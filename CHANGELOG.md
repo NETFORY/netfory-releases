@@ -191,7 +191,7 @@ Component versions covered in this file:
     relays (relay-*.sth.cx) are built in, traffic will automatically route
     through them" / "neither UDP nor relays over TCP/TLS 443 are reachable
     - the network cannot operate in this environment"
-- Fixed a truncated verdict string that read "сеть работаетомеха" (a
+- Fixed a truncated verdict string that read "The network is up and running." (a
   merge-mangled Russian phrase) - the corresponding English branch now
   correctly reads "UDP open, NAT traversable - network works in direct
   mode".
@@ -220,8 +220,7 @@ Component versions covered in this file:
   - `en.ts` → `Public Cloud Seeders - encrypted archives on Cloud Disks
     fallback (anti-censorship layer). Identified by author pubkey, no OAuth
     required.`
-  - `ru.ts` → `Публичные Cloud Seeders - фолбэк через шифрованные архивы на
-    облачных дисках …`
+  - `ru.ts` → `Public Cloud Seeders - fallback via encrypted archives on cloud storage …`
   - `id.ts` → `Cloud Seeders publik - arsip terenkripsi di Cloud Disks
     sebagai fallback …`
 - Em-dash `-` after "Public Cloud Seeders" replaced with a plain hyphen `-`
@@ -377,8 +376,7 @@ Component versions covered in this file:
 - **"Replace files (paid)" now transitions a free (link-only) dApp to the
   paid tier.** Replacing files is always a paid operation (dynamic update
   fee to the network escrow), but `update_app_at` used to preserve the old
-  `paid=false`/`free=true` flags, so the app kept the «БЕСПЛАТНО - ТОЛЬКО
-  ССЫЛКА» badge and was never network-announced. After a successful update
+  `paid=false`/`free=true` flags, so the app kept the "FREE - LINK ONLY" badge and was never network-announced. After a successful update
   payment the re-ingest now sets `paid=true`, `free=false`,
   `status=published` - `ingest_app` writes the `announce:<id>` key, so the
   app is distributed under all paid-app rules: mDNS `a{i}` records, tracker
@@ -7171,24 +7169,17 @@ No unbounded collections identified. Fix verified by `cargo check --features p2p
 ## [1.55.15] - 2026-07-11
 
 ### UX - Non-blocking "waiting for approval" pill instead of full-page overlay
-- `__sthShowSignOverlay()` в DAPP_BRIDGE_JS больше не рисует затемняющий
-  overlay поверх всего dApp - теперь это компактный floating pill в верхней
-  части страницы (24px от верха, по центру), с иконкой + текстом.
-  Пользователь по-прежнему видит контент dApp'а под пилюлей и понимает
-  куда переключиться.
-- Убраны: тёмный фон `rgba(6,8,12,0.82)`, `backdrop-filter: blur(6px)`,
-  полноэкранное перекрытие.
-- Добавлено `pointer-events: none` на контейнере (сама пилюля кликабельна) -
-  пользователь может продолжать взаимодействовать с dApp пока ждёт
-  подтверждения в главном окне.
+- `__sthShowSignOverlay()` DAPP_BRIDGE_JS no longer renders a dimming overlay over the entire dApp; instead, it displays a compact floating pill at the top of the page (centered, 24px from the top) featuring an icon and text. The user can still see the dApp content beneath the pill and understands where to switch.
+- Removed: dark background `rgba(6,8,12,0.82)`, `backdrop-filter: blur(6px)`, full-screen overlay.
+- Added `pointer-events: none` on the container (the pill itself is clickable) - the user can continue interacting with the dApp while waiting for approval in the main window.
 
 ### Fixed - Removed forced main-window focus on `getAccount`
-- Убран `unminimize + show + set_focus` main window при получении
-  connect-request. Это перехватывало фокус даже когда dApp запущен в
-  отдельной OS-window, что периодически ломало z-order (dApp контент
-  оказывался поверх UI главного окна - репорт пользователя от 11.02.2026).
-- Notification pill теперь единственный способ уведомить пользователя;
-  z-order окон остаётся тем, каким его настроила ОС.
+- Removed `unminimize + show + set_focus` main window on receiving
+  connect-request. This was stealing focus even when the dApp was running in
+  a separate OS window, which occasionally broke the z-order (dApp content
+  ended up on top of the main window UI - user report from 11.02.2026).
+- Notification pill is now the only way to notify the user;
+  window z-order remains as set by the OS.
 
 
 ### Fixed - Infinite self-logging spam of `http://ipc.localhost/plugin:event|emit`
@@ -7206,13 +7197,13 @@ No unbounded collections identified. Fix verified by `cargo check --features p2p
   never dApp network activity anyway).
 
 
-### Fixed - ReferenceError `deletingId is not defined` в Installed.vue
-- В 1.55.8 я добавил `uninstallError` ref рядом с `confirmDelete` / `flash`,
-  но заодно потерял декларацию `deletingId` (использовавшуюся в `uninstall()`
-  и в шаблоне для показа overlay при удалении). В prod-сборке ошибка
-  маскировалась (Tauri release build без source-map'ов), в debug-режиме
-  browser DevTools показывал `ReferenceError` при первом клике «Удалить →
-  Подтвердить». Вернул `const deletingId = ref('')`.
+### Fixed - ReferenceError `deletingId is not defined` in Installed.vue
+- In 1.55.8 I added the `uninstallError` ref alongside `confirmDelete` / `flash`,
+  but at the same time lost the declaration of `deletingId` (used in `uninstall()`
+  and in the template to show the overlay during deletion). In the prod build the error
+  was masked (Tauri release build without source maps), in debug mode
+  browser DevTools showed `ReferenceError` on the first click "Delete →
+  Confirm". Restored `const deletingId = ref('')`.
 
 
 ### Added - dApp network traffic tap in the System Console
@@ -7272,7 +7263,7 @@ No unbounded collections identified. Fix verified by `cargo check --features p2p
 
 ### Fixed - dApp `fetch()` to LAN/private-network backends
 - Reported symptom: authorization via wallet succeeded on the 2nd client, but
-  the subsequent dApp call to `http://192.168.31.51:8002/api/health` failed
+  the subsequent dApp call to `http://192.168.x.x:8002/api/health` failed
   with "Failed to fetch". Root cause was NOT CORS on the backend (browser
   fetch worked fine) - the WebView2/WKWebView stack behind the `sth://`
   custom scheme enforces Chrome's **Private Network Access** and stricter
@@ -7316,10 +7307,10 @@ No unbounded collections identified. Fix verified by `cargo check --features p2p
   UI returns to the caller immediately.
 
 
-### Fixed - Uninstall app silently failing on "Установленные"
-- The Installed page "Удалить → Подтвердить" click flow was resetting the
+### Fixed - Uninstall app silently failing on "Installed"
+- The Installed page "Delete → Confirm" click flow was resetting the
   confirm state (`confirmDelete = ''`) but the app never actually vanished
-  from the list - the button just re-rendered as "Удалить". Root cause
+  from the list - the button just re-rendered as "Delete". Root cause
   was two-fold:
     1. **Rust**: `delete_app_blocking` unwrapped a poisoned `SESSION_SEED`
        mutex, which re-panics inside `spawn_blocking` → `JoinError` → the
@@ -7344,7 +7335,7 @@ No unbounded collections identified. Fix verified by `cargo check --features p2p
   Core-Wallet **browser extension** API) apply a 30–45 second internal
   timeout on `getAccount()`. When the SmartNet main window was in the
   background - a common state on machines where the user just launched the
-  dApp from the "Приложения" catalog - the connect-permission prompt
+  dApp from the "Applications" catalog - the connect-permission prompt
   appeared invisibly, the user never saw it, dApp's timeout fired, and the
   page rendered its own `getAccount: extension did not respond in 45s`
   error. That is the exact scenario reported in the field.
@@ -7355,7 +7346,7 @@ No unbounded collections identified. Fix verified by `cargo check --features p2p
   in a floating webview above the main window.
 - **In-dApp overlay**: the DAPP_BRIDGE_JS overlay (introduced in 1.55.5 for
   signMessage) now also paints on `incoming-connect-request` events, with
-  the copy "Ожидание подтверждения подключения". Overlay is auto-removed on
+  the copy "Waiting for connection approval". Overlay is auto-removed on
   `dapp-response` and on the bridge's 120s timeout - so the dApp never
   looks frozen. Overlay is delayed 500 ms so it doesn't flash for
   auto-approved trusted origins.
@@ -7396,8 +7387,8 @@ No unbounded collections identified. Fix verified by `cargo check --features p2p
   emitting `incoming-sign-message-request`. The prompt is always visible.
 - **In-dApp overlay**: the injected `DAPP_BRIDGE_JS` now listens to
   `incoming-sign-message-request` and paints a full-screen semi-transparent
-  overlay inside the dApp webview - "Ожидание подписи · откройте главное
-  окно". The overlay is auto-removed on `dapp-response` or on request
+  overlay inside the dApp webview - "Waiting for signature · open the main
+  window". The overlay is auto-removed on `dapp-response` or on request
   timeout, so the dApp never appears frozen.
 - Added console.info diagnostics on the frontend when a sign request lands.
 
@@ -7450,7 +7441,7 @@ No unbounded collections identified. Fix verified by `cargo check --features p2p
   an 1800-line layout file.
 
 ### Added - P5 Seeder payout history (MyApplications)
-- New "ИСТОРИЯ ВЫПЛАТ" button on the MyApplications header opens
+- New "PAYOUT HISTORY" button on the MyApplications header opens
   `PayoutHistoryModal.vue` - a modal showing every on-chain `payout:<appId>`
   credit from the network payout-server, grouped by dApp with per-app filter.
 - Rust: new `p2p::payout_history` command scans `fetch_history_cached()` for
@@ -7469,7 +7460,7 @@ No unbounded collections identified. Fix verified by `cargo check --features p2p
 ## [1.55.1] - 2026-07-11
 
 ### Added - Copy dev:// link on repository page
-- The repository dashboard now has a "Скопировать dev://-ссылку" button (with clipboard fallback)
+- The repository dashboard now has a "Copy dev:// link" button (with clipboard fallback)
   that copies `dev://<username>/<repo>` and shows a toast confirmation - makes sharing decentralized
   projects in chat / on the wall one click.
 
@@ -7502,7 +7493,7 @@ No unbounded collections identified. Fix verified by `cargo check --features p2p
   **ANCHOR** ≥5000 GB (+500 rep). Backend `profile_stats` rank/`nextRankAt`/progress recomputed on
   uploaded bytes; the progress label now reads in GB. SUPERSEED added to rank metadata (frontend
   Network Map + User Profile).
-- The "МОЯ НОДА" seeding-awards block was made ~3× more compact: a single-line rank-tier strip
+- The "MY NODE" seeding-awards block was made ~3× more compact: a single-line rank-tier strip
   (LEECH→PEER→SEEDER→SUPERSEED→ANCHOR, reached tiers highlighted) plus two slim single-row award
   progress bars, replacing the tall two-card layout. Restores visibility of the earlier rank
   achievements (Seeder, etc.).
@@ -7539,7 +7530,7 @@ No unbounded collections identified. Fix verified by `cargo check --features p2p
   network-earnings list** ("Estimated network accrual") instead of nothing. The per-app vs aggregate
   branch in `SeederEarnings.vue` is now strictly gated by `appId` (per-app widget only shows when
   `estSth > 0`; the aggregate never leaks into a card).
-- Delete in the Installed view now shows the **same deletion overlay** ("Идёт удаление…" with a
+- Delete in the Installed view now shows the **same deletion overlay** ("Deleting…" with a
   spinner) as the MY_APPLICATIONS cards while the app is being removed.
 
 ## [1.51.6] - 2026-07-08
@@ -8303,14 +8294,14 @@ fair, per-application distribution driven by on-chain funding events.
 
 ### Note
 - The album banner appears on **newly published** albums. The already-published 528Hz album has an
-  older announcement post without the banner; re-publishing (or opening via the profile "Музыка"
+  older announcement post without the banner; re-publishing (or opening via the profile "Music"
   tab once the wall snapshot with `Snapshot.albums` has synced) will show it. Snapshot-based album
-  propagation (v1.28.0) makes albums appear in a visitor's profile "Музыка" tab after a snapshot fetch.
+  propagation (v1.28.0) makes albums appear in a visitor's profile "Music" tab after a snapshot fetch.
 
 ## [1.28.1] -26
 
 ### Added
-- **Quick "Share" button on album cards.** Album cards (profile "Музыка" tab + global page) now have
+- **Quick "Share" button on album cards.** Album cards (profile "Music" tab + global page) now have
   a small 🔗 button that generates the `sn://album/…` link and shows the QR/copy modal inline, without
   opening the album page - faster link-sharing for musicians.
 
@@ -8345,7 +8336,7 @@ fair, per-application distribution driven by on-chain funding events.
   on-chain payment in the owner's history. New `album_get(id)` fetches a single manifest.
 - **Dedicated album page (`AlbumView.vue`, `/album/:id`).** Cover, title, artist, price badge and
   full tracklist. Free/owner/purchased → "Play all" + playable tracks (routed to the global player).
-  Paid & not purchased → **"Получить за N STH"** button → pay → poll access (10s, +8s) → unlock,
+  Paid & not purchased → **"Get for N STH"** button → pay → poll access (10s, +8s) → unlock,
   mirroring the file download page.
 - **Studio.** Album publishing gained a "Paid album" toggle + STH price field.
 - **Album cards.** Show a price badge; for a paid album a non-owner hasn't bought, the card's action
@@ -8387,15 +8378,15 @@ fair, per-application distribution driven by on-chain funding events.
   per-track titles, set album title/artist, publish. Progress + toasts.
 - **Album display (`AlbumCard.vue`).** Cover, title/artist, track count, "Play all" and an
   expandable tracklist - every play routes into the global bottom player (continuous queue).
-- **Two entry points.** New global **"МУЗЫКА"** sidebar page/route (`Music.vue`) with the album
-  feed + Studio button, and a new **"Музыка" tab** in the user profile (own albums + Studio for the
+- **Two entry points.** New global **"MUSIC"** sidebar page/route (`Music.vue`) with the album
+  feed + Studio button, and a new **"Music" tab** in the user profile (own albums + Studio for the
   owner). i18n `nav.music` + `music.*` (RU/EN/ID).
 - Magnet/QR export and paid albums are deferred to the next slices.
   Verified: `yarn build` GREEN, `cargo check --features p2p` GREEN.
 
 ### Note
 - MVP discovery: album manifests are stored locally; visitors currently see a published album as a
-  normal wall post (fully playable). The dedicated album cards on the profile "Музыка" tab / global
+  normal wall post (fully playable). The dedicated album cards on the profile "Music" tab / global
   page show albums whose manifests are held locally (own + received). Network-wide album manifest
   propagation is a later slice.
 
@@ -8492,7 +8483,7 @@ fair, per-application distribution driven by on-chain funding events.
   seeding by hash is idempotent - so the same media referenced by many posts uses a single copy/blob.
 
 ### Added
-- **Live Markdown preview** in the composer - "Написать / Просмотр" (Write / Preview) tabs let the
+- **Live Markdown preview** in the composer - "Write / Preview" tabs let the
   author see the rendered post (same `marked` + `DOMPurify` pipeline) before publishing.
 - **Multiple file attachments per post (up to 10).** You can attach several audio (or other) files to
   one post. This is network-friendly: only tiny metadata (cid/name/size/mime ≈ 1 KB each) travels in
@@ -8510,8 +8501,8 @@ fair, per-application distribution driven by on-chain funding events.
 ### Added
 - **Markdown in posts.** Wall posts now render Markdown (headings, bold/italic, lists, links, code,
   blockquotes) via `marked` + `DOMPurify` sanitisation - the same engine used for app READMEs.
-- **"Show all" social-graph modal.** Each right-sidebar block (Подписчики / Подписки) has a
-  "Показать всех" button opening a scrollable modal list of all entries; clicking a person navigates
+- **"Show all" social-graph modal.** Each right-sidebar block (Followers / Following) has a
+  "Show all" button opening a scrollable modal list of all entries; clicking a person navigates
   to their profile.
 
 ### Changed
@@ -8670,7 +8661,7 @@ fair, per-application distribution driven by on-chain funding events.
 ### Added - Settings: P2P protocol node tabs + full-width layout
 - **"УЗЛЫ SMARTHOLDEM" now has two tabs**: **Clear Nodes** (the clearnet mainnet pool)
   and **P2P Nodes** (our protocol `api://` nodes from the new build-time env
-  `SMARTHOLDEM_NODES_P2P`). Each tab keeps the АВТО (pick fastest) / RESCAN (ping all)
+  `SMARTHOLDEM_NODES_P2P`). Each tab keeps the AUTO (pick fastest) / RESCAN (ping all)
   actions. Selecting a P2P node routes the wallet through it (reuses `select_node`,
   which already accepts `api://`); clearnet stays as fallback; the choice is persisted
   and P2P nodes are pinged on startup.
@@ -8734,7 +8725,7 @@ fair, per-application distribution driven by on-chain funding events.
   `FileManifest` (`wrappedKeys`), so only an authorized wallet can unwrap and decrypt.
 - The **real filename/mime is hidden**: it lives only inside the encrypted container
   (`[u32 meta_len][meta json][content]`); the public manifest shows a generic
-  "🔒 Приватный файл" name and `application/octet-stream`. Seeders/network never see
+  "🔒 Private file" name and `application/octet-stream`. Seeders/network never see
   plaintext or the original name.
 - Recipient public keys are resolved **in the backend** via the existing SmartHoldem
   node pool (`sth_node::fetch_wallet_pubkey`, reads `SMARTHOLDEM_NODES`), avoiding
@@ -8949,7 +8940,7 @@ Dashboard, in place of the former block). Three layers:
 ## [client 1.8.13] - 2026-07-01
 
 ### Fixed
-- **Windows installer launch failed ("Не удалось открыть пакет установки" / "\\").**
+- **Windows installer launch failed ("Failed to open installation package" / "\\").**
   The auto-restart command chained `msiexec` and `start` inside a single
   `cmd /C "…"` string; Rust's argument quoting wrapped the whole string, producing
   broken nested quotes that corrupted the MSI path. Now a temporary `.cmd` script is
@@ -8972,7 +8963,7 @@ Dashboard, in place of the former block). Three layers:
   update torrent (e.g. it created the release from a local folder), the updater no
   longer tries to re-download "from itself". `start_update_download` now short-circuits
   via `torrent::is_managed()` and returns the existing info_hash, so the flow
-  completes instead of hanging at "Идёт скачивание… 0%".
+  completes instead of hanging at "Downloading… 0%".
 
 ### Added
 - **Auto-restart after update (Windows/Linux).** `run_p2p_installer` now launches a
@@ -9032,12 +9023,12 @@ Dashboard, in place of the former block). Three layers:
 ## [client 1.8.6] - 2026-07-01
 
 ### Added
-- **Create a new torrent from a file or folder.** A new "Создать торрент" button
+- **Create a new torrent from a file or folder.** A new "Create Torrent" button
   on the Torrents page (left of the settings gear) opens a qBittorrent-style
   creation dialog: pick a file or folder, choose the piece size (Auto / 64 KiB –
   16 MiB), edit the tracker list (pre-filled from our cached public trackers
   synced from GitHub `ngosang/trackerslist`) and add an optional comment.
-  On "Создать торрент" the `.torrent` is generated via `librqbit::create_torrent`,
+  On "Create Torrent" the `.torrent` is generated via `librqbit::create_torrent`,
   saved into our torrents cache (`data/torrents/xx/<hash>.torrent`) and the source
   content is immediately put up for seeding in the Torrents list (no save dialog).
     - Backend: `create_torrent_from_path` and `get_bt_trackers` commands in
@@ -9053,8 +9044,8 @@ Dashboard, in place of the former block). Three layers:
 
 ### Added
 - **Right-click context menu on torrent rows.** Right-clicking any torrent in the
-  Torrents list opens a floating menu with two actions: **"Скопировать magnet-ссылку"**
-  (copies the magnet URI to the clipboard) and **"Экспортировать в .torrent"**
+  Torrents list opens a floating menu with two actions: **"Copy magnet link"**
+  (copies the magnet URI to the clipboard) and **"Export to .torrent"**
   (opens the native "Save As" dialog to export the `.torrent` file).
   Backend commands `get_torrent_magnet` and `get_torrent_file_bytes` (thin wrappers
   over the existing `magnet_of` / `torrent_file_b64` helpers) were added to
@@ -9064,8 +9055,8 @@ Dashboard, in place of the former block). Three layers:
 
 ### Added
 - **Peak upload speed + leecher count on each torrent card.** Each torrent now
-  shows its session peak upload speed ("пик ▲ …", tracked client-side) and the
-  peers column is relabeled **Сиды/Личеры** - the connected-peer count
+  shows its session peak upload speed ("peak ▲ …", tracked client-side) and the
+  peers column is relabeled **Seeders/Leechers** - the connected-peer count
   (`peer_stats.live`) represents the leechers actually downloading from us when
   seeding, making "who we're uploading to" visible at a glance.
 
@@ -9659,7 +9650,7 @@ Dashboard, in place of the former block). Three layers:
   currently being served (distinct from `active_peers`, which counts other
   providers in the mesh). Incremented via a RAII `ConnGuard` at the start of
   `ApiProtocol::accept` and reliably decremented on drop (covers panics/cancels).
-  Exposed in `/status` JSON and shown as the "Активные клиенты" card on the
+  Exposed in `/status` JSON and shown as the "Active clients" card on the
   HTML dashboard.
 
 ### Notes
@@ -9707,11 +9698,11 @@ Dashboard, in place of the former block). Three layers:
 
 ### Added (earlier)
 - **App deletion progress overlay**: clicking confirm-delete in My Applications
-  now shows an "Идёт удаление…" spinner overlay on the app card while the (multi
+  now shows an "Deleting…" spinner overlay on the app card while the (multi
   -second) blob-reclaim runs, instead of the card silently freezing then vanishing.
-- **"Мои домены" on the profile**: a profile section lists the identity's live
+- **"My Domains" on the profile**: a profile section lists the identity's live
   `.sth` domains. Visible to the owner always; to visitors only when the owner
-  ticks **"Показывать всем"** (persisted as `showDomains` in the profile manifest).
+  ticks **"Show to everyone"** (persisted as `showDomains` in the profile manifest).
   Each domain is a clickable link that opens its bound dApp in a new app tab
   (`tabs.open(appId)`). New backend command `domains_by_owner(address)`.
 - **Connection-quality dot on the globe icon**: a small coloured dot
@@ -9739,7 +9730,7 @@ Dashboard, in place of the former block). Three layers:
 
 ### Fixed (P0)
 - **My Files row layout was crooked**: cramped columns wrapped text (size
-  "121.1 КБ" split, "Stop Seeding" on two lines, "· N сид." dropped below). Fixed
+  "121.1 KB" split, "Stop Seeding" on two lines, "· N seeders" dropped below). Fixed
   with `white-space: nowrap` on table cells + `.mini` buttons, `flex-wrap: nowrap`
   on the actions group, ellipsis-truncated CID, and the name column made the
   single flexible one (`width: 99%`). ⚠️ Tauri-gated table - validated by code
@@ -9755,7 +9746,7 @@ Dashboard, in place of the former block). Three layers:
 ### Fixed (UI freeze on poor network - CRITICAL)
 - **Root cause:** several `#[tauri::command]`s were *synchronous* and performed
   blocking 12 s `ureq` HTTP calls. Sync commands run on the **main/UI thread**, so
-  on a slow network the whole window froze ("Не отвечает") for ~12 s, then
+  on a slow network the whole window froze ("Not responding") for ~12 s, then
   recovered. The worst offender was `refresh_subscribers`, auto-called **every
   30 s** by the wallet store → constant freezing on a weak link.
 - `subs::refresh_subscribers` and `subs::follow_stats` are now `async` and run
@@ -9779,13 +9770,13 @@ Dashboard, in place of the former block). Three layers:
   transit hash) instead of IPFS CIDv0. The IPFS CIDv0 is still computed and kept
   in a new `ipfsCid` manifest field, reserved ONLY for proof-of-ownership /
   future IPFS-network interop - not for P2P transit or as the local identifier.
-- **"В маркет" restricted to paid files.** Free files no longer show the
+- **"To the market" restricted to paid files.** Free files no longer show the
   on-chain marketplace publish button (a commercial listing is meaningless for a
-  free file). Paid files keep "В маркет" (Type 0 memo publish) until published.
+  free file). Paid files keep "To the market" (Type 0 memo publish) until published.
 
 ### Added
 - **Self-contained share links for free files (Private/Anonymous P2P mode).**
-  New "🔗 Ссылка" button in "My Files" copies `sn://file/<cid>~<blob>~<node>`.
+  New "🔗 Link" button in "My Files" copies `sn://file/<cid>~<blob>~<node>`.
   Any peer can open it and fetch the file directly P2P with NO on-chain
   publication. Paid files copy the plain `sn://file/<cid>` (resolved via the
   chain registry after publishing).
@@ -9822,7 +9813,7 @@ Dashboard, in place of the former block). Three layers:
   "My Files".
 
 ### Added (My Files UX)
-- **Two tabs in "My Files": «Мои файлы» / «Скачанные».** Owned vs downloaded
+- **Two tabs in "My Files": "My Files" / "Downloaded".** Owned vs downloaded
   (non-owned, locally held) files are now separated.
 - Downloaded files get **delete** (`delete_downloaded_file`), **copy link**, **QR**
   and a recorded **download date/time** (`downloadedAt`, persisted on fetch).
