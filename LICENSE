@@ -1,0 +1,67 @@
+# Business Source License 1.1
+
+License text copyright (c) 2017 MariaDB Corporation Ab, All Rights Reserved.  
+"Business Source License" is a trademark of MariaDB Corporation Ab.
+
+---
+
+## Parameters
+
+**Licensor:** Netfory Protocol / SmartHoldem Foundation  
+
+**Licensed Work:** Netfory Core Infrastructure (including Client, Seeder, Tracker, and SDKs)  
+The Licensed Work is (c) 2026 Netfory OS and SmartNet Protocols.
+
+**Additional Use Grant:** You may make production use of the Licensed Work, provided the use does not include offering a Competing Service to third parties.
+
+**Change Date:** 2030-08-10  
+
+**Change License:** Apache License, Version 2.0
+
+For information about alternative licensing arrangements for the Licensed Work, please contact: [contact@smartholdem.io](mailto:contact@smartholdem.io)
+
+---
+
+## Notice
+
+The Business Source License (this "Agreement") sets forth the terms under which you may use, copy, modify and distribute the Licensed Work.
+
+### 1. Definitions
+
+**“Licensor”** means the copyright holder(s) identified in the Parameters.  
+
+**“Licensed Work”** means the software made available under this License.  
+
+**“Competing Service”** means any product or service offered to third parties that provides substantially similar functionality to the core Netfory P2P infrastructure, including decentralized hosting, content-addressed distribution, E2EE messaging, peer-to-peer transport, or decentralized data storage services offered by the Licensor.
+
+### 2. License Grant
+
+Subject to the terms of this License, the Licensor grants you a non-exclusive, worldwide, royalty-free license to use, copy, modify, and distribute the Licensed Work and any Derivative Works.
+
+### 3. Additional Use Grant
+
+You may use the Licensed Work for any purpose, including commercial production use, except for offering a Competing Service.
+
+**The only restriction:**  
+You may not offer a competing service to third parties that provides substantially the same core functionality as Netfory (for example: decentralized hosting, content distribution, E2EE messenger, peer-to-peer transport, or decentralized data storage services).
+
+This restriction is temporary and will automatically end on **August 10, 2030**.  
+After that date, the project will be licensed under the **Apache License 2.0** (fully open source).
+
+### Summary
+
+| Use Case                                      | Allowed?          |
+|-----------------------------------------------|-------------------|
+| Personal use                                  | Yes               |
+| Internal company use                          | Yes               |
+| Building applications on top of Netfory       | Yes               |
+| Contributing code / opening pull requests     | Yes               |
+| Offering a competing P2P infrastructure service | No (until 2030) |
+
+### 4. Change of License
+
+On the Change Date, this License will automatically convert to the Apache License, Version 2.0. From that date forward, the Licensed Work may be used under the terms of the Apache License 2.0 without the restrictions of this License.
+
+### 5. Disclaimer
+
+THE LICENSED WORK IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE LICENSOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM THE USE OF THE LICENSED WORK.
