@@ -20,7 +20,7 @@ Component versions covered in this file:
 
 ---
 
-## [1.135.28] - 2026-06 (Official Repository: full pagination of on-chain registry scans)
+## [1.135.28] - 2026-08 (Official Repository: full pagination of on-chain registry scans)
 
 ### Fixed
 
@@ -46,7 +46,7 @@ Component versions covered in this file:
 - Versions bumped to **1.135.28** across `package.json`, `tauri.conf.json`,
   `Cargo.toml` and `Cargo.lock`.
 
-## [1.135.27] - 2026-06 (Build fix: `tauri:build:bonsai:mail:win/linux/mac` shipped a STALE frontend dist)
+## [1.135.27] - 2026-08 (Build fix: `tauri:build:bonsai:mail:win/linux/mac` shipped a STALE frontend dist)
 
 ### Fixed
 
@@ -68,7 +68,7 @@ Component versions covered in this file:
 - Versions bumped to **1.135.27** across `package.json`, `tauri.conf.json`,
   `Cargo.toml` and `Cargo.lock`.
 
-## [1.135.26] - 2026-06 (Encrypted discovery_cache media on Cloud Seeders - no plaintext images on cloud disks)
+## [1.135.26] - 2026-08 (Encrypted discovery_cache media on Cloud Seeders - no plaintext images on cloud disks)
 
 ### Added
 
@@ -99,7 +99,7 @@ Component versions covered in this file:
 - Versions bumped to **1.135.26** across `package.json`, `tauri.conf.json`,
   `Cargo.toml` and `Cargo.lock`.
 
-## [1.135.25] - 2026-06 (Build fix: remove trailing garbage at end of p2p.rs that broke `cargo build --features p2p`)
+## [1.135.25] - 2026-08 (Build fix: remove trailing garbage at end of p2p.rs that broke `cargo build --features p2p`)
 
 ### Fixed
 
@@ -131,7 +131,7 @@ Component versions covered in this file:
 
 ---
 
-## [1.135.24] - 2026-06 (Storages & Media: rename "Web3 player" to "Web4 player" on the P2P player & albums card)
+## [1.135.24] - 2026-08 (Storages & Media: rename "Web3 player" to "Web4 player" on the P2P player & albums card)
 
 ### Changed
 
@@ -150,7 +150,7 @@ Component versions covered in this file:
 
 ---
 
-## [1.135.23] - 2026-06 (Network Doctor: diagnostics results in English only)
+## [1.135.23] - 2026-08 (Network Doctor: diagnostics results in English only)
 
 ### Changed
 
@@ -208,7 +208,7 @@ Component versions covered in this file:
 
 ---
 
-## [1.135.22] - 2026-06 (Network Map copy: rename "Yandex Disk fallback" to generic "Cloud Disks fallback")
+## [1.135.22] - 2026-08 (Network Map copy: rename "Yandex Disk fallback" to generic "Cloud Disks fallback")
 
 ### Changed
 
@@ -235,7 +235,7 @@ Component versions covered in this file:
 
 ---
 
-## [1.135.21] - 2026-06 (Public Network Seeders: the selected publish account and secondary drive survive page navigation)
+## [1.135.21] - 2026-08 (Public Network Seeders: the selected publish account and secondary drive survive page navigation)
 
 ### Fixed
 
@@ -251,7 +251,7 @@ Component versions covered in this file:
   that equals the current secondary clears the secondary - mirroring to the
   same disk is meaningless. (`Seeders.vue`)
 
-## [1.135.20] - 2026-06 (Discover: periodic background Cloud Seeder scan while P2P is alive - new cloud-only dApps appear without manual rescans)
+## [1.135.20] - 2026-08 (Discover: periodic background Cloud Seeder scan while P2P is alive - new cloud-only dApps appear without manual rescans)
 
 ### Added
 
