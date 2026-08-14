@@ -30,7 +30,7 @@
 
 ## 📦 Ecosystem Repositories
 
-- **[netfory-client](https://github.com/NETFORY/netfory-ui):** The main desktop application (Wallet, Store, Seeder).
+- **netfory-client:** The main desktop application (Wallet, Store, Seeder).
 - **[smartnet-relay](https://github.com/NETFORY/smartnet-relay):** A lightweight, self-hosted relay server for the NETFORY P2P network.
 - **[smartnet-sdk](https://github.com/NETFORY/smartnet-sdk):** TypeScript SDK for building dApps on Netfory.
 - **[netfory-provider](https://github.com/NETFORY/netfory-provider):** API Bridge & Router (SmartNet / Web 4.0).
