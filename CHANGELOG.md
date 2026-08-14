@@ -1290,7 +1290,7 @@ content-addressed iroh blob:
 
 ---
 
-## [1.129.9] - 2026-02 (Dashboard: "Popular on the network" cards fill the full column width)
+## [1.129.9] - 2026-07 (Dashboard: "Popular on the network" cards fill the full column width)
 
 ### Changed
 
@@ -1302,7 +1302,7 @@ content-addressed iroh blob:
 
 ---
 
-## [1.129.8] - 2026-02 (Fix: "Invalid Date" in tab install-source tooltip)
+## [1.129.8] - 2026-07 (Fix: "Invalid Date" in tab install-source tooltip)
 
 ### Fixed
 
@@ -1323,7 +1323,7 @@ content-addressed iroh blob:
 
 ---
 
-## [1.129.7] - 2026-02 (Remove Neumorphic Light theme + sidebar active-pill cleanup)
+## [1.129.7] - 2026-07 (Remove Neumorphic Light theme + sidebar active-pill cleanup)
 
 ### Removed - Neumorphic Light theme
 
@@ -1347,7 +1347,7 @@ content-addressed iroh blob:
 
 ---
 
-## [1.129.6] - 2026-02 (Sidebar: cleaner active-item look)
+## [1.129.6] - 2026-07 (Sidebar: cleaner active-item look)
 
 ### Changed
 
@@ -1360,7 +1360,7 @@ content-addressed iroh blob:
 
 ---
 
-## [1.129.5] - 2026-02 (DISCOVER APPS: no hover underline on card title)
+## [1.129.5] - 2026-07 (DISCOVER APPS: no hover underline on card title)
 
 ### Changed
 
@@ -1371,7 +1371,7 @@ content-addressed iroh blob:
 
 ---
 
-## [1.129.4] - 2026-02 (Dashboard: deep-tint gradient for "Popular on the network" cards)
+## [1.129.4] - 2026-07 (Dashboard: deep-tint gradient for "Popular on the network" cards)
 
 ### Changed - cover-art palette
 
@@ -1389,7 +1389,7 @@ content-addressed iroh blob:
 
 ---
 
-## [1.129.3] - 2026-02 (Rebrand: SmartNet → NETFORY user-facing name + Russian dApps guide)
+## [1.129.3] - 2026-07 (Rebrand: SmartNet → NETFORY user-facing name + Russian dApps guide)
 
 ### Changed - user-facing product name is now **NETFORY**
 
@@ -1448,7 +1448,7 @@ content-addressed iroh blob:
 
 ---
 
-## [1.129.2] - 2026-02 (Duplicate i18n key fix)
+## [1.129.2] - 2026-07 (Duplicate i18n key fix)
 
 ### Fixed
 
@@ -1495,7 +1495,7 @@ content-addressed iroh blob:
 
 ---
 
-## [1.129.0] - 2026-02 (Trackerless dApp sharing: `sth://<id>?n=<node>&h=<hash>` direct links + one-tap QR modal)
+## [1.129.0] - 2026-07 (Trackerless dApp sharing: `sth://<id>?n=<node>&h=<hash>` direct links + one-tap QR modal)
 
 ### Added - Direct Link sharing (bypass trackers & seeders)
 - **Self-contained install URI** (`frontend/src/views/Resolve.vue`): the
@@ -1575,7 +1575,7 @@ content-addressed iroh blob:
 
 ---
 
-## [1.128.0] - 2026-02 (Private dApps hardening: on-disk `content.json` fallback, cloud/tracker announce, gold catalog badge, "Private Repository" label, no-earnings coin hide)
+## [1.128.0] - 2026-07 (Private dApps hardening: on-disk `content.json` fallback, cloud/tracker announce, gold catalog badge, "Private Repository" label, no-earnings coin hide)
 
 ### Added - Private dApp catalog experience
 - **Gold "Private apps found (N)" badge** on `Discovered.vue`: appears next to
@@ -1735,7 +1735,7 @@ a misleading, unimplemented hint.
 
 ---
 
-## [1.126.0] - 2026-02 (UI polish rollup: topbar mail shortcut + Default Light readability)
+## [1.126.0] - 2026-07 (UI polish rollup: topbar mail shortcut + Default Light readability)
 
 ### Added
 - **Topbar mail icon** (`AppLayout.vue`): envelope button
@@ -1858,7 +1858,7 @@ a misleading, unimplemented hint.
 
 ---
 
-## [1.124.2] - 2026-02 (Torrents & My Files modals i18n - RU / EN / ID)
+## [1.124.2] - 2026-07 (Torrents & My Files modals i18n - RU / EN / ID)
 
 ### Changed
 - **`TorrentLimitsModal.vue`** - «Настройки торрент-клиента» is now fully
@@ -1907,7 +1907,7 @@ a misleading, unimplemented hint.
 
 ---
 
-## [1.124.1] - 2026-02 (Seeders.vue full i18n - RU / EN / ID)
+## [1.124.1] - 2026-07 (Seeders.vue full i18n - RU / EN / ID)
 
 ### Changed
 - **`views/Seeders.vue` fully i18n-driven** - the `// PUBLIC NETWORK SEEDERS_`
@@ -1969,7 +1969,7 @@ a misleading, unimplemented hint.
 
 ---
 
-## [1.124.0] - 2026-02 (Sidebar logo shrink · System Console i18n · English-only Rust syslog)
+## [1.124.0] - 2026-07 (Sidebar logo shrink · System Console i18n · English-only Rust syslog)
 
 ### Changed
 - **Sidebar logo**: `NETFORY` brand mark reduced by 2× (48×48 → 24×24)
@@ -2019,7 +2019,7 @@ a misleading, unimplemented hint.
 
 ---
 
-## [Oxid Mail 0.7.1] - 2026-02 (English-only armor banner for outbound encrypted mail)
+## [Oxid Mail 0.7.1] - 2026-07 (English-only armor banner for outbound encrypted mail)
 
 ### Changed
 - **`armor_body` banner is now English-only**
@@ -2092,7 +2092,7 @@ a misleading, unimplemented hint.
 - Background replication failures of the mirror never fail the primary
   publish (best-effort semantics confirmed by the user).
 
-## [1.122.3] - 2026-02 (`DonateModal` i18n - English + Indonesian translations of «SUPPORT THE NETWORK_»)
+## [1.122.3] - 2026-07 (`DonateModal` i18n - English + Indonesian translations of «SUPPORT THE NETWORK_»)
 
 ### Added
 - **Full i18n coverage for the `SUPPORT THE NETWORK_` donation modal**
@@ -2123,7 +2123,7 @@ a misleading, unimplemented hint.
 
 ---
 
-## [1.122.2] - 2026-02 (Sidebar brand refresh - raster NETFORY logo, retired Mail & Seeders entries, Dashboard `Micro Blog` card)
+## [1.122.2] - 2026-07 (Sidebar brand refresh - raster NETFORY logo, retired Mail & Seeders entries, Dashboard `Micro Blog` card)
 
 ### Added
 - **Raster NETFORY logo in the sidebar** (`frontend/public/netfory_logo.png`,
@@ -2163,7 +2163,7 @@ a misleading, unimplemented hint.
 
 ---
 
-## [1.122.1] - 2026-02 (`.sth` DEVELOPERS-only guard for 1–2 char labels + `dns_manager.rs` trailing-delimiter hotfix)
+## [1.122.1] - 2026-07 (`.sth` DEVELOPERS-only guard for 1–2 char labels + `dns_manager.rs` trailing-delimiter hotfix)
 
 ### Fixed
 - **1–2 character `.sth` domain labels are now strictly DEVELOPERS-only**
@@ -2202,7 +2202,7 @@ a misleading, unimplemented hint.
 
 ---
 
-## [1.122.0 / Oxid Mail 0.7.0] - 2026-02 (Paid unlock for unverified dApps, reserved-names guard, recipient chips + contact autocomplete, ReaderView empty-screen fix)
+## [1.122.0 / Oxid Mail 0.7.0] - 2026-07 (Paid unlock for unverified dApps, reserved-names guard, recipient chips + contact autocomplete, ReaderView empty-screen fix)
 
 ### Added
 - **Paid on-chain unlock for unverified dApps** - the SmartNet dApp catalog
@@ -2324,7 +2324,7 @@ a misleading, unimplemented hint.
 
 ---
 
-## [1.121.0 / Oxid Mail 0.6.0] - 2026-02 (Attachments Dropzone + inline NTFRY, attachment preview overlay, honest P2P delivery progress)
+## [1.121.0 / Oxid Mail 0.6.0] - 2026-07 (Attachments Dropzone + inline NTFRY, attachment preview overlay, honest P2P delivery progress)
 
 ### Added
 - **Compose Dropzone with a 25 MB total-size limit** (`ui/src/components/ComposeModal.vue`) -
@@ -3029,7 +3029,7 @@ a misleading, unimplemented hint.
   deep grey instead of "hacker black", cards separated by tone + soft shadow,
   no hard borders) and `DEFAULT LIGHT` (canvas `#F8F9FA`, pure-white cards with
   a barely-visible `0 1px 3px` shadow). Rounded corners: 12px cards, pill
-  (20-24px) buttons. The brand teal accent is reserved for CTA buttons and
+  (202026-06-24px) buttons. The brand teal accent is reserved for CTA buttons and
   active elements only. `DEFAULT DARK` is now the default theme for fresh
   installs; users with a previously saved theme keep their choice.
 - **Day/night toggle (☀/☾)** in the top bar, placed right before the Settings
@@ -3083,7 +3083,7 @@ a misleading, unimplemented hint.
   counts as *online*, so first-run indexing and the SyncSplash stage marks
   (`naming`/`dns`/`subs`/`chat`/`oracle`) behave exactly as before.
 
-## [1.100.0] - 2026-02 (Wall lazy-load, offline-safe UI, cloud-seeder update publish, discovery cache)
+## [1.100.0] - 2026-07 (Wall lazy-load, offline-safe UI, cloud-seeder update publish, discovery cache)
 
 ### Added
 - **Wall lazy-load pagination.** `WallFeed.vue` now loads the microblog in
@@ -4361,7 +4361,7 @@ again (`ownSeeder()` gate).
   marks an app "via seeder" only when ALL of its providers came from the
   cloud fallback.
 
-## [1.76.3] - 2026-02-07
+## [1.76.3] - 2026-07-07
 
 ### Fixed
 - **Non-p2p build unblocked (E0433 in `p2p.rs` + `devhub.rs`).**
@@ -4378,7 +4378,7 @@ again (`ownSeeder()` gate).
   discover call). Production builds (`--features p2p`) are unchanged -
   same code path, identical behavior.
 
-## [1.76.2] - 2026-02-07
+## [1.76.2] - 2026-07-07
 
 ### Added
 - **OneDrive auto-detect: one-click add of the standard synced folder.**
@@ -4390,7 +4390,7 @@ again (`ownSeeder()` gate).
   one click; falls back to the native picker if nothing is detected.
   Bridge: `detectOneDriveFolder()` wrapper. Hint text updated in the UI.
 
-## [1.76.1] - 2026-02-07
+## [1.76.1] - 2026-07-07
 
 ### Changed
 - **OneDrive rework: local synced folder instead of Graph API (user decision).**
@@ -4415,7 +4415,7 @@ again (`ownSeeder()` gate).
   `E0433` in `p2p.rs`/`devhub.rs`); `yarn build` - clean; web-preview smoke of
   the Settings modal (button + updated hint) OK.
 
-## [1.76.0] - 2026-02-07
+## [1.76.0] - 2026-07-07
 
 ### Added
 - **Crypto Vault: OneDrive provider (Microsoft Graph API v1.0).** New
@@ -4451,7 +4451,7 @@ again (`ownSeeder()` gate).
 - `yarn build` - clean; UI smoke-verified in web preview (Settings modal shows
   the OneDrive button and provider hint).
 
-## [1.75.1] - 2026-02-06
+## [1.75.1] - 2026-07-06
 
 ### Added - Crypto Vault: «in vault» line in the drive list
 - **«Занято сейфом» row**: each drive row in the vault drive-switcher dropdown
@@ -4478,7 +4478,7 @@ again (`ownSeeder()` gate).
   every drive in the list; a `watch` on `status.stats.storedBytes` keeps the
   active drive/RAID members up to date instantly.
 
-## [1.75.0] - 2026-02-06
+## [1.75.0] - 2026-07-06
 
 ### Added - Crypto Vault: «+ Local Safe Disk» (folder as encrypted virtual drive)
 - **Local Safe Disk**: the «+ Local mock» button is replaced by
@@ -4576,7 +4576,7 @@ again (`ownSeeder()` gate).
 - Header chip now shows `⛓ RAID-0/1 · N drives`; dropdown row shows the
   active type and `N of M` selected drives.
 
-## [1.70.0] - 2026-07-24
+## [1.70.0] - 2026-072026-06-24
 
 ### Added - Crypto Vault: PKCE, RAID mode, folder drag&drop queue, .env overrides, RU docs
 - **PKCE (RFC 7636)** in both OAuth flows: `code_challenge S256` in the
@@ -4603,7 +4603,7 @@ again (`ownSeeder()` gate).
   multi-account, RAID, drag&drop, security model, own OAuth apps, FAQ
   (including "why the client secret is not secret for desktop apps").
 
-## [1.69.0] - 2026-07-24
+## [1.69.0] - 2026-072026-06-24
 
 ### Added - Crypto Vault: multi-drive / multi-account support
 - **Multiple cloud drives side by side** (e.g. 2×Yandex + 2×Google): every
@@ -4624,7 +4624,7 @@ again (`ownSeeder()` gate).
   included) is stored ChaCha20-encrypted with the wallet master key; legacy
   single-drive settings (plaintext and sealed v1) migrate automatically.
 
-## [1.68.0] - 2026-07-24
+## [1.68.0] - 2026-072026-06-24
 
 ### Added - Crypto Vault phase 5: WebDAV fast path, disk quota, transfer speed, ZSTD dictionary, sealed tokens
 - **Yandex Disk WebDAV transport**: hot-path transfers (chunks, index.enc,
@@ -4651,7 +4651,7 @@ again (`ownSeeder()` gate).
   localStorage are now ChaCha20-Poly1305-encrypted with the wallet master
   key; plaintext legacy settings are migrated transparently.
 
-## [1.67.0] - 2026-07-24
+## [1.67.0] - 2026-072026-06-24
 
 ### Added - Crypto Vault phase 4: parallel transfers, Google OAuth, VFS mkdir/rm + GC, token auto-refresh, key fingerprint
 - **Parallel chunk pipeline (up to 6 concurrent transfers)**: `push` fills a
@@ -4689,7 +4689,7 @@ the cache. The UI also reuses a still-alive backend session on page
 re-entry instead of blindly reopening.
 
 
-## [1.66.2] - 2026-07-24
+## [1.66.2] - 2026-072026-06-24
 
 ### Fixed - Crypto Vault: clear KeyMismatch error + "Reset cloud vault" recovery
 The user hit a raw "AEAD error" on Connect: the cloud `/ntfry/index.enc`
@@ -4712,7 +4712,7 @@ than the wallet key derived by the client.
   Yandex Disk, so a plain Connect now initializes a fresh vault.
 
 
-## [1.66.1] - 2026-07-24
+## [1.66.1] - 2026-072026-06-24
 
 ### Changed - "Sign in with Yandex" without a local server (embedded webview interception)
 The user's Yandex OAuth app has a locked redirect URI
@@ -6500,7 +6500,7 @@ reproduced inside dApps.
 Validated with `node --check` on the extracted bridge JS and a clean
 `cargo check --features p2p`.
 
-## [1.55.32] - 2026-02-11
+## [1.55.32] - 2026-07-11
 
 ### Fixed - WS handshake race condition (DApp Socket.IO / WebSocket)
 
@@ -6562,7 +6562,7 @@ server, tungstenite rejected it.
 - SmartNet client → `1.55.32` (`package.json`, `tauri.conf.json`, `Cargo.toml`).
 - netfory-provider → `0.6.2`.
 
-## [1.55.31] - 2026-02-11
+## [1.55.31] - 2026-07-11
 
 ### Added - Built-in WS tester in `api://` panel (8-second handshake timeout)
 
@@ -6603,7 +6603,7 @@ not only through the JS polyfill injected into DApp webviews.
   now preserves the provider prefix in both browser and SmartNet modes.
   The new tester lets us confirm the QUIC upgrade path end-to-end.
 
-## [1.55.30] - 2026-02-11
+## [1.55.30] - 2026-07-11
 
 ### Fixed - Socket.IO / WS: автоматическое восстановление имени провайдера
 
@@ -6667,7 +6667,7 @@ const socket = io('api://cf389ca0.../pokersth', {
 ;(window as any).__SMARTNET__ = { provider: 'pokersth', /* ... */ }
 ```
 
-## [1.55.29] - 2026-02-11
+## [1.55.29] - 2026-07-11
 
 ### Added - WebSocket support end-to-end (`ALPN /1`, dApp `new WebSocket(…)`)
 
@@ -6720,7 +6720,7 @@ Requires **netfory-provider ≥ 0.6.0** on the target side.
 - **R3:** version bump across `package.json`, `tauri.conf.json`,
   `Cargo.toml`.
 
-## [1.55.28] - 2026-02-11
+## [1.55.28] - 2026-07-11
 
 ### Added - ConnectionPool for `api://` (multi-request per QUIC connection)
 
@@ -6798,7 +6798,7 @@ No dApp-visible behavior change in 1.55.28 for WS.
 - R3: version bump synchronized across `package.json`,
   `tauri.conf.json`, `Cargo.toml`.
 
-## [1.55.27] - 2026-02-11
+## [1.55.27] - 2026-07-11
 
 ### Added - IPv6 outbound probe (client & seeder audit)
 
@@ -6826,7 +6826,7 @@ path status in SystemConsole at startup:
     - `ipv6 outbound: недоступен` → operating v4-only, which is fine but
       will use relay if the remote peer is v6-only or if CGNAT triggers.
 
-## [1.55.26] - 2026-02-11
+## [1.55.26] - 2026-07-11
 
 ### Fixed - netfory-provider companion release (0.4.4) to close the 401 loop
 
@@ -6849,7 +6849,7 @@ release so the round-trip actually delivers `Authorization: Bearer …`.
   SmartNet client already sends the `headers` field since 1.55.24, so
   no coordinated deploy is needed.
 
-## [1.55.25] - 2026-02-11
+## [1.55.25] - 2026-07-11
 
 ### Changed - SystemConsole always opens in its own native window
 
@@ -6873,7 +6873,7 @@ opened the detached copy). Rationale:
   stays intact so an in-window widget can still be embedded later
   (e.g. dev tab) without a rewrite.
 
-## [1.55.24] - 2026-02-11
+## [1.55.24] - 2026-07-11
 
 ### Fixed - `api://` requests dropped Authorization / custom headers (401)
 
@@ -6901,7 +6901,7 @@ endpoint (`/auth/me`, `/wallet`, etc.).
 After this fix, `Authorization: Bearer <jwt>` from `POST /auth/verify`
 survives round-trips and `GET /auth/me` returns 200 instead of 401.
 
-## [1.55.23] - 2026-02-11
+## [1.55.23] - 2026-07-11
 
 ### Added - Detached System Console window + `api://` fetch polyfill in dApps
 
@@ -6955,7 +6955,7 @@ short-circuited.
   (`[dapp]` scope) exactly like a normal HTTP fetch - with the correct
   status/timing/URL - so the dev experience is uniform.
 
-## [1.55.21] - 2026-02-11
+## [1.55.21] - 2026-07-11
 
 ### Fixed - Right-click "Translate selection" not appearing
 
@@ -6979,7 +6979,7 @@ small floating "…" pill in the screenshot) instead of ours, because our
   and dismiss any open menu/tooltip - instead of leaving the previously
   installed handler dangling.
 
-## [1.55.20] - 2026-02-11
+## [1.55.20] - 2026-07-11
 
 ### Fixed / Hardened - `api://` WebView handler
 
@@ -7018,7 +7018,7 @@ before 1.55.18 landed and the scheme isn't registered yet. After a fresh
 build you will see `[net] [api] GET <nodeId>/<provider>/…` for every
 dApp request that reaches the handler.
 
-## [1.55.19] - 2026-02-11
+## [1.55.19] - 2026-07-11
 
 ### Added - dApp runtime detection (`window.__SMARTNET__`)
 
@@ -7056,7 +7056,7 @@ export const BACKEND_URL =
     : (import.meta.env.VITE_BACKEND_URL_HTTPS || 'https://api.example.com')
 ```
 
-## [1.55.18] - 2026-02-11
+## [1.55.18] - 2026-07-11
 
 ### Added - Transparent `api://` fetch inside dApp WebViews
 
@@ -7105,7 +7105,7 @@ and every request failed instantly with `TypeError: Failed to fetch`.
   before (it still uses `invoke('api_fetch', …)` for the pretty-printed
   envelope view with signature diagnostics).
 
-## [1.55.17] - 2026-02-11
+## [1.55.17] - 2026-07-11
 
 ### Fixed - Critical: `ipc.localhost` recursion still leaking through JS tap
 
@@ -7151,7 +7151,7 @@ Rust filter landing:
 
 No unbounded collections identified. Fix verified by `cargo check --features p2p`.
 
-## [1.55.16] - 2026-02-11
+## [1.55.16] - 2026-07-11
 
 ### Fixed - Critical: SystemConsole `dapp` log recursion & memory leak
 - **Root cause:** The injected `dapp.rs` network-tap filter (`isInternalIpc`)
@@ -7182,7 +7182,7 @@ No unbounded collections identified. Fix verified by `cargo check --features p2p
 ### Chore
 - Bumped `package.json`, `Cargo.toml`, `tauri.conf.json` to `1.55.16`.
 
-## [1.55.15] - 2026-02-11
+## [1.55.15] - 2026-07-11
 
 ### UX - Non-blocking "waiting for approval" pill instead of full-page overlay
 - `__sthShowSignOverlay()` в DAPP_BRIDGE_JS больше не рисует затемняющий
@@ -7955,7 +7955,7 @@ fair, per-application distribution driven by on-chain funding events.
 > `cargo check --features p2p` GREEN and frontend `yarn build` GREEN.
 
 
-## [1.46.0] -30
+## [1.46.0] 2026-06-30
 
 ### Fixed / Changed - DApp translation quality, safety & GPU gating
 - **GPU-only.** DApp page/selection translation is now enabled only in **CUDA/Metal builds** (too slow
@@ -7975,7 +7975,7 @@ fair, per-application distribution driven by on-chain funding events.
   labels the page-wide pass skips). Wired via the new `dapp_translate_config` command; enabled on
   `dapp-loaded` for GPU builds only. Same Sled hash-cache and event bridge.
 
-## [1.45.0] -30
+## [1.45.0] 2026-06-30
 
 ### Added - DApp page translation (Phase 2): attributes, progress, memory, terminal logs
 - **Attribute translation.** Beyond text nodes, the content script now also translates `title`,
@@ -7993,7 +7993,7 @@ fair, per-application distribution driven by on-chain funding events.
   and `[sth://i18n] translation done · N strings · M% cache · Xs` (and `translation disabled`),
   mirroring the existing `[sth://system]` / `[sth://crypto]` lines.
 
-## [1.44.0] -30
+## [1.44.0] 2026-06-30
 
 ### Added - DApp page translation (Phase 1): in-webview DOM translation
 - DApps (`sth://` sites) can now be translated to the UI language with the local Qwen translator,
@@ -9460,7 +9460,7 @@ Dashboard, in place of the former block). Three layers:
   reproducible builds - fixes the transitive `cookie 0.18.1` vs `time ≥ 0.3.51`
   `Parsable::parse` arity break on fresh checkouts.
 
-## [client 1.3.0] -30
+## [client 1.3.0] 2026-06-30
 
 ### Added
 - **Configurable DHT seeders** (multiple supported, no longer a single hardcoded
@@ -9526,7 +9526,7 @@ Dashboard, in place of the former block). Three layers:
 - **Outdated P2P-discovery hint** ("Blob transit (iroh) is the next step") removed -
   dApp/blob transfer over iroh-blobs already works (ru/en/id).
 
-## [tracker 1.1.0] -30
+## [tracker 1.1.0] 2026-06-30
 
 ### Added
 - `GET /dht` - pooled Mainline DHT bootstrap nodes (fed by `/announce` `dht[]`,
@@ -9538,13 +9538,13 @@ Dashboard, in place of the former block). Three layers:
 - `/announce` accepts `dht[]` (peer DHT hints) and `seederDht` (a seeder's own DHT
   bootstrap addr).
 
-## [seeder 1.2.0] -30
+## [seeder 1.2.0] 2026-06-30
 
 ### Added
 - Advertises its public DHT bootstrap addr (`seederDht` = metrics host + `dht_port`)
   in `/announce`, so trackers can auto-distribute it via `GET /seeders-dht`.
 
-## [client 1.2.4] -30
+## [client 1.2.4] 2026-06-30
 
 ### Fixed
 - **REGRESSION: "DHT-узлы = 0" on the client.** The DHT monitor had switched to
@@ -9558,7 +9558,7 @@ Dashboard, in place of the former block). Three layers:
   the UI thread. Verified by testing_agent (iteration_18) via the
   `seeder/examples/dht_probe` reproduction: routing table 107–131 nodes (was 0).
 
-## [seeder 1.1.2] -30
+## [seeder 1.1.2] 2026-06-30
 
 ### Fixed
 - **Seeder DHT bootstrap node "Address already in use" (os error 98).** The
@@ -9571,7 +9571,7 @@ Dashboard, in place of the former block). Three layers:
   node binds 6881 cleanly and `/metrics` reports `dhtBootstrapServer=true`,
   `dhtPort=6881`, `dhtNodes` populating (98 nodes within ~12s).
 
-## [client 1.2.3 / seeder 1.1.1] -30
+## [client 1.2.3 / seeder 1.1.1] 2026-06-30
 
 ### Added
 - **Seeder `/metrics` DHT telemetry**: the seeder now reports `dhtBootstrapServer`
@@ -9584,7 +9584,7 @@ Dashboard, in place of the former block). Three layers:
   local routing table) or via **public DHT** (grey). Backed by a new
   `via_smartnet` flag on `dht_stats`.
 
-## [client 1.2.2 / provider 0.4.3 / seeder 1.1.0] -30
+## [client 1.2.2 / provider 0.4.3 / seeder 1.1.0] 2026-06-30
 
 ### Added
 - **SmartNet public DHT bootstrap node** baked into the headless **seeder**
@@ -9608,7 +9608,7 @@ Dashboard, in place of the former block). Three layers:
   reads `content.json` via `tokio::fs`. Confirms the main thread is never blocked
   during discovery (the earlier sync-DNS freeze fix remains in place).
 
-## [client 1.2.1 / provider 0.4.2] -30
+## [client 1.2.1 / provider 0.4.2] 2026-06-30
 
 ### Fixed
 - **CRITICAL: UI freeze ("Не отвечает") during peer/app discovery.** Root cause:
@@ -9624,7 +9624,7 @@ Dashboard, in place of the former block). Three layers:
 - **Installed apps grid**: switched `auto-fill` → `auto-fit` so dApp cards stretch
   across the full page width (no empty trailing columns on the right).
 
-## [provider 0.4.1] -30
+## [provider 0.4.1] 2026-06-30
 
 ### Added
 - **Configurable DHT bootstrap** (`network.dht_bootstrap`, host:port list) for
@@ -9642,7 +9642,7 @@ Dashboard, in place of the former block). Three layers:
   provider now warns that participating in the Mainline DHT exposes the server
   IP to other DHT nodes (clients still only get the relay URL).
 
-## [client 1.2.0 / provider 0.4.0] -30
+## [client 1.2.0 / provider 0.4.0] 2026-06-30
 
 ### Added
 - **Network Map redesign**: the «Карта сети» leaderboard is now a 65% table +
@@ -9863,7 +9863,7 @@ Dashboard, in place of the former block). Three layers:
 - Stage 3: paid-access flow (`filebuy:<cid>:<buyerId>` payment verification).
 - Stage 4: mesh storage metrics + DHT announce/discovery.
 
-## [1.1.4] -24
+## [1.1.4] 2026-06-24
 
 ### Verified
 - **LIVE on-chain validation of Type 5 (IPFS):** broadcast a real CID stamp to
@@ -9886,7 +9886,7 @@ Dashboard, in place of the former block). Three layers:
   addresses; everyone else gets just "My Files" (their own files + stats, plus
   files received via shared `f://` links). Unset → visible to all.
 
-## [1.1.3] -24
+## [1.1.3] 2026-06-24
 
 ### Added
 - **File Exchange v2.0 - Stage 2: on-chain publish + indexer.**
@@ -9901,7 +9901,7 @@ Dashboard, in place of the former block). Three layers:
       transactions and registers discovered files (remote stubs) so other users'
       published files surface in the Exchange.
 
-## [1.1.2] -24
+## [1.1.2] 2026-06-24
 
 ### Fixed
 - **File Exchange `f://` open:** files now open in a dedicated native child
@@ -9912,7 +9912,7 @@ Dashboard, in place of the former block). Three layers:
 - **Delete file:** replaced the native `confirm()` (blocked inside the Tauri
   webview - "dialog.confirm not allowed") with an in-app confirmation modal.
 
-## [1.1.1] -24
+## [1.1.1] 2026-06-24
 
 ### Added
 - **SmartNet File Exchange (v2.0) - Stage 1:** decentralized file sharing
