@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to **NETFORY** (SmartHoldem decentralized P2P client) are documented here.
+All notable changes to **NETFORY** (SmartHoldem decentralized P2P client) are documented [here](https://smartholdem.io/devhub/).
 
 Component versions covered in this file:
 
