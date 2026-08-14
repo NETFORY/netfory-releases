@@ -6596,61 +6596,58 @@ not only through the JS polyfill injected into DApp webviews.
 
 ### Fixed - Socket.IO / WS: автоматическое восстановление имени провайдера
 
-`socket.io-client` (и часть библиотек с ручным `path` в опциях) строит
-WS URL как `ws://<host>/<opts.path>` - берёт **только host** из BASE
-(наш 64-hex NodeID) и path из своих настроек. Имя провайдера
-(`pokersth`), которое было в `api://<nodeId>/pokersth`, полностью
-теряется. Наш WS-полифилл раньше требовал видеть его в URL и потому
-отбивал соединение как `unknown provider`.
+`socket.io-client` (and some libraries with manual `path` in options) builds
+WS URL as `ws://<host>/<opts.path>` - takes **only host** from BASE
+(our 64-hex NodeID) and path from its settings. The provider name
+(`pokersth`), which was in `api://<nodeId>/pokersth`, is completely
+lost. Our WS polyfill previously required seeing it in the URL and therefore
+rejected the connection as `unknown provider`.
 
-- **`src-tauri/src/dapp.rs` - fetch tap теперь трекает
-  `window.__STH_PROVIDER_BY_NODE__[hexId] = provider`** при каждом
-  успешном перехвате `api://` fetch. dApp достаточно сделать хотя бы
-  один api-fetch до открытия socket.io - и WS полифилл автоматически
-  вставит `/pokersth` в WS URL для того же NodeID.
-- **`src-tauri/src/dapp.rs` - `resolveWsUrl(url)`** в `StubWs`:
-    - если path уже начинается с известного `/<provider>/…` → не
-      дублируем;
-    - иначе вставляем provider первым сегментом path;
-    - fallback: `window.__SMARTNET__.provider` (dApp может задать явно).
-- Если провайдер не удалось определить - StubWs честно эмитит
-  `error` + `close(1006, 'unknown provider for nodeId')` (не молчит).
+- **`src-tauri/src/dapp.rs` - fetch tap now tracks
+  `window.__STH_PROVIDER_BY_NODE__[hexId] = provider`** on each
+  successful interception of `api://` fetch. dApp only needs to make at least
+  one api-fetch before opening socket.io - and the WS polyfill will automatically
+  insert `/pokersth` into the WS URL for the same NodeID.
+- **`src-tauri/src/dapp.rs` - `resolveWsUrl(url)`** in `StubWs`:
+    - if the path already starts with a known `/<provider>/…` → do not
+      duplicate;
+    - otherwise, insert the provider as the first segment of the path;
+    - fallback: `window.__SMARTNET__.provider` (dApp can set explicitly).
+- If the provider could not be determined - StubWs honestly emits
+  `error` + `close(1006, 'unknown provider for nodeId')` (does not stay silent).
 
 ### Added - Sec-WebSocket-Protocol forwarding
 
-`new WebSocket(url, protocols)` теперь **прозрачно** пробрасывает
-subprotocols на upstream через `Sec-WebSocket-Protocol` header в
-mesh-packet handshake. Server-side (netfory-provider 0.6.0) уже
-форвардит headers через свой whitelist → апстрим получает subprotocol
-как обычно и возвращает выбранный.
+`new WebSocket(url, protocols)` now **transparently** forwards
+subprotocols to upstream via the `Sec-WebSocket-Protocol` header in
+the mesh-packet handshake. Server-side (netfory-provider 0.6.0) already
+forwards headers through its whitelist → upstream receives the subprotocol
+as usual and returns the selected one.
 
 - **`src-tauri/src/dapp.rs` - StubWs:**
     - `protocols` string → `Sec-WebSocket-Protocol: <p>`.
     - `protocols` array → `Sec-WebSocket-Protocol: p1, p2, p3`
       (RFC 6455 §4.1).
-    - `self.protocol` временно инициализируется первым из клиентских
-      protocols (в будущем провайдер будет отдавать выбранный в
-      `dapp-ws-open` payload - сейчас апстрим сам выбирает, dApp просто
-      видит ему знакомый).
+    - `self.protocol` temporarily initialized to the first of the client protocols (in the future the provider will return the selected one in the `dapp-ws-open` payload - currently the upstream chooses, dApp just sees a familiar one).
 
 ### Migration notes
 
-Никаких изменений в dApp коде не требуется. Пример с socket.io:
+No changes in dApp code are required. Example with socket.io:
 
 ```ts
-// dApp код - без изменений
+// dApp code - unchanged
 const socket = io('api://cf389ca0.../pokersth', {
   path: '/api/socket.io',
   transports: ['websocket', 'polling'],
   auth: { token },
 })
-// первый HTTP запрос (polling handshake или любой api-fetch)
-// автоматически регистрирует nodeId → provider = 'pokersth'
-// последующий WS upgrade Socket.IO подхватит provider из мапы
+// first HTTP request (polling handshake or any api-fetch)
+// automatically registers nodeId → provider = 'pokersth'
+// subsequent WS upgrade Socket.IO will pick up the provider from the map
 ```
 
-Если ваш dApp **сначала** делает WS без предварительного api-fetch,
-задайте provider явно:
+If your dApp **first** makes a WS without a prior api-fetch,
+set the provider explicitly:
 
 ```ts
 ;(window as any).__SMARTNET__ = { provider: 'pokersth', /* ... */ }
