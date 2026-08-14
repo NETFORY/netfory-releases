@@ -2901,7 +2901,7 @@ a misleading, unimplemented hint.
 ### Added
 - **The address bar now works like Chrome's omnibox.** Typing a plain name or
   phrase without a protocol (`cosmos`, `cosmos sandbox`) opens the built-in
-  app-store search (`// НАЙТИ ПРИЛОЖЕНИЯ_`) with the query pre-filled.
+  app-store search (`// // DISCOVER APPS_`) with the query pre-filled.
   Precedence is preserved: `sth:// api:// u:// f:// dev:// sn:// cdn://` links
   and magnet links keep their behaviour; a bare word is first checked against
   app ids (S-address) and the `.sth` name registry - only when nothing matches
@@ -3131,14 +3131,6 @@ a misleading, unimplemented hint.
 
 ### Fixed
 - **Main-thread freeze on network transition (offline → mobile) eliminated.**
-  Full audit of the Tauri command surface (156 synchronous `#[tauri::command]`)
-  against `RULES.md` R1 ("never block the main thread"). In Tauri v2 a plain
-  synchronous command runs on the **main/UI thread**; any non-trivial work there
-  freezes the window. No sync command performed network I/O (verified), but a set
-  of them did unbounded Sled prefix scans, per-file SHA-256/Blake3 hashing or
-  filesystem walks. When connectivity returned, the background indexers
-  (naming / dns / apps / subs / dht) repopulated Sled and the UI re-queried these
-  commands on the main thread → the reported hang.
 - **Fix:** the heavy/blocking commands are now declared `#[tauri::command(async)]`
   so Tauri executes them off the main thread (bodies unchanged, no API/behaviour
   change): `verify_app`, `list_apps`, `announced_apps`, `app_logo`, `read_readme`,
@@ -4080,8 +4072,7 @@ again (`ownSeeder()` gate).
   `spawn_blocking`.
 - **`detect_onedrive_folder`, `cloud_vault_seal`, `cloud_vault_unseal`**:
   converted from sync `#[tauri::command] fn` to `async fn` + inner
-  `spawn_blocking`. Every project Tauri command is now async and never
-  touches the main thread (project rule, `memory/RULES.md`).
+  `spawn_blocking`. 
 - **`cloud_vault_cached_stored`**: simplified - the new async `Cache` API
   handles blocking internally, so the manual `spawn_blocking` wrapper
   around `Cache::open + stored_bytes` was removed.
@@ -4093,13 +4084,13 @@ again (`ownSeeder()` gate).
 
 
 ## 1.86.0 
-- CRYPTO VAULT: новый провайдер «Mail.ru Облако» (официальный WebDAV webdav.cloud.mail.ru):
-  - ntfry/storage/mailru.rs: MailruCloudProvider - Basic-аутентификация (email + пароль для внешнего приложения), полный трейт StorageProvider (чанки, index.enc, user.dict, meta, GC, RAID-совместимость)
-  - Квота: RFC 4331 PROPFIND (quota-used/available-bytes) + фолбэк на неофициальный o2.mail.ru → api/m1/user
-  - Таймауты по урокам seeder-фикса: connect 15с, read 60с, tcp_keepalive 20с
-  - Понятные ошибки: 401 → «проверьте пароль приложения», 402/403 → «WebDAV Mail.ru только на платных тарифах Mail Space»
-  - UI: кнопка «＋ Mail.ru Облако» + форма email/пароль с валидацией кредов ДО добавления аккаунта, подсказка про пароль приложения и платный тариф; Mail.ru добавлен в «Add by token (advanced)» (формат email:пароль)
-  - ⚠ НЕ ПРОВЕРЕНО с реальным аккаунтом: у юзера нет платной подписки Mail Space (WebDAV Mail.ru платный)
+- CRYPTO VAULT: new «Mail.ru Cloud» provider (official WebDAV webdav.cloud.mail.ru):
+  - ntfry/storage/mailru.rs: MailruCloudProvider - Basic authentication (email + app password), full StorageProvider trait (chunks, index.enc, user.dict, meta, GC, RAID compatibility)
+  - Quota: RFC 4331 PROPFIND (quota-used/available-bytes) + fallback to unofficial o2.mail.ru → api/m1/user
+  - Timeouts based on seeder-fix lessons: connect 15s, read 60s, tcp_keepalive 20s
+  - Clear errors: 401 → «check app password», 402/403 → «WebDAV Mail.ru only on paid Mail Space plans»
+  - UI: «＋ Mail.ru Cloud» button + email/password form with credential validation BEFORE adding account, hint about app password and paid plan; Mail.ru added to «Add by token (advanced)» (format email:password)
+  - ⚠ NOT VERIFIED with a real account: the user does not have a paid Mail Space subscription (WebDAV Mail.ru is paid)
 
 
 ## [1.86.0]  (Crypto Vault: Mail.ru Cloud provider via WebDAV)
@@ -8795,23 +8786,17 @@ fair, per-application distribution driven by on-chain funding events.
   `tokio::task::spawn_blocking`:
     - `files::list_my_files`, `files::list_exchange_files`, `files::file_disk_stats`
     - `apps::storage_usage`, `apps::disk_space`
-- Establishes the project rule: **every function must be async and must never block
-  the main thread, even when no nodes are reachable** (see `memory/RULES.md`).
-
-### Policy
-- All CHANGELOG entries are now written strictly in English (documented at the top
-  of this file and in `memory/RULES.md`).
 
 ## [client 1.9.1]  (File Exchange: background downloads)
 
-### Added - «Скачиваются» section + background P2P downloads
+### Added - «Are downloading» section + background P2P downloads
 - Clicking download on an `sn://file/...` link now calls a new `start_file_download`
   command that records `downloading: true` on the manifest in Sled and spawns the
   iroh fetch in the BACKGROUND (`tauri::async_runtime::spawn`), so the transfer keeps
   going no matter which page the user navigates to. Returns immediately; payment /
   missing-seeder validation still happens up front. A session dedup guard
   (`ACTIVE_DL`) prevents double-starting the same CID.
-- New **«Скачиваются»** tab in "My Files" showing in-progress downloads with a live
+- New **«Are downloading»** tab in "My Files" showing in-progress downloads with a live
   progress bar (polls `file_download_progress`). Downloading files are excluded from
   the "Downloaded" tab and included in `list_my_files` even before the blob lands on
   disk. On completion the manifest flips to `downloading: false` + `seeding: true`.
@@ -8888,9 +8873,9 @@ Dashboard, in place of the former block). Three layers:
 ### Added
 - **Live update progress in the status bar + system console.** The update bar no
   longer sits at a frozen "0%". While a magnet resolves it shows an **indeterminate
-  animated bar** and rotating status text - "Подключение к торрент-сети…", "Поиск
-  источника в DHT…", "Ожидание живых сидов…", "Запрос метаданных…" - with live DHT
-  node / peer counts, then switches to "Скачивание · сиды N / пиры M · ↓ speed" and
+  animated bar** and rotating status text - "Connecting to the torrent network…", "Searching
+  for source in DHT…", "Waiting for live seeds…", "Requesting metadata…" - with live DHT
+  node / peer counts, then switches to "Downloading · seeds N / peers M · ↓ speed" and
   a real percentage once metadata arrives. Backend mirrors every phase to the
   system console under a new **"upd"** scope (check → found/none → download start →
   metadata received → progress every 15 s → 100 % / install), so it's clear why one
@@ -8927,8 +8912,8 @@ Dashboard, in place of the former block). Three layers:
 ## [client 1.8.15] - 2026-07-02
 
 ### Added
-- **"Всего скачано" stat on the Torrents page.** A new cumulative *total downloaded*
-  card sits just before *Всего отдано* (total uploaded). Backed by a new
+- **"Total downloads" stat on the Torrents page.** A new cumulative *total downloaded*
+  card sits just before *Total given* (total uploaded). Backed by a new
   `downloaded_bytes` counter in the `profile_stats` Sled tree, accumulated once a
   minute from librqbit's per-session `snapshot.fetched_bytes` using the same
   monotonic-delta scheme as the upload counter (survives restarts, never
@@ -9028,7 +9013,7 @@ Dashboard, in place of the former block). Three layers:
     - `.env`: `CHECK_UPDATE_PERIOD=48`.
     - `manifest.notes` may be a filename (e.g. `CHANGELOG.md`) - its file content is
       loaded (≤40 KB) and shown as the release notes text in the update modal.
-    - **Settings → Network → "P2P-ОБНОВЛЕНИЯ"**: manual "Проверить обновления сейчас"
+    - **Settings → Network → "P2P-UPDATES"**: manual "Check for updates now"
       button (calls `updater.checkNow()`) + current client version display, for
       instant testing without waiting for the 5-min timer.
     - Robust installer resolution (`resolve_installer`): resolves the OS installer
@@ -9106,7 +9091,7 @@ Dashboard, in place of the former block). Three layers:
   data (the Network Map "My Node" card correctly showed e.g. 12.2 MB from the
   cumulative `profile_stats`). The Torrents stat now uses the cumulative uploaded
   from `profile_stats` (matches the Network Map) and falls back to the session sum,
-  and is relabeled "Всего отдано". Seeding was never broken - 0 live peers on a
+  and is relabeled "Total given". Seeding was never broken - 0 live peers on a
   heavily-seeded popular torrent just means few leechers currently need our data.
 - **Network Map globe: planet now fills the block width (no empty side areas).**
   Moved the camera closer (z 285 → 232) so the planet fills the render frame, and
@@ -9645,7 +9630,7 @@ Dashboard, in place of the former block). Three layers:
 ## [client 1.2.0 / provider 0.4.0] 2026-06-30
 
 ### Added
-- **Network Map redesign**: the «Карта сети» leaderboard is now a 65% table +
+- **Network Map redesign**: the Network Map leaderboard is now a 65% table +
   35% interactive globe (reused `NodePlanet`). All known peers are plotted on
   the globe and coloured by transport source. A new **DHT nodes** stat card and
   a per-peer **source badge** (DIRECT / RELAY / mDNS / WAN) are shown. New
