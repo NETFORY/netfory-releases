@@ -277,7 +277,7 @@ Component versions covered in this file:
   entry from it, and the hourly auto-replication (`lib/seederRep.ts`) keeps
   the cloud state fresh.
 
-## [1.135.19] - 2026-06 (Window title now shows the UI bundle version and flags a stale dist - core/frontend mismatches are impossible to miss)
+## [1.135.19] - 2026-08 (Window title now shows the UI bundle version and flags a stale dist - core/frontend mismatches are impossible to miss)
 
 ### Added
 
@@ -290,7 +290,7 @@ Component versions covered in this file:
   `…v<core> · UI v<ui> [STALE UI!]` and a warning line is written to SYSLOG.
   (`AppLayout.vue::syncTitleVersions`, `vite.config.js`, `vite-env.d.ts`.)
 
-## [1.135.18] - 2026-06 (Catalog cards: rich no-preview fallback + preview cache is only replaced by a successfully downloaded NEW image)
+## [1.135.18] - 2026-08 (Catalog cards: rich no-preview fallback + preview cache is only replaced by a successfully downloaded NEW image)
 
 ### Fixed
 
@@ -320,7 +320,7 @@ Component versions covered in this file:
   the short description as a PERMANENT bottom strip in the same style as
   the hover strip on cards with a preview (`.disc-desc-strip.static`).
 
-## [1.135.17] - 2026-06 (Linux embedded dApps, round 2: flat GtkFixed instead of GtkOverlay - input events reach the webviews again)
+## [1.135.17] - 2026-08 (Linux embedded dApps, round 2: flat GtkFixed instead of GtkOverlay - input events reach the webviews again)
 
 ### Fixed
 
@@ -340,7 +340,7 @@ Component versions covered in this file:
   the main webview by raising their GdkWindow. Input now routes directly by
   each webview's GdkWindow geometry - no wrapper windows in between.
 
-## [1.135.16] - 2026-06 (Linux embedded dApp webviews: reparented from the window GtkBox into GtkOverlay+GtkFixed - bounds finally apply)
+## [1.135.16] - 2026-08 (Linux embedded dApp webviews: reparented from the window GtkBox into GtkOverlay+GtkFixed - bounds finally apply)
 
 ### Fixed
 
@@ -370,7 +370,7 @@ Component versions covered in this file:
 - New Linux-only dependency `gtk = "0.18"` (same crate version wry/webkit2gtk
   already use, so the dependency graph is unchanged).
 
-## [1.135.15] - 2026-06 (Paid file replacement upgrades a FREE link-only dApp to PAID status with full network distribution)
+## [1.135.15] - 2026-08 (Paid file replacement upgrades a FREE link-only dApp to PAID status with full network distribution)
 
 ### Changed
 
@@ -391,7 +391,7 @@ Component versions covered in this file:
 - Update-modal note (`apps.updatePaidNote`, ru/en/id) now explains that a
   free app becomes paid and announced after a paid file replacement.
 
-## [1.135.14] - 2026-06 (Free/link-only dApp logos & previews now propagate through Cloud Seeders - phase 2 of catalog media distribution)
+## [1.135.14] - 2026-08 (Free/link-only dApp logos & previews now propagate through Cloud Seeders - phase 2 of catalog media distribution)
 
 ### Fixed
 
@@ -424,7 +424,7 @@ Component versions covered in this file:
   PNG/JPG magic-byte validation. Result: catalog images stay available even
   when the publishing peer is fully offline.
 
-## [1.135.13] - 2026-06 (Windows build fix, round 2: relative `frontendDist` resolved against `src-tauri/`, not the cwd)
+## [1.135.13] - 2026-08 (Windows build fix, round 2: relative `frontendDist` resolved against `src-tauri/`, not the cwd)
 
 ### Fixed
 
@@ -444,7 +444,7 @@ Component versions covered in this file:
   `frontend/src-tauri/`), the path resolves correctly under either CLI
   semantics, on every OS.
 
-## [1.135.12] - 2026-06 (Windows build fix: the app window showed a file index of `frontend/dist` instead of the UI)
+## [1.135.12] - 2026-08 (Windows build fix: the app window showed a file index of `frontend/dist` instead of the UI)
 
 ### Fixed
 
@@ -464,7 +464,7 @@ Component versions covered in this file:
   URL. This keeps the original 1.135.7 fix intact (no dependency on the
   caller's cwd) while restoring the Windows build.
 
-## [1.135.11] - 2026-06 (Catalog logos/previews now fall back to Cloud Seeders when P2P providers are offline)
+## [1.135.11] - 2026-08 (Catalog logos/previews now fall back to Cloud Seeders when P2P providers are offline)
 
 ### Fixed
 
@@ -493,7 +493,7 @@ Component versions covered in this file:
   SYSLOG (`dapp` scope) distinguishes the outcomes: "взят с cloud seeder",
   "cloud fallback тоже пуст", and `seeder` scope logs blake3 mismatches.
 
-## [1.135.10] - 2026-06 (Linux/WebKitGTK/RDP fix: native dApp child webview no longer covers the sidebar/tab-strip after open or maximize)
+## [1.135.10] - 2026-08 (Linux/WebKitGTK/RDP fix: native dApp child webview no longer covers the sidebar/tab-strip after open or maximize)
 
 ### Fixed - dApp webview overlaps NETFORY chrome on Linux (Ubuntu via xrdp)
 
@@ -532,7 +532,7 @@ Component versions covered in this file:
 - Version bump `1.135.9` → `1.135.10` (`package.json`, `tauri.conf.json`,
   `Cargo.toml`, `Cargo.lock`).
 
-## [1.135.9] - 2026-06 (Oxid Mail binary is now bundled as a Tauri sidecar on Linux/macOS - fixes "Oxid Mail не найден" in deb/AppImage)
+## [1.135.9] - 2026-08 (Oxid Mail binary is now bundled as a Tauri sidecar on Linux/macOS - fixes "Oxid Mail не найден" in deb/AppImage)
 
 ### Fixed - `oxid-mail` binary missing from Linux deb/AppImage installs
 
@@ -565,7 +565,7 @@ Component versions covered in this file:
 - Version bump `1.135.8` → `1.135.9` (`package.json`, `tauri.conf.json`,
   `Cargo.toml`, `Cargo.lock`).
 
-## [1.135.8] - 2026-06 (First-launch UI language now follows the system locale instead of defaulting to Russian)
+## [1.135.8] - 2026-08 (First-launch UI language now follows the system locale instead of defaulting to Russian)
 
 ### Fixed - Russian UI on first launch on English systems
 
@@ -586,7 +586,7 @@ Component versions covered in this file:
 - Version bump `1.135.7` → `1.135.8` (`package.json`, `tauri.conf.json`,
   `Cargo.toml`, `Cargo.lock`).
 
-## [1.135.7] - 2026-06 (Absolute `frontendDist` injected by the build wrapper - final fix for `Unable to find your web assets` on Ubuntu)
+## [1.135.7] - 2026-08 (Absolute `frontendDist` injected by the build wrapper - final fix for `Unable to find your web assets` on Ubuntu)
 
 ### Fixed - Tauri CLI resolving `frontendDist: "../dist"` against the CWD instead of `src-tauri/`
 
@@ -611,7 +611,7 @@ Component versions covered in this file:
 - Version bump `1.135.6` → `1.135.7` (`package.json`, `tauri.conf.json`,
   `Cargo.toml`, `Cargo.lock`).
 
-## [1.135.6] - 2026-06 (Deterministic vite output + wrapper builds frontend explicitly - fixes `Unable to find your web assets` on Ubuntu)
+## [1.135.6] - 2026-08 (Deterministic vite output + wrapper builds frontend explicitly - fixes `Unable to find your web assets` on Ubuntu)
 
 ### Fixed - `Unable to find your web assets, did you forget to build your web app?` on Linux/macOS
 
@@ -662,7 +662,7 @@ macOS - from the same command, on the same tree.
 
 ---
 
-## [1.135.5] - 2026-06 (Cross-platform Oxid Mail bundle: Ubuntu/macOS/Windows share one build command)
+## [1.135.5] - 2026-08 (Cross-platform Oxid Mail bundle: Ubuntu/macOS/Windows share one build command)
 
 ### Fixed - `resource path 'oxid-mail.exe' doesn't exist` on Ubuntu / macOS
 
@@ -712,7 +712,7 @@ yarn tauri:build:bonsai:mail
 
 ---
 
-## [1.135.4] - 2026-06 (DISCOVER APPS_ card header height trimmed 64 → 56 px)
+## [1.135.4] - 2026-08 (DISCOVER APPS_ card header height trimmed 64 → 56 px)
 
 ### Changed - `.disc-cover` (catalog card header)
 
@@ -725,7 +725,7 @@ yarn tauri:build:bonsai:mail
 
 ---
 
-## [1.135.3] - 2026-06 (MY_APPLICATIONS_ preview: strict 440×180 aspect, no vertical stretch)
+## [1.135.3] - 2026-08 (MY_APPLICATIONS_ preview: strict 440×180 aspect, no vertical stretch)
 
 ### Fixed - owner-card preview thumbnails were stretching to match card height
 
@@ -743,7 +743,7 @@ yarn tauri:build:bonsai:mail
 
 ---
 
-## [1.135.2] - 2026-06 (MY_APPLICATIONS_ owner cards show uploaded preview on the right, 70/30 split)
+## [1.135.2] (MY_APPLICATIONS_ owner cards show uploaded preview on the right, 70/30 split)
 
 ### Added - 440×180 owner-preview thumbnail on every card in MY_APPLICATIONS_
 
@@ -772,7 +772,7 @@ yarn tauri:build:bonsai:mail
 
 ---
 
-## [1.135.1] - 2026-06 (Discover header: hide-installed toggle, rounded SCAN pill, compact install button)
+## [1.135.1]  (Discover header: hide-installed toggle, rounded SCAN pill, compact install button)
 
 ### Added - «Hide installed» toggle (localStorage-persisted)
 
@@ -818,7 +818,7 @@ yarn tauri:build:bonsai:mail
 
 ---
 
-## [1.135.0] - 2026-06 (Cloud seeders replicate discovery_cache media + auto-replication 30 → 60 min)
+## [1.135.0]  (Cloud seeders replicate discovery_cache media + auto-replication 30 → 60 min)
 
 ### Added - `/ntfryseed/discovery_cache` replication (cloud fallback for catalog artwork)
 
@@ -845,7 +845,7 @@ yarn tauri:build:bonsai:mail
 
 ---
 
-## [1.134.1] - 2026-06 (Dashboard "Popular on the network": full-height preview, no vertical crop)
+## [1.134.1]  (Dashboard "Popular on the network": full-height preview, no vertical crop)
 
 ### Changed
 
@@ -857,7 +857,7 @@ yarn tauri:build:bonsai:mail
 
 ---
 
-## [1.134.0] - 2026-06 (DISCOVER APPS card redesign: hover description strip, no OPEN button, icon-only details)
+## [1.134.0]  (DISCOVER APPS card redesign: hover description strip, no OPEN button, icon-only details)
 
 ### Changed - `views/Discovered.vue` (per user's spec + POKER mockup)
 
@@ -880,7 +880,7 @@ yarn tauri:build:bonsai:mail
 
 ---
 
-## [1.133.5] - 2026-06 (Fix: installed apps on OTHER clients showed no preview - P2P fallback added)
+## [1.133.5]  (Fix: installed apps on OTHER clients showed no preview - P2P fallback added)
 
 ### Root cause
 
@@ -903,7 +903,7 @@ branch never used it.
 
 ---
 
-## [1.133.4] - 2026-06 (Full session audit after silent write failures - one lost edit found and restored)
+## [1.133.4]  (Full session audit after silent write failures - one lost edit found and restored)
 
 ### Audit scope (every touch-point of v1.130.0 → v1.133.3 re-verified byte-by-byte)
 
@@ -931,7 +931,7 @@ branch never used it.
 
 ---
 
-## [1.133.3] - 2026-06 (Fix: crop modal never rendered - missing template tag + z-index below the EDIT modal)
+## [1.133.3]  (Fix: crop modal never rendered - missing template tag + z-index below the EDIT modal)
 
 ### Fixed
 
@@ -944,7 +944,7 @@ branch never used it.
 
 ---
 
-## [1.133.2] - 2026-06 (Fix: tracker v1.4.0 compile error - AppRecord initializer missing logo/preview)
+## [1.133.2]  (Fix: tracker v1.4.0 compile error - AppRecord initializer missing logo/preview)
 
 ### Fixed
 
@@ -958,7 +958,7 @@ branch never used it.
 
 ---
 
-## [1.133.1] - 2026-06 (Dashboard "Popular on the network": logo chip only as a fallback)
+## [1.133.1]  (Dashboard "Popular on the network": logo chip only as a fallback)
 
 ### Changed
 
@@ -969,7 +969,7 @@ branch never used it.
 
 ---
 
-## [1.133.0] - 2026-06 (Tracker passthrough of logo/preview hashes + in-app 440×180 crop tool)
+## [1.133.0]  (Tracker passthrough of logo/preview hashes + in-app 440×180 crop tool)
 
 ### Added - Phase 2: tracker passthrough (`/app/tracker` v1.4.0)
 
@@ -1001,7 +1001,7 @@ branch never used it.
 
 ---
 
-## [1.132.5] - 2026-06 (Root cause CLOSED: arithmetic-coded JPEG previews are now rejected at every layer)
+## [1.132.5]  (Root cause CLOSED: arithmetic-coded JPEG previews are now rejected at every layer)
 
 ### Root cause (confirmed by the user)
 
@@ -1029,7 +1029,7 @@ magic-byte checks (`FF D8 FF`), the backend served a valid data URL, but the
 
 ---
 
-## [1.132.4] - 2026-06 (Diagnostics round 2: frontend-side preview logging - `ui_log` command)
+## [1.132.4]  (Diagnostics round 2: frontend-side preview logging - `ui_log` command)
 
 ### Context
 
@@ -1063,7 +1063,7 @@ image decode inside the user's WebView2.
 
 ---
 
-## [1.132.3] - 2026-06 (Diagnostics: preview/logo pipeline logs in the system journal - no DevTools needed)
+## [1.132.3]  (Diagnostics: preview/logo pipeline logs in the system journal - no DevTools needed)
 
 ### Added
 
@@ -1089,7 +1089,7 @@ they pinpoint whether the failure is IPC, path, file read, or P2P fetch.
 
 ---
 
-## [1.132.2] - 2026-06 (Fix: preview not showing on the developer's own card - blocking sequential loads)
+## [1.132.2]  (Fix: preview not showing on the developer's own card - blocking sequential loads)
 
 ### Root cause
 
@@ -1125,7 +1125,7 @@ frontend's blocking load order + stale marker.
 
 ---
 
-## [1.132.1] - 2026-06 (Catalog card layout: preview block under the header, status icons on the preview)
+## [1.132.1]  (Catalog card layout: preview block under the header, status icons on the preview)
 
 ### Changed - `views/Discovered.vue` (per user's mockup)
 
@@ -1144,7 +1144,7 @@ frontend's blocking load order + stale marker.
 
 ---
 
-## [1.132.0] - 2026-06 (Cards render DAPP Preview instead of the gradient - gradient stays as fallback)
+## [1.132.0]  (Cards render DAPP Preview instead of the gradient - gradient stays as fallback)
 
 ### Added
 
@@ -1174,7 +1174,7 @@ frontend's blocking load order + stale marker.
 
 ---
 
-## [1.131.0] - 2026-06 (Mandatory DAPP Preview 440×180 on publish + P2P distribution like logo)
+## [1.131.0]  (Mandatory DAPP Preview 440×180 on publish + P2P distribution like logo)
 
 ### Added - DAPP Preview (publish form + Edit modal)
 
@@ -1219,7 +1219,7 @@ frontend's blocking load order + stale marker.
 
 ---
 
-## [1.130.1] - 2026-06 (Fix: 1.130.0 compile errors - missing logo constants + export() return type)
+## [1.130.1]  (Fix: 1.130.0 compile errors - missing logo constants + export() return type)
 
 ### Fixed
 
@@ -1233,7 +1233,7 @@ frontend's blocking load order + stale marker.
 
 ---
 
-## [1.130.0] - 2026-06 (Catalog logos for non-installed dApps - P2P logo blobs + discovery cache)
+## [1.130.0]  (Catalog logos for non-installed dApps - P2P logo blobs + discovery cache)
 
 ### Added - PNG logo distribution for non-installed apps
 
@@ -1459,7 +1459,7 @@ content-addressed iroh blob:
 
 ---
 
-## [1.129.1] - 2026-06 (Fix: Direct Link / QR for FREE "link-only" dApps)
+## [1.129.1]  (Fix: Direct Link / QR for FREE "link-only" dApps)
 
 ### Fixed - Direct Link generation for free (unlisted) apps
 - **`app_share_info` no longer depends on the tracker snapshot**
@@ -1641,7 +1641,7 @@ content-addressed iroh blob:
 
 ---
 
-## [1.127.0] - 2026-06 (Private dApps: E2EE containers with on-chain access lists)
+## [1.127.0]  (Private dApps: E2EE containers with on-chain access lists)
 
 ### Added - Private dApp (owner-controlled access list)
 - **Publish flow** (`MyApplications.vue` → PUBLISH tab): new "🔒 Private dApp
@@ -1690,7 +1690,7 @@ content-addressed iroh blob:
 
 ---
 
-## [Oxid Mail 0.8.0] - 2026-06 (P2P reply keys + auto-contact + honest key-lookup error)
+## [Oxid Mail 0.8.0]  (P2P reply keys + auto-contact + honest key-lookup error)
 
 ### Problem
 A pure-P2P user (only `SADDR@sth`, registered name + messenger keys in
@@ -1771,7 +1771,7 @@ a misleading, unimplemented hint.
 
 ---
 
-## [1.125.0] - 2026-06 (Topbar mail shortcut + Default Light readability overhaul)
+## [1.125.0]  (Topbar mail shortcut + Default Light readability overhaul)
 
 ### Added
 - **Topbar mail icon** (`AppLayout.vue`): a new envelope button
@@ -1800,7 +1800,7 @@ a misleading, unimplemented hint.
   unchanged; dark overlays (drag-and-drop, toasts, modals backdrops) keep their
   original colors in both schemes.
 
-## [1.124.4] - 2026-06 (UX: click-to-copy full address on user profile)
+## [1.124.4]  (UX: click-to-copy full address on user profile)
 
 ### Added
 - **User profile → address chip under avatar** (`views/UserProfile.vue`):
@@ -1820,7 +1820,7 @@ a misleading, unimplemented hint.
 
 ---
 
-## [Oxid Mail 0.7.2] - 2026-06 (Share Contact polish + anti-spam send hint)
+## [Oxid Mail 0.7.2]  (Share Contact polish + anti-spam send hint)
 
 ### Changed
 - **Share My Contact modal** (`ShareContactModal.vue`):
@@ -1837,7 +1837,7 @@ a misleading, unimplemented hint.
 
 ---
 
-## [1.124.3] - 2026-06 (Fix: DEVELOPERS bypass for unverified dApps agreement)
+## [1.124.3]  (Fix: DEVELOPERS bypass for unverified dApps agreement)
 
 ### Fixed
 - **Discover Apps → "Show unknown DAPPs"** - addresses listed in `.env
@@ -2042,7 +2042,7 @@ a misleading, unimplemented hint.
 
 ---
 
-## [1.123.0] - 2026-06 (Google Drive public seeder `sn://seed/g@…` + Secondary drive dual replication)
+## [1.123.0]  (Google Drive public seeder `sn://seed/g@…` + Secondary drive dual replication)
 
 ### Added
 - **Google Drive as a third Cloud Seeder provider** (`ntfry/src/seeder.rs`).
@@ -2413,7 +2413,7 @@ a misleading, unimplemented hint.
 
 ---
 
-## [1.120.0 / Oxid Mail 0.5.0] - 2026-06 (Iroh P2P delivery, external links, one-click sender contact, QR share)
+## [1.120.0 / Oxid Mail 0.5.0]  (Iroh P2P delivery, external links, one-click sender contact, QR share)
 
 ### Added
 - **Iroh P2P transport (`mail-core::p2p`)** - an iroh 1.0 endpoint (preset N0:
@@ -2450,7 +2450,7 @@ a misleading, unimplemented hint.
 
 ---
 
-## [1.120.0 / Oxid Mail 0.4.0] - 2026-06 (Contacts module: Local Trust Layer over blockchain discovery)
+## [1.120.0 / Oxid Mail 0.4.0]  (Contacts module: Local Trust Layer over blockchain discovery)
 
 ### Added
 - **Local address book (`mail-core::contacts`)** - Web-of-Trust style direct
@@ -2495,7 +2495,7 @@ a misleading, unimplemented hint.
 
 ---
 
-## [1.120.0 / Oxid Mail 0.3.0] - 2026-06 (Encrypted mail protocol v1: NTFRY envelope, email↔STH binding, Anti-Spoofing)
+## [1.120.0 / Oxid Mail 0.3.0]  (Encrypted mail protocol v1: NTFRY envelope, email↔STH binding, Anti-Spoofing)
 
 ### Added
 - **New crate `mail-crypto`** - frozen protocol v1 primitives:
@@ -2561,7 +2561,7 @@ a misleading, unimplemented hint.
 
 ---
 
-## [1.120.0] - 2026-06 (Oxid Mail 0.2.0 · Gmail App-Password-only sign-in, custom seed passthrough, sled lock fix)
+## [1.120.0]  (Oxid Mail 0.2.0 · Gmail App-Password-only sign-in, custom seed passthrough, sled lock fix)
 
 ### Added
 - **Oxid Mail: "Connect SmartNet" onboarding shortcut** - the mail app now
@@ -2622,7 +2622,7 @@ a misleading, unimplemented hint.
 
 ---
 
-## [1.119.0] - 2026-06 (Dashboard Mail badge + unread counter over IPC)
+## [1.119.0]  (Dashboard Mail badge + unread counter over IPC)
 
 ### Added
 - **Mail card unread badge in the SmartNet Dashboard** - the "Mail" tile now
@@ -2649,7 +2649,7 @@ a misleading, unimplemented hint.
 
 ---
 
-## [1.118.0] - 2026-06 (Mail integration: IPC seed handoff + IMAP IDLE system notifications)
+## [1.118.0]  (Mail integration: IPC seed handoff + IMAP IDLE system notifications)
 
 ### Added
 - **Seamless IPC handoff of the SmartNet seed** - when the user launches Oxid
@@ -2681,7 +2681,7 @@ a misleading, unimplemented hint.
   token is only valid for the exact PID that SmartNet spawned, is single-use
   and expires within seconds. It never touches the network or disk.
 
-## [1.117.0] - 2026-06 (vDapps status panel + Official Repository doc)
+## [1.117.0]  (vDapps status panel + Official Repository doc)
 
 ### Added
 - **Seeders page → vDapps panel**: trusted developers now see when and what
@@ -2695,7 +2695,7 @@ a misleading, unimplemented hint.
   links never filtered), including the vDapps cloud-seeder fallback and its
   trust chain.
 
-## [1.116.0] - 2026-06 (Avatar flash fix, Update All + notifications, vDapps cloud fallback)
+## [1.116.0]  (Avatar flash fix, Update All + notifications, vDapps cloud fallback)
 
 ### Fixed
 - **Stale avatar on profile switch**: opening another user's profile briefly
@@ -2721,7 +2721,7 @@ a misleading, unimplemented hint.
   anchored at the .env admin seed). `SEED_FILES` grew to 4 entries
   (backward compatible: missing file → null).
 
-## [1.115.0] - 2026-06 (Update badge in sidebar + manual Official rescan)
+## [1.115.0]  (Update badge in sidebar + manual Official rescan)
 
 ### Added
 - **Sidebar update badge**: the "INSTALLED / Мои приложения" nav item now
@@ -2735,7 +2735,7 @@ a misleading, unimplemented hint.
   both registries immediately - no need to wait for the 24h cycle - and
   re-marks the DISCOVER catalog on the spot.
 
-## [1.114.0] - 2026-06 (Official status in app details + build fixes)
+## [1.114.0]  (Official status in app details + build fixes)
 
 ### Added
 - **App details modal**: new "VERIFICATION" row - green "✔ Official
@@ -2748,7 +2748,7 @@ a misleading, unimplemented hint.
   the mDNS `o{i}` owner-records collection in the browse parser and
   `owner: m.owner` in `build_tracker_snapshot` (`p2p.rs`).
 
-## [1.113.0] - 2026-06 (Messenger fix + signed owner canon v2)
+## [1.113.0]  (Messenger fix + signed owner canon v2)
 
 ### Fixed
 - **Messenger black screen**: `ChatWidget.vue` referenced `useUiStore()`
@@ -2773,7 +2773,7 @@ a misleading, unimplemented hint.
     tampered v2 owner → rejected.
     Note: mDNS LAN announces remain unsigned by design (advisory only).
 
-## [1.112.0] - 2026-06 (Official Repository: verified dApps by default)
+## [1.112.0]  (Official Repository: verified dApps by default)
 
 ### Added
 - **Official Repository** (`src-tauri/src/official.rs`): the client scans two
@@ -2811,7 +2811,7 @@ a misleading, unimplemented hint.
   signature; the strongest guarantee comes from `id ∈ OFFICIAL_DAPPS`
   (id ↔ pubkey binding) and the post-install signed manifest.
 
-## [1.111.0] - 2026-06 (Comment cache: instant thread expand)
+## [1.111.0]  (Comment cache: instant thread expand)
 
 ### Added
 - **Comment cache** (`store/wallCache.ts`): comment threads are now cached per
@@ -2821,7 +2821,7 @@ a misleading, unimplemented hint.
   Adding/hiding a comment updates the cache immediately; comments of posts
   evicted from the feed cache (LRU) are pruned automatically.
 
-## [1.110.0] - 2026-06 (Avatar cache everywhere: messenger, wall & comments)
+## [1.110.0]  (Avatar cache everywhere: messenger, wall & comments)
 
 ### Added
 - **Persistent avatar cache** (`store/users.ts`): avatar data-URLs are now
@@ -2837,7 +2837,7 @@ a misleading, unimplemented hint.
   cache now serves the wall, comments and the messenger uniformly, and avatar
   updates propagate everywhere at once.
 
-## [1.109.0] - 2026-06 (Wall post cache: instant profile open)
+## [1.109.0]  (Wall post cache: instant profile open)
 
 ### Added
 - **Wall post cache** (`store/wallCache.ts`): opening a profile now renders
@@ -2859,7 +2859,7 @@ a misleading, unimplemented hint.
   restored: live-event merge keeps paginated posts intact, infinite scroll
   works again via the bottom sentinel + `IntersectionObserver`.
 
-## [1.108.1] - 2026-06 (Fix: Storages & Media cards melting into the background)
+## [1.108.1]  (Fix: Storages & Media cards melting into the background)
 
 ### Fixed
 - **Torrents / My Files / Music cards on the Storages page** blended into the
@@ -2870,7 +2870,7 @@ a misleading, unimplemented hint.
   `#FFFFFF` light) and the cards get the standard elevation shadow + 12px
   radius. Legacy themes are untouched (they still show the bordered look).
 
-## [1.108.0] - 2026-06 (Telegram-round chat bubbles + human copy in USER mode)
+## [1.108.0]  (Telegram-round chat bubbles + human copy in USER mode)
 
 ### Changed
 - **Chat bubbles are rounder, Telegram-style:** base radius 16→18px, softer
@@ -2887,7 +2887,7 @@ a misleading, unimplemented hint.
   iroh-gossip), Storage: «всё хранится у вас и всегда под рукой».
   DEV/GEEK still see the full technical descriptions.
 
-## [1.107.1] - 2026-06 (Light theme: USER/DEV/GEEK switcher fixed)
+## [1.107.1]  (Light theme: USER/DEV/GEEK switcher fixed)
 
 ### Fixed
 - **Mode switcher on DEFAULT LIGHT:** the pill container used a dark
@@ -2896,7 +2896,7 @@ a misleading, unimplemented hint.
   a soft shadow, and the active mode is a solid filled chip with white text -
   green for USER, blue for DEV, amber for GEEK (Adminex-style).
 
-## [1.107.0] - 2026-06 (Omnibox search from the address bar + store card covers)
+## [1.107.0]  (Omnibox search from the address bar + store card covers)
 
 ### Added
 - **The address bar now works like Chrome's omnibox.** Typing a plain name or
@@ -2916,7 +2916,7 @@ a misleading, unimplemented hint.
 - USER-mode green online dot on store cards (instead of the "● N seeds"
   counter) - the earlier change had been lost in a later edit; re-applied.
 
-## [1.106.0] - 2026-06 (DEFAULT LIGHT restyled after the Adminex reference)
+## [1.106.0]  (DEFAULT LIGHT restyled after the Adminex reference)
 
 ### Changed
 - **DEFAULT LIGHT now follows the admin-dashboard reference:** soft blue-grey
@@ -2929,7 +2929,7 @@ a misleading, unimplemented hint.
   `rgba(0,0,0,.18)` film designed for dark themes and looked muddy - now
   white cards with a light hover.
 
-## [1.105.1] - 2026-06 (Fix: blank Dashboard after leaving Profile; store buttons less round)
+## [1.105.1]  (Fix: blank Dashboard after leaving Profile; store buttons less round)
 
 ### Fixed
 - **Blank page when navigating Profile → Dashboard.** The router view was
@@ -2947,7 +2947,7 @@ a misleading, unimplemented hint.
 - **App-store buttons are less round** on DEFAULT themes (~10px, per the
   reference), instead of the global pill shape.
 
-## [1.105.0] - 2026-06 (Always-visible day/night toggle, showcase top cards, Stealth tile)
+## [1.105.0]  (Always-visible day/night toggle, showcase top cards, Stealth tile)
 
 ### Changed
 - **☀/☾ toggle is now always visible** between the ♫ and ⚙ icons, on every
@@ -2962,7 +2962,7 @@ a misleading, unimplemented hint.
 - **Stealth Mode moved into "// SITES YOU SEED_"** as the sixth block
   (DEV/GEEK only), matching the tile grid instead of floating in the banner.
 
-## [1.104.0] - 2026-06 (Dashboard polish: omnibox highlight, top apps, NameService tile, first-visit hints)
+## [1.104.0]  (Dashboard polish: omnibox highlight, top apps, NameService tile, first-visit hints)
 
 ### Added
 - **Top-3 network apps under the search box.** The freed space below the
@@ -2987,7 +2987,7 @@ a misleading, unimplemented hint.
 - Note: the ☀/☾ toggle has been between the ♫ and ⚙ icons since v1.101.0 -
   it only appears while a DEFAULT theme is active.
 
-## [1.103.0] - 2026-06 (First-run onboarding + USER store search-only)
+## [1.103.0]  (First-run onboarding + USER store search-only)
 
 ### Added
 - **First-run onboarding.** A friendly three-step intro shown once on first
@@ -3003,7 +3003,7 @@ a misleading, unimplemented hint.
 - Note: the "TRACKERLESS MODE ACTIVE · N seeders via DHT" pill on the
   Dashboard was already USER-hidden since v1.101.0.
 
-## [1.102.0] - 2026-06 (Clean USER sidebar, simple app store cards, smooth theme transitions)
+## [1.102.0]  (Clean USER sidebar, simple app store cards, smooth theme transitions)
 
 ### Changed
 - **Cleaner sidebar in USER mode.** The "Network map" entry is now DEV/GEEK-only
@@ -3021,7 +3021,7 @@ a misleading, unimplemented hint.
   colour-transition fallback (~300ms) for other webviews - like modern
   browsers, no more hard palette snap.
 
-## [1.101.0] - 2026-06 (New DEFAULT theme: Google-style dark/light + USER-mode dashboard cleanup)
+## [1.101.0]  (New DEFAULT theme: Google-style dark/light + USER-mode dashboard cleanup)
 
 ### Added
 - **DEFAULT theme family (new default).** Two new skins in the Google/Material
@@ -3053,7 +3053,7 @@ a misleading, unimplemented hint.
   "secp256k1 + AES-256-GCM" jargon (full tech copy remains in DEV/GEEK).
 - Dashboard search field is rendered as a pill "omnibox" on DEFAULT themes.
 
-## [1.100.1] - 2026-06 (Global offline freeze audit: no network must never stall the app)
+## [1.100.1]  (Global offline freeze audit: no network must never stall the app)
 
 ### Fixed
 - **Full offline-freeze audit across backend and frontend.** When the internet
@@ -3127,7 +3127,7 @@ a misleading, unimplemented hint.
 - No schema changes. `sth_discovery_apps` is a client-local `localStorage`
   key; wiping it just forces a fresh scan on next boot.
 
-## [1.99.1] - 2026-06 (R1 audit: heavy Tauri commands moved off the main thread)
+## [1.99.1]  (R1 audit: heavy Tauri commands moved off the main thread)
 
 ### Fixed
 - **Main-thread freeze on network transition (offline → mobile) eliminated.**
@@ -3156,7 +3156,7 @@ a misleading, unimplemented hint.
   on dedicated threads with timeouts; no blocking `ureq` inside any async context.
 - `cargo check --features p2p`: clean (warnings only).
 
-## [1.99.0] - 2026-06 (Profile: 60/40 wall, responsive horizontal profile bar)
+## [1.99.0]  (Profile: 60/40 wall, responsive horizontal profile bar)
 
 ### Changed
 - **Wall proportions:** center microblog vs right sidebar is now **60/40**
@@ -3945,7 +3945,7 @@ again (`ownSeeder()` gate).
   resumable upload above, spurious retries are effectively eliminated on
   reliable connections and drastically reduced on mobile ones.
 
-## [1.89.3] - 2026-06 (Mail.ru seeder: seamless one-time public-link flow)
+## [1.89.3]  (Mail.ru seeder: seamless one-time public-link flow)
 
 ### Changed
 - **Mail.ru seeder publishing is now a single one-time step for VK ID
@@ -3959,7 +3959,7 @@ again (`ownSeeder()` gate).
   `cloud.mail.ru` added to the external-link allow-list so the folder opens in
   the system browser.
 
-## [1.89.2] - 2026-06 (Mail.ru seeder publish: User-Agent fix + manual weblink fallback)
+## [1.89.2]  (Mail.ru seeder publish: User-Agent fix + manual weblink fallback)
 
 ### Fixed
 - **o2.mail.ru rejected token requests with `missing user-agent header`** -
@@ -3977,7 +3977,7 @@ again (`ownSeeder()` gate).
   chunk-file download (via dispatcher `weblink_get` + redirect follow) work
   without any authentication; missing files return proper 404.
 
-## [1.89.1] - 2026-06 (Mail.ru seeder publish: real API errors surfaced)
+## [1.89.1]  (Mail.ru seeder publish: real API errors surfaced)
 
 ### Fixed
 - **`HTTP: error decoding response body` when publishing a seeder to Mail.ru
@@ -3988,7 +3988,7 @@ again (`ownSeeder()` gate).
   actual server response body (first 220 chars) is included in the error
   message, so the real cause is visible in the UI.
 
-## [1.89.0] - 2026-06 (Mail.ru Cloud Seeders + configurable chunk size)
+## [1.89.0]  (Mail.ru Cloud Seeders + configurable chunk size)
 
 ### Added
 - **Mail.ru Cloud as a Public Network Seeder provider** - new seed URI format
@@ -4008,7 +4008,7 @@ again (`ownSeeder()` gate).
   per block. Existing 128 KB chunks remain fully readable (decompression
   bound raised to a provider-agnostic 4 MiB safety cap).
 
-## [1.88.2] - 2026-06 (Crypto Vault: vault-level retry for all cloud providers)
+## [1.88.2]  (Crypto Vault: vault-level retry for all cloud providers)
 
 ### Added
 - **Automatic retry of transient cloud errors for every provider** - chunk
@@ -4018,7 +4018,7 @@ again (`ownSeeder()` gate).
   1.88.1 to Yandex Disk, Google Drive and RAID mirrors, so a single dropped
   connection no longer aborts a large multi-chunk transfer.
 
-## [1.88.1] - 2026-06 (Crypto Vault: resilient Mail.ru WebDAV transfers)
+## [1.88.1]  (Crypto Vault: resilient Mail.ru WebDAV transfers)
 
 ### Fixed
 - **Large-file upload failure on Mail.ru Cloud** - pushing a big file
@@ -4030,7 +4030,7 @@ again (`ownSeeder()` gate).
   below Mail.ru's server-side keep-alive so dead pooled sockets are never
   reused.
 
-## [1.88.0] - 2026-06 (Crypto Vault: visible delete errors, safe chunk GC, instant UI)
+## [1.88.0]  (Crypto Vault: visible delete errors, safe chunk GC, instant UI)
 
 ### Fixed
 - **Silent delete failures on Yandex Disk / Google Drive** - `Vault::delete`
@@ -4053,7 +4053,7 @@ again (`ownSeeder()` gate).
   instantly; chunk GC runs in the background. On error the previous listing
   is restored and the exact error is shown.
 
-## [1.87.0] - 2026-06 (Crypto Vault: fully async Sled cache + non-blocking IPC on drive switch)
+## [1.87.0]  (Crypto Vault: fully async Sled cache + non-blocking IPC on drive switch)
 
 ### Fixed
 - **Drive-switching freeze in Crypto Vault** - synchronous `sled::open()` +
@@ -4092,7 +4092,7 @@ again (`ownSeeder()` gate).
   warnings; no new errors).
 
 
-## 1.86.0 - 2026-06
+## 1.86.0 
 - CRYPTO VAULT: новый провайдер «Mail.ru Облако» (официальный WebDAV webdav.cloud.mail.ru):
   - ntfry/storage/mailru.rs: MailruCloudProvider - Basic-аутентификация (email + пароль для внешнего приложения), полный трейт StorageProvider (чанки, index.enc, user.dict, meta, GC, RAID-совместимость)
   - Квота: RFC 4331 PROPFIND (quota-used/available-bytes) + фолбэк на неофициальный o2.mail.ru → api/m1/user
@@ -4102,7 +4102,7 @@ again (`ownSeeder()` gate).
   - ⚠ НЕ ПРОВЕРЕНО с реальным аккаунтом: у юзера нет платной подписки Mail Space (WebDAV Mail.ru платный)
 
 
-## [1.86.0] - 2026-06 (Crypto Vault: Mail.ru Cloud provider via WebDAV)
+## [1.86.0]  (Crypto Vault: Mail.ru Cloud provider via WebDAV)
 
 ### Added
 - **Mail.ru Cloud (`cloud.mail.ru`) provider in Crypto Vault** - new
@@ -4129,13 +4129,13 @@ again (`ownSeeder()` gate).
   **App Password** (created in Mail.ru account security settings). The
   regular account password will not work. UI hint added to the form.
 
-## 1.85.0 - 2026-06
+## 1.85.0 
 - UI: бейдж «попытка N/3» в строке прогресса заливки архива на странице Seeders - при обрыве мобильной связи пользователь видит, что клиент повторяет загрузку, а не завис:
   - ntfry: колбэк прогресса `on_progress(sent, attempt)` теперь передаёт номер попытки
   - Rust IPC: поле `attempt` в событии `seeder-publish-progress` (смена попытки пробрасывается в UI мгновенно, минуя троттлинг 450мс)
   - Seeders.vue: пульсирующий янтарный бейдж (data-testid="seeders-publish-retry-badge") при attempt > 1
 
-## [1.85.0] - 2026-06 (Cloud Seeders: live retry badges in the publish UI)
+## [1.85.0]  (Cloud Seeders: live retry badges in the publish UI)
 
 ### Added
 - **Live "Attempt N/3" retry badges** on the Seeders publish progress:
@@ -4152,7 +4152,7 @@ again (`ownSeeder()` gate).
   events on retry boundaries; `bridge.ts` `SeederPublishProgress`
   interface + `useSeedersStatsStore` updated accordingly.
 
-## 1.84.0 - 2026-06
+## 1.84.0 
 - FIX: Обрыв мобильной связи при публикации в Cloud Seeder больше не подвешивает загрузку навсегда:
   - `http_client`: добавлены `read_timeout(60s)` и `tcp_keepalive(20s)` (у reqwest нет дефолтного таймаута запроса - оборванный TCP висел вечно)
   - Загрузка архива dApp: общий таймаут попытки = 60с + размер/8КиБ/с, до 3 попыток с бэкоффом (2с/4с/6с); 4xx (кроме 408/429) - без повторов
@@ -4161,7 +4161,7 @@ again (`ownSeeder()` gate).
 - AUDIT (P1): подтверждено - `cloud_seeder_publish` требует разблокированный кошелёк (`signing_key()` → SESSION_SEED) ДО любых облачных операций; токен сам по себе публикацию не даёт
 
 
-## [1.84.0] - 2026-06 (Cloud Seeders: origin badges, sidebar heartbeat, legacy cleanup)
+## [1.84.0]  (Cloud Seeders: origin badges, sidebar heartbeat, legacy cleanup)
 
 ### Added
 - **Sidebar SEEDERS nav item with live "⇈ N" badge** (DEV/GEEK modes):
@@ -4209,7 +4209,7 @@ again (`ownSeeder()` gate).
   (`SESSION_SEED` via `signing_key()`) - publishing is impossible without
   a valid session.
 
-## [1.83.1] - 2026-06 (Cloud Seeders: clickable replication toast)
+## [1.83.1]  (Cloud Seeders: clickable replication toast)
 
 ### Added
 - **Clickable "⇈ SEEDER - replicated to cloud" toast**: the background
@@ -4219,7 +4219,7 @@ again (`ownSeeder()` gate).
   clickable toasts, so users get one-click access to the Cloud Seeders
   dashboard right after a successful publish.
 
-## [1.83.0] - 2026-06 (Cloud Seeders: auto URI exchange, /dapps subfolder, version-aware install)
+## [1.83.0]  (Cloud Seeders: auto URI exchange, /dapps subfolder, version-aware install)
 
 ### Added
 - **Global "⇈ SEEDER - replicated to cloud" toast**: background Cloud Seeder
@@ -4261,7 +4261,7 @@ again (`ownSeeder()` gate).
   metadata; the author's archive is always overwritten in place so only the
   latest version lives in each seeder's folder.
 
-## [1.82.0] - 2026-06 (Cloud Seeders: live upload speed)
+## [1.82.0]  (Cloud Seeders: live upload speed)
 
 ### Added
 - **Live cloud-upload speed on the Seeders page**: dApp archive uploads to
@@ -4276,7 +4276,7 @@ again (`ownSeeder()` gate).
   strip: "⇈ SPEED · X МБ/с", volume-weighted across all archives uploaded
   this session (manual publish and background replication alike).
 
-## [1.81.0] - 2026-06 (Cloud Seeders: per-session /ntfryseed summary bar)
+## [1.81.0]  (Cloud Seeders: per-session /ntfryseed summary bar)
 
 ### Added
 - **Session-scoped /ntfryseed statistics on the Seeders page**: a compact
@@ -4289,7 +4289,7 @@ again (`ownSeeder()` gate).
   in `/ntfryseed` on Yandex Disk after zstd + ChaCha20-Poly1305, plus the
   raw-vs-packed delta to make the compression payoff visible at a glance.
 
-## [1.80.0] - 2026-06 (Discover: one-click "via seeder" install)
+## [1.80.0]  (Discover: one-click "via seeder" install)
 
 ### Added
 - **Cloud-archive install fallback in Discover**: the INSTALL button now
@@ -4301,7 +4301,7 @@ again (`ownSeeder()` gate).
   registry; integrity is enforced by `verify_app` after unpack. Storage-limit
   errors keep triggering the standard "increase storage" prompt.
 
-## [1.79.0] - 2026-06 (Cloud Seeders: dApp archives in the cloud + statuses)
+## [1.79.0]  (Cloud Seeders: dApp archives in the cloud + statuses)
 
 ### Added
 - **Encrypted dApp archives in /ntfryseed**: `cloud_seeder_publish` now also
@@ -4329,7 +4329,7 @@ again (`ownSeeder()` gate).
 - `tar` is now a non-optional dependency of the Tauri crate (cloud install
   works without the `p2p` feature).
 
-## [1.78.0] - 2026-06 (Cloud Seeders Phase 3b)
+## [1.78.0]  (Cloud Seeders Phase 3b)
 
 ### Added
 - **Cloud Fallback (auto)**: 7 s after discovery starts, if no live P2P peers
@@ -5071,7 +5071,7 @@ relay-only, dead) so end users can self-troubleshoot restrictive mobile
 carriers without asking support.
 
 
-## [1.63.13] - 2026-06-25
+## [1.63.13] -25
 
 ### Added - Network Doctor: mobile-internet / DPI diagnostics (Settings → Network)
 Russian mobile carriers combine CGNAT (symmetric NAT), DPI that drops
@@ -5108,7 +5108,7 @@ v4-only fallback on systems without an IPv6 stack. Applies to the
 ephemeral DHT beacon and the fixed LAN beacon ports; the client-side
 `probe_ex()` now binds a family-matching socket for v6 beacon targets.
 
-## [1.63.12] - 2026-06-25
+## [1.63.12] -25
 
 ### Fixed - ClearNet warning modal was hidden BEHIND the native dApp webview
 Clicking an external `https://` link inside a dApp (e.g. `dex-trade.com`)
@@ -5121,7 +5121,7 @@ underneath it and could not be interacted with.
   and restored automatically when the modal is confirmed or dismissed.
   `clearnet.url` added to the sync watcher list.
 
-## [1.63.11] - 2026-06-25
+## [1.63.11] -25
 
 ### Added - custom-scheme links from dApp webviews open as native host tabs
 A dApp can now link to any SmartNet resource with a plain `<a href>`,
@@ -7955,7 +7955,7 @@ fair, per-application distribution driven by on-chain funding events.
 > `cargo check --features p2p` GREEN and frontend `yarn build` GREEN.
 
 
-## [1.46.0] - 2026-06-30
+## [1.46.0] -30
 
 ### Fixed / Changed - DApp translation quality, safety & GPU gating
 - **GPU-only.** DApp page/selection translation is now enabled only in **CUDA/Metal builds** (too slow
@@ -7975,7 +7975,7 @@ fair, per-application distribution driven by on-chain funding events.
   labels the page-wide pass skips). Wired via the new `dapp_translate_config` command; enabled on
   `dapp-loaded` for GPU builds only. Same Sled hash-cache and event bridge.
 
-## [1.45.0] - 2026-06-30
+## [1.45.0] -30
 
 ### Added - DApp page translation (Phase 2): attributes, progress, memory, terminal logs
 - **Attribute translation.** Beyond text nodes, the content script now also translates `title`,
@@ -7993,7 +7993,7 @@ fair, per-application distribution driven by on-chain funding events.
   and `[sth://i18n] translation done · N strings · M% cache · Xs` (and `translation disabled`),
   mirroring the existing `[sth://system]` / `[sth://crypto]` lines.
 
-## [1.44.0] - 2026-06-30
+## [1.44.0] -30
 
 ### Added - DApp page translation (Phase 1): in-webview DOM translation
 - DApps (`sth://` sites) can now be translated to the UI language with the local Qwen translator,
@@ -8017,7 +8017,7 @@ fair, per-application distribution driven by on-chain funding events.
 - New Tauri command `dapp_translate_toggle(address, on, target)` evals the controller into the
   `embed-<addr>` / `app-<addr>` webview. Bumped to v1.44.0.
 
-## [1.43.0] - 2026-06-29
+## [1.43.0] -29
 
 ### Added - Optional GPU acceleration for the local AI translator
 - The local neural translator (candle / Qwen2.5-1.5B GGUF) can now run on a GPU instead of the CPU.
@@ -8101,7 +8101,7 @@ fair, per-application distribution driven by on-chain funding events.
 > compile on the ~99%-full container disk, so the Rust side is verified locally via `yarn tauri:build`.
 > Frontend `yarn build` is GREEN.
 
-## [1.42.1] - 2026-06-26
+## [1.42.1] -26
 
 ### Fixed - Translator build error on candle < 0.11 (`clear_kv_cache` not found)
 - The local `yarn tauri:build` failed with `no method named clear_kv_cache found for
@@ -8112,7 +8112,7 @@ fair, per-application distribution driven by on-chain funding events.
   all candle 0.9–0.11 versions. (Remaining `tauri-plugin-shell` deprecation and `p2p.rs`
   unused-assignment warnings are pre-existing and non-fatal.)
 
-## [1.42.0] - 2026-06-26
+## [1.42.0] -26
 
 ### Added - Background pre-translation of subscription posts
 - **The feed opens already translated.** New Rust command `translate_prewarm(target_lang)` spawns a
@@ -8129,7 +8129,7 @@ fair, per-application distribution driven by on-chain funding events.
 > NOTE: same environment caveat as v1.41.0 - `candle` can't compile on the ~99%-full container disk,
 > so the Rust side is verified locally via `yarn tauri:build`. Frontend `yarn build` is GREEN.
 
-## [1.41.0] - 2026-06-26
+## [1.41.0] -26
 
 ### Added - LOCAL neural translation layer for the Wall (AI Translation Layer)
 - **Fully offline, private post/comment translation** - no external APIs. New Rust module
@@ -8159,7 +8159,7 @@ fair, per-application distribution driven by on-chain funding events.
 > quantized_qwen2 API and must be verified locally via `yarn tauri:build` (per agreement with the user).
 > Frontend `yarn build` is GREEN.
 
-## [1.40.0] - 2026-06-26
+## [1.40.0] -26
 
 ### Fixed - Playlist track that wouldn't play until played on the wall first
 - Playing a freshly-added playlist track sometimes did nothing until the same track was played on the
@@ -8176,7 +8176,7 @@ fair, per-application distribution driven by on-chain funding events.
   repeat-all loops back to the start. i18n RU/EN (`wall.shuffle/repeatOff/repeatAll/repeatOne`).
   Verified: `yarn build` GREEN.
 
-## [1.39.0] - 2026-06-26
+## [1.39.0] -26
 
 ### Added - Drag-and-drop playlist reordering
 - **Custom playlist order, persisted in the DB.** The personal playlist (`WallPlaylist`) can now be
@@ -8188,7 +8188,7 @@ fair, per-application distribution driven by on-chain funding events.
   persists the new order via the bridge. i18n RU/EN (`wall.dragReorder`).
   Verified: `cargo check --features p2p` GREEN, `yarn build` GREEN.
 
-## [1.38.0] - 2026-06-26
+## [1.38.0] -26
 
 ### Added - Reputation system + paid dislike
 - **On-node reputation ledger (`reputation.rs`).** Stored in Sled at `reputation:<address>` as i64.
@@ -8208,7 +8208,7 @@ fair, per-application distribution driven by on-chain funding events.
   before broadcasting. i18n RU/EN (`profile.reputation/reputationHint/dislike*`).
   Verified: `cargo check --features p2p` GREEN, `yarn build` GREEN.
 
-## [1.37.0] - 2026-06-26
+## [1.37.0] -26
 
 ### Added - Torrent tab: seeding stats + My Node card
 - **Profile → Torrents tab now shows live stats (own profile only).** Replaced the "coming soon"
@@ -8221,7 +8221,7 @@ fair, per-application distribution driven by on-chain funding events.
   (`profile.mySeeds/activeTorrents/totalDownloaded/totalUploaded/torrentLocalOnly`). Frontend only.
   Verified: `yarn build` GREEN.
 
-## [1.36.0] - 2026-06-26
+## [1.36.0] -26
 
 ### Fixed - Clickable album banner for legacy announcement posts
 - **Old album announcements are now clickable for subscribers.** Album posts published before the
@@ -8233,7 +8233,7 @@ fair, per-application distribution driven by on-chain funding events.
   albums already carried the banner; this back-fills existing posts without a re-publish. Frontend
   only. Verified: `yarn build` GREEN.
 
-## [1.35.0] - 2026-06-26
+## [1.35.0] -26
 
 ### Added - Album sales sparkline (demand dynamics)
 - **Per-album sales chart.** New Rust command `album_sales_series(id)` returns a sorted time series
@@ -8244,7 +8244,7 @@ fair, per-application distribution driven by on-chain funding events.
   (`music.salesDynamics/byDay/byWeek/noSalesYet/chartTotal/chartPeak`).
   Verified: `yarn build` GREEN, `cargo check --features p2p` GREEN.
 
-## [1.34.0] - 2026-06-26
+## [1.34.0] -26
 
 ### Added - Per-album author revenue
 - **Album revenue for the author.** New Rust command `album_revenue(id)` sums the STH amount of all
@@ -8262,7 +8262,7 @@ fair, per-application distribution driven by on-chain funding events.
   i18n `player.drag`.
   Verified: `yarn build` GREEN, `cargo check --features p2p` GREEN.
 
-## [1.33.0] - 2026-06-26
+## [1.33.0] -26
 
 ### Added - Album edit/delete + music UX polish
 - **Edit & delete albums (author only).** New Rust commands `album_update` (edit title, artist,
@@ -8291,7 +8291,7 @@ fair, per-application distribution driven by on-chain funding events.
 - i18n RU/EN/ID (`music.edit/save/delete/…`, `music.otherAuthorsAlbums`, `player.toggleSize`).
   Verified: `yarn build` GREEN, `cargo check --features p2p` GREEN.
 
-## [1.30.0] - 2026-06-26
+## [1.30.0] -26
 
 ### Added - Album year + author note in the Studio
 - The Musician's Studio now has a **Year** field and an **Author note** textarea (≤2000 chars).
@@ -8300,7 +8300,7 @@ fair, per-application distribution driven by on-chain funding events.
   a description block under the actions.
   Verified: `cargo check --features p2p` GREEN, `yarn build` GREEN.
 
-## [1.29.0] - 2026-06-26
+## [1.29.0] -26
 
 ### Fixed / Added - Paid album is now reachable & purchasable from the wall
 - **Clickable album banner on the wall.** Album announcement posts now carry a structured
@@ -8321,14 +8321,14 @@ fair, per-application distribution driven by on-chain funding events.
   tab once the wall snapshot with `Snapshot.albums` has synced) will show it. Snapshot-based album
   propagation (v1.28.0) makes albums appear in a visitor's profile "Музыка" tab after a snapshot fetch.
 
-## [1.28.1] - 2026-06-26
+## [1.28.1] -26
 
 ### Added
 - **Quick "Share" button on album cards.** Album cards (profile "Музыка" tab + global page) now have
   a small 🔗 button that generates the `sn://album/…` link and shows the QR/copy modal inline, without
   opening the album page - faster link-sharing for musicians.
 
-## [1.28.0] - 2026-06-26
+## [1.28.0] -26
 
 ### Added - Album sales counter, network sharing (sn:// + QR), magnet export
 - **Sales counter.** `album_sales(id)` counts unique buyers from confirmed on-chain `albumbuy:<id>:`
@@ -8348,7 +8348,7 @@ fair, per-application distribution driven by on-chain funding events.
 - i18n `music.*` (RU/EN/ID). New commands registered in `lib.rs`.
   Verified: `cargo check --features p2p` GREEN, `yarn build` GREEN.
 
-## [1.27.0] - 2026-06-26
+## [1.27.0] -26
 
 ### Added - Paid albums (direct-to-creator STH payment, like paid files)
 - **Album pricing.** `album_create` now takes a `price`; `price > 0` marks the album paid
@@ -8368,7 +8368,7 @@ fair, per-application distribution driven by on-chain funding events.
 - i18n `music.*` payment keys (RU/EN/ID). New commands registered in `lib.rs`.
   Verified: `cargo check --features p2p` GREEN, `yarn build` GREEN.
 
-## [1.26.1] - 2026-06-26
+## [1.26.1] -26
 
 ### Fixed
 - **Milkdrop visualizer rendered a black screen.** butterchurn was drawing into the canvas's
@@ -8383,7 +8383,7 @@ fair, per-application distribution driven by on-chain funding events.
   queue is empty now loads the user's personal playlist into the queue (paused, ready to play) via
   the new `setQueue` store action, so there's always something to press play on.
 
-## [1.26.0] - 2026-06-26
+## [1.26.0] -26
 
 ### Added - Musician's Studio + free albums (iroh collection, slice 1)
 - **Free album architecture (iroh-native).** An album is a **signed manifest** listing
@@ -8413,7 +8413,7 @@ fair, per-application distribution driven by on-chain funding events.
   page show albums whose manifests are held locally (own + received). Network-wide album manifest
   propagation is a later slice.
 
-## [1.25.1] - 2026-06-26
+## [1.25.1] -26
 
 ### Fixed
 - **Spectrum visualizer was inverted.** During playback the analyser can return silence in the
@@ -8426,7 +8426,7 @@ fair, per-application distribution driven by on-chain funding events.
   now opens on click even without a track (anchored to the screen bottom) and shows an
   "empty queue" hint; the 70px bar still appears only once a track is playing. i18n `player.emptyQueue`.
 
-## [1.25.0] - 2026-06-26
+## [1.25.0] -26
 
 ### Added - Album cover art (ID3) + Milkdrop visualizer in the global player
 - **Embedded cover art (ID3 APIC via `lofty`).** On attaching an audio file
@@ -8447,7 +8447,7 @@ fair, per-application distribution driven by on-chain funding events.
   `butterchurn-presets` 2.4.7.
   Verified: `yarn build` GREEN (butterchurn code-split), `cargo check --features p2p` GREEN.
 
-## [1.24.0] - 2026-06-26
+## [1.24.0] -26
 
 ### Added - Global cyberpunk bottom audio player (Web3 music, Iteration 1: UI shell)
 - **Persistent global player (`store/player.ts` + `components/BottomAudioPlayer.vue`).**
@@ -8475,7 +8475,7 @@ fair, per-application distribution driven by on-chain funding events.
   tracks gated by an on-chain STH transaction) is the next iteration (Task 2) and is intentionally
   NOT part of this UI-shell iteration.
 
-## [1.23.0] - 2026-06-26
+## [1.23.0] -26
 
 ### Added
 - **Personal music playlist.** Users can add any post's audio track to their own playlist via a "＋"
@@ -8658,7 +8658,7 @@ fair, per-application distribution driven by on-chain funding events.
     - **Torrent** - placeholder for seeding / network-contribution stats (next phase).
 - Frontend-only (`UserProfile.vue` + i18n RU/EN). `yarn build` GREEN.
 
-## [1.12.1] - 2026-06-25
+## [1.12.1] -25
 
 ### Fixed
 - Downloaded **private files showed no size** in "My Files" (inbox manifests were
@@ -8666,7 +8666,7 @@ fair, per-application distribution driven by on-chain funding events.
   cheaply from the SFP2 header (blob size − header − GCM overhead, no decryption) and
   written to the manifest. `cargo check --features p2p` GREEN.
 
-## [1.12.0] - 2026-06-25
+## [1.12.0] -25
 
 ### Added - Exchange endpoint: env-configurable + P2P fallback
 - Exchange gateway is no longer hardcoded. It resolves at call time (cached ~30s):
@@ -8679,7 +8679,7 @@ fair, per-application distribution driven by on-chain funding events.
   the existing iroh `api_request` P2P transport. Backend-only (`sth_node.rs`);
   `cargo check --features p2p` GREEN.
 
-## [1.11.0] - 2026-06-25
+## [1.11.0] -25
 
 ### Added - Settings: P2P protocol node tabs + full-width layout
 - **"УЗЛЫ SMARTHOLDEM" now has two tabs**: **Clear Nodes** (the clearnet mainnet pool)
@@ -8697,7 +8697,7 @@ fair, per-application distribution driven by on-chain funding events.
   section instead of a separate full-width block.
 - `yarn build` GREEN (env var confirmed bundled). Frontend-only; no Rust changes.
 
-## [1.10.0] - 2026-06-25
+## [1.10.0] -25
 
 ### Added - Private files: real filename + notify confirmation + full-width layout
 - **Real filename shown** for private files (owner and recipient). Transit blob is now
@@ -8776,7 +8776,7 @@ fair, per-application distribution driven by on-chain funding events.
   missing its `#[tauri::command]` attribute (added but never compiled last session) -
   attribute added so the crate builds again.
 
-## [client 1.9.3] - 2026-06 (Torrents: open file on double-click)
+## [client 1.9.3]  (Torrents: open file on double-click)
 
 ### Added
 - **Double-click a torrent row to open its payload with the system default app.**
@@ -8785,7 +8785,7 @@ fair, per-application distribution driven by on-chain funding events.
   back to opening the folder. The directory walk runs in `spawn_blocking` (never
   blocks the main thread).
 
-## [client 1.9.2] - 2026-06 (no-block UI: async commands)
+## [client 1.9.2]  (no-block UI: async commands)
 
 ### Fixed - UI freeze after download / on offline nodes
 - Several Tauri commands were **synchronous** and therefore ran on the main thread,
@@ -8802,7 +8802,7 @@ fair, per-application distribution driven by on-chain funding events.
 - All CHANGELOG entries are now written strictly in English (documented at the top
   of this file and in `memory/RULES.md`).
 
-## [client 1.9.1] - 2026-06 (File Exchange: background downloads)
+## [client 1.9.1]  (File Exchange: background downloads)
 
 ### Added - «Скачиваются» section + background P2P downloads
 - Clicking download on an `sn://file/...` link now calls a new `start_file_download`
@@ -8832,7 +8832,7 @@ fair, per-application distribution driven by on-chain funding events.
 - Version bumped to 1.9.1 across `package.json`, `Cargo.toml`, `tauri.conf.json`
   (previously stuck at 1.8.21 through the 1.8.22 Tor-rollback and 1.9.0 Stealth work).
 
-## [client 1.9.0] - 2026-06 (Stealth Mode / anti-DPI)
+## [client 1.9.0]  (Stealth Mode / anti-DPI)
 
 ### Added - Stealth Mode (hardcore TSPU/DPI censorship bypass)
 New module `src-tauri/src/stealth.rs` + `StealthMode.vue` component (toggle on the
@@ -8859,7 +8859,7 @@ Dashboard, in place of the former block). Three layers:
   activate instantly; relay isolation applies on the next startup (no deadlock risk,
   no dropping of active chats).
 
-## [client 1.8.22] - 2026-06 (Tor rollback)
+## [client 1.8.22]  (Tor rollback)
 
 ### Removed - full rollback of the Tor Connect integration
 - Completely removed the experimental "Tor Connect" layer (arti-client): the
@@ -9460,7 +9460,7 @@ Dashboard, in place of the former block). Three layers:
   reproducible builds - fixes the transitive `cookie 0.18.1` vs `time ≥ 0.3.51`
   `Parsable::parse` arity break on fresh checkouts.
 
-## [client 1.3.0] - 2026-06-30
+## [client 1.3.0] -30
 
 ### Added
 - **Configurable DHT seeders** (multiple supported, no longer a single hardcoded
@@ -9526,7 +9526,7 @@ Dashboard, in place of the former block). Three layers:
 - **Outdated P2P-discovery hint** ("Blob transit (iroh) is the next step") removed -
   dApp/blob transfer over iroh-blobs already works (ru/en/id).
 
-## [tracker 1.1.0] - 2026-06-30
+## [tracker 1.1.0] -30
 
 ### Added
 - `GET /dht` - pooled Mainline DHT bootstrap nodes (fed by `/announce` `dht[]`,
@@ -9538,13 +9538,13 @@ Dashboard, in place of the former block). Three layers:
 - `/announce` accepts `dht[]` (peer DHT hints) and `seederDht` (a seeder's own DHT
   bootstrap addr).
 
-## [seeder 1.2.0] - 2026-06-30
+## [seeder 1.2.0] -30
 
 ### Added
 - Advertises its public DHT bootstrap addr (`seederDht` = metrics host + `dht_port`)
   in `/announce`, so trackers can auto-distribute it via `GET /seeders-dht`.
 
-## [client 1.2.4] - 2026-06-30
+## [client 1.2.4] -30
 
 ### Fixed
 - **REGRESSION: "DHT-узлы = 0" on the client.** The DHT monitor had switched to
@@ -9558,7 +9558,7 @@ Dashboard, in place of the former block). Three layers:
   the UI thread. Verified by testing_agent (iteration_18) via the
   `seeder/examples/dht_probe` reproduction: routing table 107–131 nodes (was 0).
 
-## [seeder 1.1.2] - 2026-06-30
+## [seeder 1.1.2] -30
 
 ### Fixed
 - **Seeder DHT bootstrap node "Address already in use" (os error 98).** The
@@ -9571,7 +9571,7 @@ Dashboard, in place of the former block). Three layers:
   node binds 6881 cleanly and `/metrics` reports `dhtBootstrapServer=true`,
   `dhtPort=6881`, `dhtNodes` populating (98 nodes within ~12s).
 
-## [client 1.2.3 / seeder 1.1.1] - 2026-06-30
+## [client 1.2.3 / seeder 1.1.1] -30
 
 ### Added
 - **Seeder `/metrics` DHT telemetry**: the seeder now reports `dhtBootstrapServer`
@@ -9584,7 +9584,7 @@ Dashboard, in place of the former block). Three layers:
   local routing table) or via **public DHT** (grey). Backed by a new
   `via_smartnet` flag on `dht_stats`.
 
-## [client 1.2.2 / provider 0.4.3 / seeder 1.1.0] - 2026-06-30
+## [client 1.2.2 / provider 0.4.3 / seeder 1.1.0] -30
 
 ### Added
 - **SmartNet public DHT bootstrap node** baked into the headless **seeder**
@@ -9608,7 +9608,7 @@ Dashboard, in place of the former block). Three layers:
   reads `content.json` via `tokio::fs`. Confirms the main thread is never blocked
   during discovery (the earlier sync-DNS freeze fix remains in place).
 
-## [client 1.2.1 / provider 0.4.2] - 2026-06-30
+## [client 1.2.1 / provider 0.4.2] -30
 
 ### Fixed
 - **CRITICAL: UI freeze ("Не отвечает") during peer/app discovery.** Root cause:
@@ -9624,7 +9624,7 @@ Dashboard, in place of the former block). Three layers:
 - **Installed apps grid**: switched `auto-fill` → `auto-fit` so dApp cards stretch
   across the full page width (no empty trailing columns on the right).
 
-## [provider 0.4.1] - 2026-06-30
+## [provider 0.4.1] -30
 
 ### Added
 - **Configurable DHT bootstrap** (`network.dht_bootstrap`, host:port list) for
@@ -9642,7 +9642,7 @@ Dashboard, in place of the former block). Three layers:
   provider now warns that participating in the Mainline DHT exposes the server
   IP to other DHT nodes (clients still only get the relay URL).
 
-## [client 1.2.0 / provider 0.4.0] - 2026-06-30
+## [client 1.2.0 / provider 0.4.0] -30
 
 ### Added
 - **Network Map redesign**: the «Карта сети» leaderboard is now a 65% table +
@@ -9863,7 +9863,7 @@ Dashboard, in place of the former block). Three layers:
 - Stage 3: paid-access flow (`filebuy:<cid>:<buyerId>` payment verification).
 - Stage 4: mesh storage metrics + DHT announce/discovery.
 
-## [1.1.4] - 2026-06-24
+## [1.1.4] -24
 
 ### Verified
 - **LIVE on-chain validation of Type 5 (IPFS):** broadcast a real CID stamp to
@@ -9886,7 +9886,7 @@ Dashboard, in place of the former block). Three layers:
   addresses; everyone else gets just "My Files" (their own files + stats, plus
   files received via shared `f://` links). Unset → visible to all.
 
-## [1.1.3] - 2026-06-24
+## [1.1.3] -24
 
 ### Added
 - **File Exchange v2.0 - Stage 2: on-chain publish + indexer.**
@@ -9901,7 +9901,7 @@ Dashboard, in place of the former block). Three layers:
       transactions and registers discovered files (remote stubs) so other users'
       published files surface in the Exchange.
 
-## [1.1.2] - 2026-06-24
+## [1.1.2] -24
 
 ### Fixed
 - **File Exchange `f://` open:** files now open in a dedicated native child
@@ -9912,7 +9912,7 @@ Dashboard, in place of the former block). Three layers:
 - **Delete file:** replaced the native `confirm()` (blocked inside the Tauri
   webview - "dialog.confirm not allowed") with an in-app confirmation modal.
 
-## [1.1.1] - 2026-06-24
+## [1.1.1] -24
 
 ### Added
 - **SmartNet File Exchange (v2.0) - Stage 1:** decentralized file sharing
@@ -9937,7 +9937,7 @@ Dashboard, in place of the former block). Three layers:
   and a no-op when the P2P node isn't running.
 
 
-## [1.1.0] - 2026-06
+## [1.1.0] 
 
 ### Added
 - **Storage proofs on the 3D globe:** connected peers are colored green when they
