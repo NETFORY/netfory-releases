@@ -1,4 +1,4 @@
-<img width="2448" height="816" alt="Netforu-web4-os" src="resources/633464701-e05fb357-0ab4-400b-a9ac-3c03cdcb0667.jpg" />
+<img width="2448" height="816" alt="Netfory web4 os" src="resources/633464701-e05fb357-0ab4-400b-a9ac-3c03cdcb0667.jpg" />
 
 ![License](resources/license-bsl1.1-blue.svg)
 ![Status](https://img.shields.io/badge/status-Production_Ready-green.svg)
