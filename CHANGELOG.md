@@ -6,7 +6,7 @@ Component versions covered in this file:
 
 - SmartNet client bumped from **1.0**
   through **1.135.28**.
-- Oxid Mail workspace (`oxid-mail/*`) — bumped from **0.1.0** to **0.2.0**
+- Oxid Mail workspace (`oxid-mail/*`) - bumped from **0.1.0** to **0.2.0**
   alongside SmartNet 1.120.0, then to **0.3.0** (encrypted mail protocol v1),
   to **0.5.0** (Iroh P2P delivery + contacts + QR share), to **0.6.0**
   (attachments Dropzone + inline NTFRY + attachment preview overlay
@@ -27,7 +27,7 @@ Component versions covered in this file:
 - **Registry scans only read the first 100 transactions.** Both the client
   (`scan_registry()` in `official.rs`) and the tracker
   (`official_scan_registry()` in `tracker/src/main.rs`) fetched a single
-  `page=1&limit=100` — once the admin issues more than 100 approvals, the
+  `page=1&limit=100` - once the admin issues more than 100 approvals, the
   oldest developer/dApp entries would silently drop out of the Official
   Repository. Both scanners now walk all pages up to `meta.pageCount`
   (safety cap: 50 pages = 5000 tx), stopping early on an empty `data`
@@ -38,7 +38,7 @@ Component versions covered in this file:
 - Partial results are never persisted: the client propagates any page error
   (`node_get` already fails over across the node pool, and `refresh_now`
   keeps the previous snapshot on error); the tracker restarts the scan on
-  the next pool host — the registry snapshot is always replaced atomically
+  the next pool host - the registry snapshot is always replaced atomically
   with a complete list.
 
 ### Changed
@@ -52,7 +52,7 @@ Component versions covered in this file:
 
 - **The `yarn tauri:build:bonsai:mail:win` (and `:linux` / `:mac`) shortcuts
   never rebuilt the web assets.** They pass `--config
-  src-tauri/tauri.mail.conf.json`, which sets `beforeBuildCommand: ""` —
+  src-tauri/tauri.mail.conf.json`, which sets `beforeBuildCommand: ""` -
   that override exists for `build-mail-bundle.cjs` (which runs `yarn build`
   itself), but the platform shortcuts bypass that script entirely. Result:
   every MSI/deb/dmg baked in whatever old `frontend/dist` was lying around
@@ -68,7 +68,7 @@ Component versions covered in this file:
 - Versions bumped to **1.135.27** across `package.json`, `tauri.conf.json`,
   `Cargo.toml` and `Cargo.lock`.
 
-## [1.135.26] - 2026-06 (Encrypted discovery_cache media on Cloud Seeders — no plaintext images on cloud disks)
+## [1.135.26] - 2026-06 (Encrypted discovery_cache media on Cloud Seeders - no plaintext images on cloud disks)
 
 ### Added
 
@@ -84,7 +84,7 @@ Component versions covered in this file:
   (`media_key()` in `cloudseeder.rs`). Any client reconstructs the key from
   the announced app id + media hash, decrypts, and restores the original
   file name locally (`<prefix>-<hash>.<ext>` in `data/discovery_cache/…`).
-  This is obfuscation from cloud-disk scanners, not secrecy — authenticity
+  This is obfuscation from cloud-disk scanners, not secrecy - authenticity
   is still enforced by the mandatory `blake3(plaintext) == announced hash`
   check, so a tampered/forged blob is rejected and the next seeder is tried.
 
@@ -94,7 +94,7 @@ Component versions covered in this file:
   dApp media from `data/dapps/<id>/` and the foreign-dApp cache); upload
   size cap extended by 28 bytes for the GCM nonce+tag overhead.
 - `fetch_discovery_media()` tries the encrypted `.enc` name first, then
-  falls back to the legacy plaintext name — old files already sitting on
+  falls back to the legacy plaintext name - old files already sitting on
   seeders keep working; nothing is deleted from the cloud.
 - Versions bumped to **1.135.26** across `package.json`, `tauri.conf.json`,
   `Cargo.toml` and `Cargo.lock`.
@@ -124,7 +124,7 @@ Component versions covered in this file:
 
 ### Notes
 
-- No behavioural change when built with `--features p2p` — the fix is
+- No behavioural change when built with `--features p2p` - the fix is
   purely a syntax cleanup.
 - Versions bumped to **1.135.25** across `package.json`, `tauri.conf.json`,
   `Cargo.toml`, and `Cargo.lock` (`smartnet-client`).
@@ -136,11 +136,11 @@ Component versions covered in this file:
 ### Changed
 
 - **Storages & Media page** → `[ P2P player & albums ]` card description
-  updated from `"Local music library and Web3 player — buy albums
+  updated from `"Local music library and Web3 player - buy albums
   straight from artists, no middlemen."` to `"Local music library and
   Web4 player - buy albums straight from artists, no middlemen."`
   (`frontend/src/views/Storages.vue`).
-- Em-dash `—` replaced with a plain hyphen `-` per user request.
+- Em-dash `-` replaced with a plain hyphen `-` per user request.
 
 ### Notes
 
@@ -160,40 +160,40 @@ Component versions covered in this file:
   Russian, which looked out of place next to the already-English row labels
   ("IPV6 OUTBOUND", "NAT TYPE", "VERDICT", …) in the UI.
 - Every check now uses concise, protocol-neutral English:
-  - `ipv6`: "IPv6 outbound works — two v6 nodes connect directly, bypassing
-    CGNAT" / "no outbound IPv6 — on mobile networks a direct connect will
+  - `ipv6`: "IPv6 outbound works - two v6 nodes connect directly, bypassing
+    CGNAT" / "no outbound IPv6 - on mobile networks a direct connect will
     hit CGNAT"
   - `node`: "P2P node failed to start: {err}" · verdict "diagnostics
-    aborted — node did not start"
-  - `sockets`: "iroh bound: {addrs} (IPv4 only — no IPv6 stack available on
+    aborted - node did not start"
+  - `sockets`: "iroh bound: {addrs} (IPv4 only - no IPv6 stack available on
     this host)"
   - `udp`: "QUIC/UDP outbound: v4=yes/no · v6=yes/no (QAD probes to
-    relays)" / "net_report did not finish within 20s — DPI likely drops all
+    relays)" / "net_report did not finish within 20s - DPI likely drops all
     unknown UDP"
   - `nat`: "Symmetric NAT (typical mobile CGNAT): hole-punch does not
     work…" / "Cone NAT: hole-punch possible · external address {ip}" /
-    "NAT type unknown (too few UDP responses — UDP is likely filtered)"
+    "NAT type unknown (too few UDP responses - UDP is likely filtered)"
   - `relay`: "{N} relays reachable via QUIC, best latency {ms} ms · home:
     {url}" / "no relay responded via QUIC (UDP path to relays is blocked)"
   - `relay_https`: "{ok}/{total} relays reachable over TCP/TLS 443, best
-    {ms} ms · IPv4 TCP blocked by ISP — relays reachable over IPv6 TCP
+    {ms} ms · IPv4 TCP blocked by ISP - relays reachable over IPv6 TCP
     (bypassing CGNAT)"
   - `dht`: "nodes in table: {N} · BEP5-ping bootstrap: response
     received / no response (UDP to DHT is likely blocked)"
   - `dns`: "system DNS works" / "system DNS not responding, but DoH
-    (Cloudflare) works — ISP is filtering DNS" / "neither system DNS nor
+    (Cloudflare) works - ISP is filtering DNS" / "neither system DNS nor
     DoH respond"
-  - `verdict`: "direct P2P connections available: UDP open, IPv6 present —
+  - `verdict`: "direct P2P connections available: UDP open, IPv6 present -
     CGNAT is no obstacle" / "UDP open, but Symmetric NAT (CGNAT): direct
     only with v6 peers, everything else goes via relays. Network WORKS" /
-    "UDP open, NAT traversable — network works in direct mode" / "UDP
-    blocked by ISP. Network runs via relays over TCP/TLS 443 — SmartNet
+    "UDP open, NAT traversable - network works in direct mode" / "UDP
+    blocked by ISP. Network runs via relays over TCP/TLS 443 - SmartNet
     relays (relay-*.sth.cx) are built in, traffic will automatically route
     through them" / "neither UDP nor relays over TCP/TLS 443 are reachable
-    — the network cannot operate in this environment"
+    - the network cannot operate in this environment"
 - Fixed a truncated verdict string that read "сеть работаетомеха" (a
-  merge-mangled Russian phrase) — the corresponding English branch now
-  correctly reads "UDP open, NAT traversable — network works in direct
+  merge-mangled Russian phrase) - the corresponding English branch now
+  correctly reads "UDP open, NAT traversable - network works in direct
   mode".
 
 ### Notes
@@ -224,7 +224,7 @@ Component versions covered in this file:
     облачных дисках …`
   - `id.ts` → `Cloud Seeders publik - arsip terenkripsi di Cloud Disks
     sebagai fallback …`
-- Em-dash `—` after "Public Cloud Seeders" replaced with a plain hyphen `-`
+- Em-dash `-` after "Public Cloud Seeders" replaced with a plain hyphen `-`
   per user request.
 
 ### Notes
@@ -248,15 +248,15 @@ Component versions covered in this file:
 - `activeAccId` is now persisted in `localStorage` (`sth_seeder_pub_acc`),
   restored on mount and validated against the current Crypto Vault account
   list (a detached account falls back to the first one). Selecting a primary
-  that equals the current secondary clears the secondary — mirroring to the
+  that equals the current secondary clears the secondary - mirroring to the
   same disk is meaningless. (`Seeders.vue`)
 
-## [1.135.20] - 2026-06 (Discover: periodic background Cloud Seeder scan while P2P is alive — new cloud-only dApps appear without manual rescans)
+## [1.135.20] - 2026-06 (Discover: periodic background Cloud Seeder scan while P2P is alive - new cloud-only dApps appear without manual rescans)
 
 ### Added
 
 - **Background cloud scan** (`cloudseeder.rs::spawn_cloud_fallback`): the P2P
-  scan works as before, and additionally — while P2P is ALIVE — the client now
+  scan works as before, and additionally - while P2P is ALIVE - the client now
   polls Cloud Seeders for new dApps in the background: first pass ~2 minutes
   after startup (to quickly fill the catalog), then once every 30 minutes,
   capped at **3 seeders per pass** (seeders with a healthy status are picked
@@ -264,7 +264,7 @@ Component versions covered in this file:
   so dApps that existed only on cloud seeders (publisher offline) never
   appeared in the catalog of a P2P-connected client.
 - `run_fallback_once` refactored into `run_fallback_scan(limit)` (`limit=0` =
-  poll ALL seeders — emergency fallback and the manual Discover rescan button
+  poll ALL seeders - emergency fallback and the manual Discover rescan button
   keep their old behavior). SYSLOG marks passes as `(background, P2P alive)`
   vs `(P2P unreachable)`.
 
@@ -277,7 +277,7 @@ Component versions covered in this file:
   entry from it, and the hourly auto-replication (`lib/seederRep.ts`) keeps
   the cloud state fresh.
 
-## [1.135.19] - 2026-06 (Window title now shows the UI bundle version and flags a stale dist — core/frontend mismatches are impossible to miss)
+## [1.135.19] - 2026-06 (Window title now shows the UI bundle version and flags a stale dist - core/frontend mismatches are impossible to miss)
 
 ### Added
 
@@ -285,7 +285,7 @@ Component versions covered in this file:
   baked into the JS at build time (`vite define: __UI_VERSION__`) and compared
   on startup with the Rust core version (`getVersion()`). If they match, the
   title stays `NETFORY // SmartHoldem WEB4 P2P network v<core>` as before;
-  if they diverge (an outdated `dist` slipped into the build — the exact
+  if they diverge (an outdated `dist` slipped into the build - the exact
   confusion from the v1.135.18 report), the title becomes
   `…v<core> · UI v<ui> [STALE UI!]` and a warning line is written to SYSLOG.
   (`AppLayout.vue::syncTitleVersions`, `vite.config.js`, `vite-env.d.ts`.)
@@ -295,7 +295,7 @@ Component versions covered in this file:
 ### Fixed
 
 - **Previews "reset" after the publisher edited app tags (Linux report).**
-  The on-disk `discovery_cache` was never wiped — the re-announce after a
+  The on-disk `discovery_cache` was never wiped - the re-announce after a
   metadata edit transiently (or persistently) carried EMPTY logo/preview
   hashes, and clients stopped even *looking* at their cache: an empty hash
   failed validation in `discovery_media`, and the UI marker logic never
@@ -305,31 +305,31 @@ Component versions covered in this file:
     rejecting; and when a valid hash can't be fetched anywhere (P2P + cloud
     both fail) the stale cached file is served as a last resort. The cache
     is physically replaced ONLY when a new image is successfully downloaded
-    and validated (existing hash-change cleanup) — exactly "drop old only
+    and validated (existing hash-change cleanup) - exactly "drop old only
     when the new one is available".
   - `Discovered.vue` `loadLogos`: per-app retry keys (`hash|providers?`)
-    replace the one-shot '' markers — a fetch is re-attempted whenever the
+    replace the one-shot '' markers - a fetch is re-attempted whenever the
     announced hash or provider availability CHANGES, and an already
     displayed image is never overwritten by a failure.
 
 ### Added
 
 - **No-preview card fallback** (Discovered.vue): instead of an empty
-  gradient, the preview area now shows the app type badge (FREE — green /
-  PAID — amber / PRIVATE — violet, i18n ru/en/id), up to 5 tag chips, and
+  gradient, the preview area now shows the app type badge (FREE - green /
+  PAID - amber / PRIVATE - violet, i18n ru/en/id), up to 5 tag chips, and
   the short description as a PERMANENT bottom strip in the same style as
   the hover strip on cards with a preview (`.disc-desc-strip.static`).
 
-## [1.135.17] - 2026-06 (Linux embedded dApps, round 2: flat GtkFixed instead of GtkOverlay — input events reach the webviews again)
+## [1.135.17] - 2026-06 (Linux embedded dApps, round 2: flat GtkFixed instead of GtkOverlay - input events reach the webviews again)
 
 ### Fixed
 
 - **After 1.135.16 the dApp rendered in the right place but NOTHING was
-  clickable — neither the dApp nor the main UI.** Cause: GtkOverlay creates a
+  clickable - neither the dApp nor the main UI.** Cause: GtkOverlay creates a
   wrapper GdkWindow for each overlay child sized to the child's allocation;
   our GtkFixed overlay child filled the whole window (default GTK_ALIGN_FILL),
   so that wrapper window sat above the main webview and swallowed all input
-  that didn't hit a dApp — and reparent side effects left the dApp's own
+  that didn't hit a dApp - and reparent side effects left the dApp's own
   input window dead too.
 - New flat scheme in `linux_embed_bounds`: BOTH webviews live in a single
   `GtkFixed` (exactly the container wry natively supports for multiwebview):
@@ -338,9 +338,9 @@ Component versions covered in this file:
   signal; dApps get hard bounds (`move_` + `set_size_request` + immediate
   `size_allocate`, mirroring wry's own fixed-parent path) and are kept above
   the main webview by raising their GdkWindow. Input now routes directly by
-  each webview's GdkWindow geometry — no wrapper windows in between.
+  each webview's GdkWindow geometry - no wrapper windows in between.
 
-## [1.135.16] - 2026-06 (Linux embedded dApp webviews: reparented from the window GtkBox into GtkOverlay+GtkFixed — bounds finally apply)
+## [1.135.16] - 2026-06 (Linux embedded dApp webviews: reparented from the window GtkBox into GtkOverlay+GtkFixed - bounds finally apply)
 
 ### Fixed
 
@@ -350,7 +350,7 @@ Component versions covered in this file:
   `Window::add_child` packs the child webview into the window's *vertical
   GtkBox* with `pack_start(expand=true, fill=true)` (`WebviewKind::WindowChild`
   → `build_gtk(default_vbox)`), so the main webview and the dApp split the
-  window 50/50 — and wry's `set_bounds` only works for a GtkFixed (or x11)
+  window 50/50 - and wry's `set_bounds` only works for a GtkFixed (or x11)
   parent, making every `set_position`/`set_size` a silent no-op. The user's
   SYSLOG proved the frontend sent correct bounds (`sync-embed …
   host=[200,93 1013x628]`) that GTK ignored. The 1.135.10 hide/show
@@ -361,7 +361,7 @@ Component versions covered in this file:
 - `webview.rs::linux_embed_bounds` (Linux only): on the first bounds call the
   dApp webview is reparented out of the GtkBox into
   `vbox → GtkOverlay { main-webview, GtkFixed { dApp webviews } }`.
-  GtkFixed is a no-window container — empty areas stay transparent to input
+  GtkFixed is a no-window container - empty areas stay transparent to input
   (clicks reach the main webview), children get hard positions via
   `gtk_fixed_move` + `set_size_request` that survive any window re-layout,
   resize or maximize. Subsequent calls just move/resize within the fixed.
@@ -377,10 +377,10 @@ Component versions covered in this file:
 - **"Replace files (paid)" now transitions a free (link-only) dApp to the
   paid tier.** Replacing files is always a paid operation (dynamic update
   fee to the network escrow), but `update_app_at` used to preserve the old
-  `paid=false`/`free=true` flags, so the app kept the «БЕСПЛАТНО — ТОЛЬКО
+  `paid=false`/`free=true` flags, so the app kept the «БЕСПЛАТНО - ТОЛЬКО
   ССЫЛКА» badge and was never network-announced. After a successful update
   payment the re-ingest now sets `paid=true`, `free=false`,
-  `status=published` — `ingest_app` writes the `announce:<id>` key, so the
+  `status=published` - `ingest_app` writes the `announce:<id>` key, so the
   app is distributed under all paid-app rules: mDNS `a{i}` records, tracker
   announces (with logo/preview hashes), headless seeders, catalog listing.
   SYSLOG records the transition (`update <id>: free → paid`).
@@ -391,14 +391,14 @@ Component versions covered in this file:
 - Update-modal note (`apps.updatePaidNote`, ru/en/id) now explains that a
   free app becomes paid and announced after a paid file replacement.
 
-## [1.135.14] - 2026-06 (Free/link-only dApp logos & previews now propagate through Cloud Seeders — phase 2 of catalog media distribution)
+## [1.135.14] - 2026-06 (Free/link-only dApp logos & previews now propagate through Cloud Seeders - phase 2 of catalog media distribution)
 
 ### Fixed
 
 - **Other clients showed an identicon + gradient instead of the logo/preview
   for a freshly published FREE (link-only) dApp.** Free dApps are not
   tracker-announced (announcing is a paid feature), so remote catalogs learn
-  about them from a Cloud Seeder's `dapps.enc` — and those entries carried NO
+  about them from a Cloud Seeder's `dapps.enc` - and those entries carried NO
   media hashes ("phase 2" placeholder), so clients never even attempted to
   fetch the images. On top of that, the publisher only replicated OTHER
   apps' cached media to the cloud (`discovery_cache/*`), never the media of
@@ -413,13 +413,13 @@ Component versions covered in this file:
   mDNS/trackers, so all channels stay content-addressed and interchangeable.
 - **Client side** (`merge_seeder_dapps`, p2p.rs): seeder-discovered apps now
   populate `PeerApp.logo`/`preview` from `dapps.enc`, so the catalog card
-  lazily fetches media — first over P2P, then via the 1.135.11 Cloud Seeder
+  lazily fetches media - first over P2P, then via the 1.135.11 Cloud Seeder
   download fallback when no live providers exist.
 - **Publisher upload of OWN media** (`replicate_discovery_media`,
   cloudseeder.rs): every `cloud_seeder_publish` now also uploads the
   logo/preview files of the publisher's own non-draft, non-private dApps
   (free link-only included) from `data/dapps/<id>/` to
-  `/ntfryseed/discovery_cache/<id>-<logo|preview>-<hash>.<ext>` — same
+  `/ntfryseed/discovery_cache/<id>-<logo|preview>-<hash>.<ext>` - same
   content-addressed naming, same per-provider dedup map, ≤ 256 KB and
   PNG/JPG magic-byte validation. Result: catalog images stay available even
   when the publishing peer is fully offline.
@@ -432,7 +432,7 @@ Component versions covered in this file:
   Windows after 1.135.12.** Empirically the base directory Tauri CLI uses to
   resolve a *relative* `frontendDist` is not stable: the Ubuntu log behind
   1.135.6/7 pointed at the cwd, while the Windows log from 1.135.12 clearly
-  resolved against `src-tauri/`. An absolute path is not an option either —
+  resolved against `src-tauri/`. An absolute path is not an option either -
   on Windows a drive path (`D:/…`) parses as a valid URL with scheme `d:`
   and broke the runtime (1.135.11 regression, fixed in 1.135.12).
 - New bulletproof scheme in `scripts/build-mail-bundle.cjs`: the config keeps
@@ -452,7 +452,7 @@ Component versions covered in this file:
   (`scripts/build-mail-bundle.cjs`) wrote an ABSOLUTE `build.frontendDist`
   (e.g. `D:/projects/.../frontend/dist`) into the generated merge config.
   Tauri parses `frontendDist` as a URL first, and a Windows drive path is a
-  *syntactically valid URL* with scheme `d:` — so instead of embedding the
+  *syntactically valid URL* with scheme `d:` - so instead of embedding the
   dist directory, the production window navigated to it as an external URL
   and WebView2 rendered a raw file-index listing of the `dist` folder.
   Linux/macOS were unaffected because `/home/...` does not parse as a URL
@@ -472,7 +472,7 @@ Component versions covered in this file:
   publishing P2P peer is offline.** `discovery_logo` / `discovery_preview`
   fetched exclusively over Iroh P2P from the announced providers; if none of
   them were reachable (or the announce carried no providers at all), the
-  catalog card stayed on the gradient fallback forever — users on fresh
+  catalog card stayed on the gradient fallback forever - users on fresh
   installs saw only 2 of many previews load. Cloud Seeders already
   *replicated* these media files to `/ntfryseed/discovery_cache/` (flat
   content-addressed names `<appId>-<logo|preview>-<hash>.<png|jpg>`), but no
@@ -486,7 +486,7 @@ Component versions covered in this file:
   Cloud Seeders (seeders with a healthy status are tried first) without OAuth,
   via the same `fetch_public` used for dApp archive rescue. Integrity is
   enforced: the file name is content-addressed, so `blake3(bytes)` must equal
-  the iroh hash from the announce — a tampered cloud file is rejected and the
+  the iroh hash from the announce - a tampered cloud file is rejected and the
   next seeder is tried. Size (≤ 256 KB) and PNG/JPEG magic-byte validation,
   local `discovery_cache` caching and LRU pruning are shared with the P2P
   path, so a successful cloud rescue is cached exactly like a P2P download.
@@ -495,17 +495,17 @@ Component versions covered in this file:
 
 ## [1.135.10] - 2026-06 (Linux/WebKitGTK/RDP fix: native dApp child webview no longer covers the sidebar/tab-strip after open or maximize)
 
-### Fixed — dApp webview overlaps NETFORY chrome on Linux (Ubuntu via xrdp)
+### Fixed - dApp webview overlaps NETFORY chrome on Linux (Ubuntu via xrdp)
 
 - Symptom (reported on Ubuntu 26 via RDP, display scale 100%): opening a
-  dApp made the sidebar and top tab strip disappear — the native child
+  dApp made the sidebar and top tab strip disappear - the native child
   webview visually filled the entire main window. Pressing the maximize
   button or F11 made the problem worse (the dApp ate 100 % of the window),
   while on a fresh Dashboard the sidebar/topbar were rendered correctly.
 - Root cause: on WebKitGTK (Tauri v2 uses wry → `add_child`), the child
   webview is a GTK widget positioned inside a `GtkFixed` container. When
   `set_position` / `set_size` are called after a window resize/maximize,
-  WebKitGTK does not always re-run the fixed-layout pass — the widget
+  WebKitGTK does not always re-run the fixed-layout pass - the widget
   keeps stale bounds, which on our first-open path happen to be the full
   main-window size. On Windows/macOS the platform layer requeues layout
   automatically, so the bug never surfaced there. RDP-driven X11
@@ -524,7 +524,7 @@ Component versions covered in this file:
   after every reflow (open / maximize / drawer toggle / terminal open).
 - Diagnostic: `syncEmbedded` now emits a `ui_log` line with the exact
   host rect, window size, DPR and shrink offsets right before it moves
-  the webview — so if the geometry ever misbehaves again, System Console
+  the webview - so if the geometry ever misbehaves again, System Console
   shows the true numbers immediately (no DevTools needed).
 
 ### Chore
@@ -532,21 +532,21 @@ Component versions covered in this file:
 - Version bump `1.135.9` → `1.135.10` (`package.json`, `tauri.conf.json`,
   `Cargo.toml`, `Cargo.lock`).
 
-## [1.135.9] - 2026-06 (Oxid Mail binary is now bundled as a Tauri sidecar on Linux/macOS — fixes "Oxid Mail не найден" in deb/AppImage)
+## [1.135.9] - 2026-06 (Oxid Mail binary is now bundled as a Tauri sidecar on Linux/macOS - fixes "Oxid Mail не найден" in deb/AppImage)
 
-### Fixed — `oxid-mail` binary missing from Linux deb/AppImage installs
+### Fixed - `oxid-mail` binary missing from Linux deb/AppImage installs
 
 - Root cause: on Linux, Tauri places `bundle.resources` under
   `usr/lib/<app>/` while the main executable lives in `usr/bin/`. The
   launcher (`mail_launcher.rs`) only searched next to the exe, in
-  `./oxid-mail/`, `OXID_MAIL_BIN` and `PATH` — so the bundled binary was
+  `./oxid-mail/`, `OXID_MAIL_BIN` and `PATH` - so the bundled binary was
   never found. On Windows MSI resources land next to the exe, which is why
   it worked there. Resources also do not guarantee the executable bit.
 - Fix (bundling): `tauri.mail.linux.conf.json` and
   `tauri.mail.macos.conf.json` now use `bundle.externalBin` (Tauri sidecar)
   instead of `bundle.resources`. Sidecars are installed next to the main
   binary (`usr/bin/oxid-mail` in deb/AppImage, `Contents/MacOS/` in .app)
-  with the executable bit preserved — the existing "next to exe" lookup
+  with the executable bit preserved - the existing "next to exe" lookup
   finds them without any env vars. Windows keeps `resources` (already
   working).
 - Fix (build script): `scripts/build-oxid-mail.cjs` additionally copies the
@@ -567,7 +567,7 @@ Component versions covered in this file:
 
 ## [1.135.8] - 2026-06 (First-launch UI language now follows the system locale instead of defaulting to Russian)
 
-### Fixed — Russian UI on first launch on English systems
+### Fixed - Russian UI on first launch on English systems
 
 - Root cause: `src/i18n/index.ts` correctly detected the browser/system locale
   (`navigator.languages` → `ru`/`en`/`id`, fallback `en`), but the Pinia UI
@@ -586,14 +586,14 @@ Component versions covered in this file:
 - Version bump `1.135.7` → `1.135.8` (`package.json`, `tauri.conf.json`,
   `Cargo.toml`, `Cargo.lock`).
 
-## [1.135.7] - 2026-06 (Absolute `frontendDist` injected by the build wrapper — final fix for `Unable to find your web assets` on Ubuntu)
+## [1.135.7] - 2026-06 (Absolute `frontendDist` injected by the build wrapper - final fix for `Unable to find your web assets` on Ubuntu)
 
-### Fixed — Tauri CLI resolving `frontendDist: "../dist"` against the CWD instead of `src-tauri/`
+### Fixed - Tauri CLI resolving `frontendDist: "../dist"` against the CWD instead of `src-tauri/`
 
 - Root cause (confirmed by the user's Ubuntu log): even with `dist/` correctly
   built at `frontend/dist`, Tauri CLI resolved the relative `../dist` from the
   **current working directory** (`frontend/`), producing
-  `/home/…/smartnet/dist` — one level too high — and aborting with
+  `/home/…/smartnet/dist` - one level too high - and aborting with
   `Unable to find your web assets`.
 - Fix: `scripts/build-mail-bundle.cjs` now generates a temporary merge config
   `src-tauri/tauri.mail.gen.conf.json` at build time. It is the
@@ -611,9 +611,9 @@ Component versions covered in this file:
 - Version bump `1.135.6` → `1.135.7` (`package.json`, `tauri.conf.json`,
   `Cargo.toml`, `Cargo.lock`).
 
-## [1.135.6] - 2026-06 (Deterministic vite output + wrapper builds frontend explicitly — fixes `Unable to find your web assets` on Ubuntu)
+## [1.135.6] - 2026-06 (Deterministic vite output + wrapper builds frontend explicitly - fixes `Unable to find your web assets` on Ubuntu)
 
-### Fixed — `Unable to find your web assets, did you forget to build your web app?` on Linux/macOS
+### Fixed - `Unable to find your web assets, did you forget to build your web app?` on Linux/macOS
 
 - Root cause: `vite.config.js` used `process.cwd()` for both the `@` alias
   and an implicit relative `build.outDir: 'dist'`. When Tauri ran
@@ -623,21 +623,21 @@ Component versions covered in this file:
   looked for it at a different absolute path (e.g.
   `/home/techno/projects/smartnet/dist`) → error.
 
-### Changed — `frontend/vite.config.js`: absolute paths pinned to `__dirname`
+### Changed - `frontend/vite.config.js`: absolute paths pinned to `__dirname`
 
 - `root` explicitly set to `__dirname` (ESM `import.meta.url`).
-- `resolve.alias['@']` now uses `path.resolve(__dirname, 'src')` — no more
+- `resolve.alias['@']` now uses `path.resolve(__dirname, 'src')` - no more
   reliance on `process.cwd()`.
 - `build.outDir` is now `path.resolve(__dirname, 'dist')` (absolute), plus
   `emptyOutDir: true` for clean rebuilds.  → vite always writes to
   `<frontend-dir>/dist`, no matter where you invoke `yarn build` from.
 
-### Changed — `frontend/scripts/build-mail-bundle.cjs`
+### Changed - `frontend/scripts/build-mail-bundle.cjs`
 
 - The wrapper now runs `yarn build` itself (explicitly, from
   `path.resolve(__dirname, '..')` = the frontend directory) **before**
   invoking `tauri build`, and validates that `<frontend>/dist/index.html`
-  actually exists — if not, aborts with a clear message pointing at
+  actually exists - if not, aborts with a clear message pointing at
   `vite.config.js`.
 - Merge configs
   (`tauri.mail.conf.json`, `tauri.mail.linux.conf.json`,
@@ -646,9 +646,9 @@ Component versions covered in this file:
   vite from an unpredictable cwd. This makes the frontend build
   deterministic across Windows / Ubuntu / macOS.
 - New env vars honored by the wrapper:
-  - `TAURI_BUNDLES` — override bundle formats (e.g. `deb`, `msi,nsis`)
-  - `TAURI_EXTRA_ARGS` — extra CLI args passed to `tauri build`
-  - `SKIP_FRONTEND=1` — skip the vite step (useful when `dist/` is already
+  - `TAURI_BUNDLES` - override bundle formats (e.g. `deb`, `msi,nsis`)
+  - `TAURI_EXTRA_ARGS` - extra CLI args passed to `tauri build`
+  - `SKIP_FRONTEND=1` - skip the vite step (useful when `dist/` is already
     up to date, e.g. during CI incremental jobs)
 
 ### How to use (unchanged for the user)
@@ -658,18 +658,18 @@ yarn tauri:build:bonsai:mail
 ```
 
 Produces `.msi` on Windows, `.deb + .AppImage` on Linux, `.dmg + .app` on
-macOS — from the same command, on the same tree.
+macOS - from the same command, on the same tree.
 
 ---
 
 ## [1.135.5] - 2026-06 (Cross-platform Oxid Mail bundle: Ubuntu/macOS/Windows share one build command)
 
-### Fixed — `resource path 'oxid-mail.exe' doesn't exist` on Ubuntu / macOS
+### Fixed - `resource path 'oxid-mail.exe' doesn't exist` on Ubuntu / macOS
 
 - **`frontend/src-tauri/tauri.mail.conf.json`** hard-coded a Windows-only
   resource path (`"resources": ["oxid-mail.exe"]`), so `yarn
   tauri:build:bonsai:mail` failed on Linux/macOS with
-  `resource path 'oxid-mail.exe' doesn't exist` — the copied binary there is
+  `resource path 'oxid-mail.exe' doesn't exist` - the copied binary there is
   named `oxid-mail` (no `.exe` suffix).
 - Added **platform-specific merge configs** next to the existing Windows one:
   - `frontend/src-tauri/tauri.mail.linux.conf.json` → `"resources": ["oxid-mail"]`
@@ -677,11 +677,11 @@ macOS — from the same command, on the same tree.
   - `frontend/src-tauri/tauri.mail.conf.json` stays Windows (msi) with
     `oxid-mail.exe`.
 
-### Added — universal build wrapper `scripts/build-mail-bundle.cjs`
+### Added - universal build wrapper `scripts/build-mail-bundle.cjs`
 
 - New Node wrapper that:
   1. Runs the existing `scripts/build-oxid-mail.cjs` (compiles Oxid Mail,
-     copies the binary — already cross-platform: `.exe` on Win, no suffix
+     copies the binary - already cross-platform: `.exe` on Win, no suffix
      elsewhere).
   2. Detects `process.platform` and picks the matching merge-config
      (`tauri.mail.conf.json` / `tauri.mail.linux.conf.json` /
@@ -692,9 +692,9 @@ macOS — from the same command, on the same tree.
   4. Honors optional `TAURI_BUNDLES` / `TAURI_EXTRA_ARGS` env vars for
      overrides.
 
-### Changed — package.json scripts
+### Changed - package.json scripts
 
-- **`frontend/package.json`** — `tauri:build:bonsai:mail` now points to the
+- **`frontend/package.json`** - `tauri:build:bonsai:mail` now points to the
   universal wrapper, so the same command builds on Windows, Ubuntu and
   macOS with no extra flags:
   - `tauri:build:bonsai:mail` → `node scripts/build-mail-bundle.cjs`
@@ -706,7 +706,7 @@ macOS — from the same command, on the same tree.
 ### Usage
 
 ```bash
-# One command, three OSes — no changes to CI scripts required:
+# One command, three OSes - no changes to CI scripts required:
 yarn tauri:build:bonsai:mail
 ```
 
@@ -714,9 +714,9 @@ yarn tauri:build:bonsai:mail
 
 ## [1.135.4] - 2026-06 (DISCOVER APPS_ card header height trimmed 64 → 56 px)
 
-### Changed — `.disc-cover` (catalog card header)
+### Changed - `.disc-cover` (catalog card header)
 
-- **`frontend/src/views/Discovered.vue`** — reduced the card header height
+- **`frontend/src/views/Discovered.vue`** - reduced the card header height
   from `64px` to `56px` (`.disc-cover`). The plate icon and title text
   continue to center-align inside, so the visual balance is preserved while
   the header no longer eats vertical space away from the 440×180 preview
@@ -727,9 +727,9 @@ yarn tauri:build:bonsai:mail
 
 ## [1.135.3] - 2026-06 (MY_APPLICATIONS_ preview: strict 440×180 aspect, no vertical stretch)
 
-### Fixed — owner-card preview thumbnails were stretching to match card height
+### Fixed - owner-card preview thumbnails were stretching to match card height
 
-- **`frontend/src/views/MyApplications.vue`** — previous release (1.135.2)
+- **`frontend/src/views/MyApplications.vue`** - previous release (1.135.2)
   aligned `.card-preview` with `align-self: stretch` and `min-height: 100%`,
   which forced the preview column to match the tallest sibling (`.card-body`).
   When cards had tags or extra metadata (BattleShip, SmartHoldem) the preview
@@ -738,16 +738,16 @@ yarn tauri:build:bonsai:mail
 - Switched `.app-card:has(> .card-preview)` to `align-items: start` and gave
   `.card-preview` a strict `align-self: start` + `width: 100%; aspect-ratio:
   440 / 180`, dropping `min-height: 100%`. Every preview is now the same
-  visual size across the whole list — a strict 440×180 ratio that never
-  spills outside the card — regardless of what the left column contains.
+  visual size across the whole list - a strict 440×180 ratio that never
+  spills outside the card - regardless of what the left column contains.
 
 ---
 
 ## [1.135.2] - 2026-06 (MY_APPLICATIONS_ owner cards show uploaded preview on the right, 70/30 split)
 
-### Added — 440×180 owner-preview thumbnail on every card in MY_APPLICATIONS_
+### Added - 440×180 owner-preview thumbnail on every card in MY_APPLICATIONS_
 
-- **`frontend/src/views/MyApplications.vue`** — imported `appPreview` from
+- **`frontend/src/views/MyApplications.vue`** - imported `appPreview` from
   `@/lib/bridge` and added a reactive `previews` record parallel to the
   existing `logos` record. `refreshLogo()` and `loadLogos()` now also fetch
   the preview blob so the thumbnail refreshes instantly after Edit/Publish
@@ -756,7 +756,7 @@ yarn tauri:build:bonsai:mail
   `.card-body` (main content: head, tags, sth:// row, meta, actions) and a
   right `.card-preview` (`<img>`) that renders **only when the owner uploaded
   a preview**. If the preview is missing the card falls back to a single
-  column — no empty rectangle.
+  column - no empty rectangle.
 - CSS uses `grid-template-columns: minmax(0, 7fr) minmax(0, 3fr)` via
   `.app-card:has(> .card-preview)` so the split is a strict ~70/30 without
   hardcoded pixel widths. Narrow viewports (`max-width: 900px`) collapse to a
@@ -774,32 +774,32 @@ yarn tauri:build:bonsai:mail
 
 ## [1.135.1] - 2026-06 (Discover header: hide-installed toggle, rounded SCAN pill, compact install button)
 
-### Added — «Hide installed» toggle (localStorage-persisted)
+### Added - «Hide installed» toggle (localStorage-persisted)
 
-- **`frontend/src/views/Discovered.vue`** — new `hideInstalled` reactive flag
+- **`frontend/src/views/Discovered.vue`** - new `hideInstalled` reactive flag
   reads/writes `localStorage['ntfry.discover.hideInstalled']` (chose
   localStorage over sled: no extra Tauri round-trip, survives across reloads,
   and the flag is UI-only so there is no need to sync it across seeders).
   The catalog's `filtered` computed now drops apps with `installed === true`,
-  **but keeps private dApps** even when they are installed — owners still need
+  **but keeps private dApps** even when they are installed - owners still need
   to see them in the catalog to launch/reinstall.
 - Toggling the switch resets pagination to page 1 so the user immediately sees
   the top of the filtered catalog instead of an empty tail.
-- **i18n** — added `discover.hideInstalled` and `discover.hideInstalledHint`
+- **i18n** - added `discover.hideInstalled` and `discover.hideInstalledHint`
   in `en.ts`, `ru.ts`, `id.ts`.
 
-### Changed — SCAN button now a rounded pill matching PRIVATE FOUND
+### Changed - SCAN button now a rounded pill matching PRIVATE FOUND
 
-- **`Discovered.vue`** — replaced the square `btn btn-primary` variant with a
+- **`Discovered.vue`** - replaced the square `btn btn-primary` variant with a
   new `.scan-pill` class: pill-shaped (`border-radius: 999px`), inner
   highlight + drop-glow to visually pair with the golden PRIVATE FOUND badge
   next to it. Adds a subtle `scan-pill-pulse` animation while
   `discovery.scanning === true` and a spinning ⟳ glyph so users have live
   feedback that the mesh scan is actually running.
 
-### Fixed — install button icons no longer wrap to a second line
+### Fixed - install button icons no longer wrap to a second line
 
-- **`Discovered.vue`** — the action row (`.disc-actions-clean`) grid layout
+- **`Discovered.vue`** - the action row (`.disc-actions-clean`) grid layout
   used three columns (`1fr auto 36px`) while the card actually renders four
   children: install, size badge, ⓘ details, copy-link square. The 4th child
   wrapped onto a new line and clipped underneath the card. Changed the grid
@@ -810,7 +810,7 @@ yarn tauri:build:bonsai:mail
 
 ### Notes
 
-- The toggle is UI-only — it does not re-run `discovery.scan()`, so switching
+- The toggle is UI-only - it does not re-run `discovery.scan()`, so switching
   it on/off is instant and free of P2P traffic.
 - Private dApps are intentionally excluded from the hide filter: their owner
   or an address on the access list must still see them in the catalog even
@@ -820,9 +820,9 @@ yarn tauri:build:bonsai:mail
 
 ## [1.135.0] - 2026-06 (Cloud seeders replicate discovery_cache media + auto-replication 30 → 60 min)
 
-### Added — `/ntfryseed/discovery_cache` replication (cloud fallback for catalog artwork)
+### Added - `/ntfryseed/discovery_cache` replication (cloud fallback for catalog artwork)
 
-- **`ntfry/src/seeder.rs`** — `SEED_MEDIA_DIR = "discovery_cache"` + three
+- **`ntfry/src/seeder.rs`** - `SEED_MEDIA_DIR = "discovery_cache"` + three
   provider uploaders `yandex/mailru/gdrive_upload_media_file(token, name,
   data)`: WebDAV providers MKCOL the folder idempotently and PUT the file;
   Google Drive resolves/creates the folder by id and upserts.
@@ -831,7 +831,7 @@ yarn tauri:build:bonsai:mail
   local `data/discovery_cache` (sorted by mtime), uploads `logo-*` /
   `preview-*` files flat as `<appId>-logo-<hash>.<ext>`. Upload happens
   **only on change**: names are content-addressed, and an uploaded-set per
-  provider×role is persisted in sled (`cfg:seeder_media_uploaded:*`) — an
+  provider×role is persisted in sled (`cfg:seeder_media_uploaded:*`) - an
   unchanged file is never re-sent. 256 KB per-file cap enforced. The publish
   syslog line now includes `+N media`.
 - Purpose: when a client has NO live seeds/peers and only the cloud, catalog
@@ -849,7 +849,7 @@ yarn tauri:build:bonsai:mail
 
 ### Changed
 
-- `views/Dashboard.vue` — `.top-app-cover` fixed `height: 96px` replaced with
+- `views/Dashboard.vue` - `.top-app-cover` fixed `height: 96px` replaced with
   `aspect-ratio: 440 / 180`: the cover now matches the DAPP Preview's native
   proportions, so the whole image is visible without vertical cropping and
   keeps scaling with the card width (`object-fit: cover` becomes an exact
@@ -859,13 +859,13 @@ yarn tauri:build:bonsai:mail
 
 ## [1.134.0] - 2026-06 (DISCOVER APPS card redesign: hover description strip, no OPEN button, icon-only details)
 
-### Changed — `views/Discovered.vue` (per user's spec + POKER mockup)
+### Changed - `views/Discovered.vue` (per user's spec + POKER mockup)
 
 - **Description** is hidden from the card body; it slides up from the bottom
   of the preview area on hover (`.disc-desc-strip`: dark header-like glass
   background, white text, `translateY` transition). Rendered only when a
   description exists.
-- **OPEN button removed entirely** — the app opens by clicking the title bar
+- **OPEN button removed entirely** - the app opens by clicking the title bar
   or the preview (both already wired). Non-installed apps keep INSTALL.
 - **Tags removed from the card in ALL modes** (still available in the
   Details modal).
@@ -874,43 +874,43 @@ yarn tauri:build:bonsai:mail
 - **dApp size** (`⛁ N MB`) moved onto the action row, one line before the ⓘ
   details icon (`.disc-actions-clean` switched from grid to flex; details
   icon is pushed right via `margin-left: auto`).
-- **«via seeder» badge** moved onto the preview area — bottom-right corner,
+- **«via seeder» badge** moved onto the preview area - bottom-right corner,
   the same glass pill styling as the seeds/status pill top-right
   (`.disc-seeder-overlay`).
 
 ---
 
-## [1.133.5] - 2026-06 (Fix: installed apps on OTHER clients showed no preview — P2P fallback added)
+## [1.133.5] - 2026-06 (Fix: installed apps on OTHER clients showed no preview - P2P fallback added)
 
 ### Root cause
 
-Client 2 had XBTS SITE / SmartHoldem WEB 4.0 **installed** — and for
+Client 2 had XBTS SITE / SmartHoldem WEB 4.0 **installed** - and for
 installed apps the card only read the LOCAL `<id>-preview.<ext>` file. Their
 local copies were installed BEFORE the publisher attached previews (a FREE
 metadata EDIT does not bump the version, so no update is triggered) → no
 local file → gradient. The announce carried `previewHash`, but the installed
 branch never used it.
 
-### Fixed — cascade: local file → P2P blob from the announce → gradient
+### Fixed - cascade: local file → P2P blob from the announce → gradient
 
 - `views/Discovered.vue` + `views/Dashboard.vue`: for INSTALLED apps, when
   `app_preview` / `app_logo` returns null and the announce has
   `previewHash` / `logoHash`, the card now lazily fetches the blob over P2P
-  (`discovery_preview` / `discovery_logo`, cached in `discovery_cache`) —
+  (`discovery_preview` / `discovery_logo`, cached in `discovery_cache`) -
   identical to the non-installed path. Old installs get artwork without
   re-installing; a future app update still brings the file locally (it is
   part of the payload tar since the publisher re-seeded).
 
 ---
 
-## [1.133.4] - 2026-06 (Full session audit after silent write failures — one lost edit found and restored)
+## [1.133.4] - 2026-06 (Full session audit after silent write failures - one lost edit found and restored)
 
 ### Audit scope (every touch-point of v1.130.0 → v1.133.3 re-verified byte-by-byte)
 
 - **p2p.rs** (18 patterns): constants, `jpeg_is_arithmetic`, both SEEDED maps,
   `l{i}`/`p{i}` announce + parse, `fetch_logo` (impl + stub),
   `discovery_logo/preview/media`, `media_data_url`, `prune_discovery_cache`,
-  GC keep-set ×2, struct fields ×3, tracker/seeder mappings — ALL PRESENT.
+  GC keep-set ×2, struct fields ×3, tracker/seeder mappings - ALL PRESENT.
 - **apps.rs**: `preview_ext` (+arithmetic), `read_preview_bytes`, `log_once`,
   `app_preview`, both preview writes, `preserved_preview`, and ALL 6
   `ingest_app` signature/call sites verified programmatically at 16 args each.
@@ -924,31 +924,31 @@ branch never used it.
 
 ### Fixed (the one lost edit)
 
-- `views/MyApplications.vue` / `resetForm()` — did not clear
+- `views/MyApplications.vue` / `resetForm()` - did not clear
   `previewBytes`/`previewName` (the 1.131.0 edit had silently failed): after
   creating a draft, the previous app's preview stayed selected in the publish
   form. Restored.
 
 ---
 
-## [1.133.3] - 2026-06 (Fix: crop modal never rendered — missing template tag + z-index below the EDIT modal)
+## [1.133.3] - 2026-06 (Fix: crop modal never rendered - missing template tag + z-index below the EDIT modal)
 
 ### Fixed
 
-- `views/MyApplications.vue` — the `<PreviewCropModal>` template tag was
+- `views/MyApplications.vue` - the `<PreviewCropModal>` template tag was
   missing (the 1.133.0 edit did not persist; only the import existed), so the
   crop modal never rendered for either the publish form or the EDIT modal.
   Tag restored after `<AboutModal>`.
-- `components/PreviewCropModal.vue` — overlay `z-index` raised 200 → 300 so
+- `components/PreviewCropModal.vue` - overlay `z-index` raised 200 → 300 so
   the crop opens ON TOP of the EDIT modal (`.modal-back` is 200).
 
 ---
 
-## [1.133.2] - 2026-06 (Fix: tracker v1.4.0 compile error — AppRecord initializer missing logo/preview)
+## [1.133.2] - 2026-06 (Fix: tracker v1.4.0 compile error - AppRecord initializer missing logo/preview)
 
 ### Fixed
 
-- `/app/tracker/src/main.rs` — the `or_insert_with(|| AppRecord { ... })`
+- `/app/tracker/src/main.rs` - the `or_insert_with(|| AppRecord { ... })`
   initializer in the announce handler was missing the new `logo`/`preview`
   fields (E0063; the 1.133.0 edit did not persist). Added
   `logo: a.logo.clone()`, `preview: a.preview.clone()`. All 7 tracker
@@ -962,7 +962,7 @@ branch never used it.
 
 ### Changed
 
-- `views/Dashboard.vue` — the glass logo/identicon chip on the top-3 covers
+- `views/Dashboard.vue` - the glass logo/identicon chip on the top-3 covers
   is now rendered ONLY when the card has no DAPP Preview image
   (`v-if="!topPreviews[a.id]"`). With a preview present, the artwork is shown
   clean, without the chip overlapping it.
@@ -971,27 +971,27 @@ branch never used it.
 
 ## [1.133.0] - 2026-06 (Tracker passthrough of logo/preview hashes + in-app 440×180 crop tool)
 
-### Added — Phase 2: tracker passthrough (`/app/tracker` v1.4.0)
+### Added - Phase 2: tracker passthrough (`/app/tracker` v1.4.0)
 
 - `AppAnnounce` / `AppRecord` / `AppOut` gained pass-through `logo` and
   `preview` iroh-hash fields (`#[serde(default)]` in, `skip_serializing_if
-  empty` out — NOT part of the ECDSA signature, so legacy announces/records
+  empty` out - NOT part of the ECDSA signature, so legacy announces/records
   keep verifying). The registry refreshes the hashes from the latest
   non-empty announce (content-addressed → a changed image = a new hash).
 - The client already sends (`TrackerAnnounceApp`, since 1.130/1.131) and
-  parses (`TrackerApp`) these fields — **no client changes needed**: catalog
+  parses (`TrackerApp`) these fields - **no client changes needed**: catalog
   images now reach peers that discover an app via the tracker only (the blob
   itself is still fetched over iroh from the announced providers).
 - Tracker test fixtures updated. Deploy: rebuild the tracker binary.
 
-### Added — in-app preview crop (client v1.133.0)
+### Added - in-app preview crop (client v1.133.0)
 
 - New `components/PreviewCropModal.vue`: pick ANY image (`accept="image/*"`)
   in the publish form or the EDIT modal → a modal with a live 440×180 canvas
   frame: drag to position, zoom via slider or mouse wheel (center-anchored,
-  cover-clamped). APPLY exports the exact 440×180 frame via canvas —
+  cover-clamped). APPLY exports the exact 440×180 frame via canvas -
   PNG first, falling back to JPEG q0.9 / q0.72 if over the 256 KB network
-  limit. Canvas output is always browser-generated (Huffman) — the
+  limit. Canvas output is always browser-generated (Huffman) - the
   arithmetic-JPEG class of bugs can't re-enter through this path.
 - The old strict 440×180 file validation in `MyApplications.vue` is replaced
   by the crop flow (`onPreviewPick` / `onEditPreviewPick` → modal →
@@ -1006,34 +1006,34 @@ branch never used it.
 ### Root cause (confirmed by the user)
 
 The XBTS preview JPEG was compressed with **arithmetic coding** (SOF9-SOF11
-markers). Chromium/WebView2 only decodes Huffman JPEGs — the image passed all
+markers). Chromium/WebView2 only decodes Huffman JPEGs - the image passed all
 magic-byte checks (`FF D8 FF`), the backend served a valid data URL, but the
 `<img>` silently failed to decode → "empty" card. Re-saving as PNG fixed it.
 
-### Fixed — arithmetic JPEG detection (`jpeg_is_arithmetic`, JPEG segment walk)
+### Fixed - arithmetic JPEG detection (`jpeg_is_arithmetic`, JPEG segment walk)
 
-- **`p2p.rs`** — shared `jpeg_is_arithmetic()` (walks JPEG header segments up
+- **`p2p.rs`** - shared `jpeg_is_arithmetic()` (walks JPEG header segments up
   to SOS, flags SOF9/SOF10/SOF11). `discovery_media` now rejects such blobs
   from peers (logged as «блоб не PNG/JPG (или арифм. JPEG)»).
-- **`apps.rs` / `preview_ext`** — arithmetic JPEGs are never written to
+- **`apps.rs` / `preview_ext`** - arithmetic JPEGs are never written to
   `<id>-preview.jpg` at publish/edit time, so they can't enter the network.
-- **`MyApplications.vue`** — the picker scans the bytes and shows a clear
-  message: «Этот JPEG сжат арифметическим кодированием — браузеры его не
+- **`MyApplications.vue`** - the picker scans the bytes and shows a clear
+  message: «Этот JPEG сжат арифметическим кодированием - браузеры его не
   отображают. Пересохраните как PNG или обычный JPEG» (i18n EN/RU/ID,
   `apps.previewArith`) instead of the misleading 440×180 error.
 
 ### Kept
 
-- The 1.132.3/1.132.4 SYSLOG diagnostics (deduped one-shots) stay in place —
+- The 1.132.3/1.132.4 SYSLOG diagnostics (deduped one-shots) stay in place -
   they proved the exact failure layer and remain useful for support.
 
 ---
 
-## [1.132.4] - 2026-06 (Diagnostics round 2: frontend-side preview logging — `ui_log` command)
+## [1.132.4] - 2026-06 (Diagnostics round 2: frontend-side preview logging - `ui_log` command)
 
 ### Context
 
-The 1.132.3 SYSLOG showed `app_preview STsks… — OK (79423 B)` — the backend
+The 1.132.3 SYSLOG showed `app_preview STsks… - OK (79423 B)` - the backend
 returns the data URL, yet the card still shows no image. A standalone
 reproduction of the exact card DOM/CSS with a real JPEG data URL rendered
 correctly in Chromium, so the remaining unknown is the frontend data flow /
@@ -1041,16 +1041,16 @@ image decode inside the user's WebView2.
 
 ### Added
 
-- **`syslog.rs`** — new `ui_log(scope, msg)` command: the frontend can write
+- **`syslog.rs`** - new `ui_log(scope, msg)` command: the frontend can write
   into the system journal (no DevTools needed in production builds).
-- **`views/Discovered.vue`** — one-shot (deduped) diagnostic entries:
-  - `preview <id>… — invoke вернул N симв. / null` — what the Vue layer
+- **`views/Discovered.vue`** - one-shot (deduped) diagnostic entries:
+  - `preview <id>… - invoke вернул N симв. / null` - what the Vue layer
     actually received from `app_preview`;
-  - `preview <id>… — <img> декодирован и отрисован` — the `@load` event
+  - `preview <id>… - <img> декодирован и отрисован` - the `@load` event
     fired (image decoded and painted);
-  - `preview <id>… — ОШИБКА декодирования <img>` — the `@error` event fired
+  - `preview <id>… - ОШИБКА декодирования <img>` - the `@error` event fired
     (bad data URL / unsupported JPEG variant / CSP block).
-- `lib/bridge.ts` — `uiLog()` fire-and-forget wrapper.
+- `lib/bridge.ts` - `uiLog()` fire-and-forget wrapper.
 
 ### Expected diagnosis matrix
 
@@ -1059,24 +1059,24 @@ image decode inside the user's WebView2.
 | no `invoke вернул` line | Vue branch never ran (installed flag / marker) |
 | `invoke вернул null` | IPC returned nothing despite backend OK (serialization) |
 | `вернул N симв.` + `ОШИБКА декодирования` | WebView2 refused the JPEG (decode/CSP) |
-| `вернул N симв.` + `декодирован и отрисован` | image painted — CSS/layout issue |
+| `вернул N симв.` + `декодирован и отрисован` | image painted - CSS/layout issue |
 
 ---
 
-## [1.132.3] - 2026-06 (Diagnostics: preview/logo pipeline logs in the system journal — no DevTools needed)
+## [1.132.3] - 2026-06 (Diagnostics: preview/logo pipeline logs in the system journal - no DevTools needed)
 
 ### Added
 
-- **`apps.rs` / `app_preview`** — every outcome is now written to the SYSLOG
+- **`apps.rs` / `app_preview`** - every outcome is now written to the SYSLOG
   (`dapp` scope) with per-outcome dedup (no spam on the 4s catalog poll):
-  - `app_preview <id>… — OK: <file> (<N> B)` — file found and returned;
-  - `app_preview <id>… — файл не найден: <full path>` — read miss (shows the
+  - `app_preview <id>… - OK: <file> (<N> B)` - file found and returned;
+  - `app_preview <id>… - файл не найден: <full path>` - read miss (shows the
     exact directory the backend checked);
-  - `app_preview <id>… — private dApp, skip`.
+  - `app_preview <id>… - private dApp, skip`.
     If NO `app_preview` lines appear at all while the catalog is open, the
-    frontend never reached the command (invoke/registration issue) — that is
+    frontend never reached the command (invoke/registration issue) - that is
     itself the diagnosis.
-- **`p2p.rs` / `discovery_media`** (logo + preview of non-installed apps) —
+- **`p2p.rs` / `discovery_media`** (logo + preview of non-installed apps) -
   logs invalid announce hash, fetch failure (with provider count and the
   transport error), unreadable blob, bad-format / over-limit rejection, and
   the success path (`скачан и закэширован (<N> B, <ext>)`).
@@ -1084,12 +1084,12 @@ image decode inside the user's WebView2.
 ### How to use
 
 Rebuild, open // DISCOVER APPS_, wait a few seconds, then open the system
-journal (SYSLOG) and filter by `app_preview` / `discovery_`. Send the lines —
+journal (SYSLOG) and filter by `app_preview` / `discovery_`. Send the lines -
 they pinpoint whether the failure is IPC, path, file read, or P2P fetch.
 
 ---
 
-## [1.132.2] - 2026-06 (Fix: preview not showing on the developer's own card — blocking sequential loads)
+## [1.132.2] - 2026-06 (Fix: preview not showing on the developer's own card - blocking sequential loads)
 
 ### Root cause
 
@@ -1097,14 +1097,14 @@ they pinpoint whether the failure is IPC, path, file read, or P2P fetch.
 preview loop only started after ALL logo fetches finished, and each
 non-installed app with dead P2P providers blocks up to ~10-15 s inside
 `download_complete_any` retries. With several offline apps in the catalog the
-previews could take minutes to appear — perceived as "preview never shows".
+previews could take minutes to appear - perceived as "preview never shows".
 On top of that, installed apps got a permanent `''` marker after the first
 failed attempt, so a preview added later via EDIT never retried within the
 session.
 
 ### Fixed
 
-- **`views/Discovered.vue`** — `loadLogos()` now fires ALL logo/preview loads
+- **`views/Discovered.vue`** - `loadLogos()` now fires ALL logo/preview loads
   **in parallel** (`Promise.all` of independent jobs): local disk reads for
   installed apps resolve instantly and never wait for slow P2P fetches of
   offline peers.
@@ -1113,21 +1113,21 @@ session.
   without restarting or re-opening the page.
 - Defensive `(a.providers || [])` guard for apps hydrated from an older
   localStorage catalog cache.
-- **`views/Dashboard.vue`** — the same non-blocking treatment for
+- **`views/Dashboard.vue`** - the same non-blocking treatment for
   `topLogos` / `topPreviews` on the "Popular on the network" cards.
 
 ### Verified backend paths (diagnosis with the user)
 
 `<id>-preview.jpg` was confirmed present on disk in `data/dapps/<id>/` and
 `app_preview` reads exactly that path (identical pattern to the working
-`app_logo`) — the backend write/read chain was correct; the failure was the
+`app_logo`) - the backend write/read chain was correct; the failure was the
 frontend's blocking load order + stale marker.
 
 ---
 
 ## [1.132.1] - 2026-06 (Catalog card layout: preview block under the header, status icons on the preview)
 
-### Changed — `views/Discovered.vue` (per user's mockup)
+### Changed - `views/Discovered.vue` (per user's mockup)
 
 - Card structure is now: **header bar** (logo chip + title + [vN], gradient)
   → **DAPP Preview block** (full-bleed, `aspect-ratio: 440/180`; the 440×180
@@ -1135,7 +1135,7 @@ frontend's blocking load order + stale marker.
   open/details) → description → the existing action strip (full-width
   OPEN → / INSTALL + ⓘ details + copy-link squares).
 - The status badges (official ✔, private 🔒, installed dot, online dot /
-  seeds counter) moved from their own row **onto the preview block** — a
+  seeds counter) moved from their own row **onto the preview block** - a
   glass pill (`.disc-top-overlay`, blur + translucent dark) pinned to the
   top-right corner, matching the mockup.
 - The preview image no longer lives inside the 64px header cover; the header
@@ -1144,15 +1144,15 @@ frontend's blocking load order + stale marker.
 
 ---
 
-## [1.132.0] - 2026-06 (Cards render DAPP Preview instead of the gradient — gradient stays as fallback)
+## [1.132.0] - 2026-06 (Cards render DAPP Preview instead of the gradient - gradient stays as fallback)
 
 ### Added
 
-- **`src-tauri/src/apps.rs`** — new command `app_preview(id)`: returns the
+- **`src-tauri/src/apps.rs`** - new command `app_preview(id)`: returns the
   local `<id>-preview.png|jpg` of an installed dApp as a base64 data URL
   (correct `image/png` / `image/jpeg` mime); `None` for private dApps and
   apps without a preview (the card keeps the gradient).
-- **`views/Discovered.vue`** — the catalog card cover (`.disc-cover`) now
+- **`views/Discovered.vue`** - the catalog card cover (`.disc-cover`) now
   renders the 440×180 DAPP Preview as an absolutely-positioned
   `object-fit: cover` image on top of the deterministic gradient
   (`coverStyle` stays as the fallback; the dark scrim `::after` and the
@@ -1161,11 +1161,11 @@ frontend's blocking load order + stale marker.
   fetch it over P2P via `discovery_preview` (announced `previewHash` +
   `discovery_cache`), mirroring the logo pipeline. `overflow: hidden` added
   to `.disc-cover` so the image clips to the rounded top corners.
-- **`views/Dashboard.vue`** — the three "Popular on the network" covers
+- **`views/Dashboard.vue`** - the three "Popular on the network" covers
   (`.top-app-cover`) use the same preview-image-over-gradient treatment
   (`topPreviews` map next to `topLogos`); the glass icon chip (z-index 1)
   stays on top of the preview.
-- `lib/bridge.ts` — new `appPreview()` wrapper.
+- `lib/bridge.ts` - new `appPreview()` wrapper.
 
 ### Notes
 
@@ -1176,31 +1176,31 @@ frontend's blocking load order + stale marker.
 
 ## [1.131.0] - 2026-06 (Mandatory DAPP Preview 440×180 on publish + P2P distribution like logo)
 
-### Added — DAPP Preview (publish form + Edit modal)
+### Added - DAPP Preview (publish form + Edit modal)
 
-- **`views/MyApplications.vue`** — new mandatory "PICK PREVIEW" control to the
+- **`views/MyApplications.vue`** - new mandatory "PICK PREVIEW" control to the
   right of the logo picker in the publish form: JPG/PNG only, **max 256 KB**,
   resolution validated strictly at **440×180 px** (via `Image.naturalWidth/
   Height`); draft creation is blocked (`missingMeta`) until a preview is
   chosen. Hidden for **private dApps** (their visual identity is never stored
   or announced). The EDIT modal got the same optional picker so already
   published apps can attach a preview through the FREE metadata edit.
-- **`apps.rs`** — `create_draft_app` / `edit_app_metadata` (+ `ingest_app`)
+- **`apps.rs`** - `create_draft_app` / `edit_app_metadata` (+ `ingest_app`)
   accept `preview: Option<Vec<u8>>`; the file is written next to the payload
-  as **`<id>-preview.<png|jpg>`** (presentation metadata like the logo — not
+  as **`<id>-preview.<png|jpg>`** (presentation metadata like the logo - not
   part of the signed merkle at ingest) and is preserved across re-ingest
   (finalize/preview/update) via `read_preview_bytes`. Backend stays lenient
   (Option) so updates of legacy apps without a preview keep working; magic
   bytes (PNG/JPEG) + 256 KB limit enforced before writing.
 
-### Added — network distribution (same pipeline as the 1.130.0 logo blobs)
+### Added - network distribution (same pipeline as the 1.130.0 logo blobs)
 
 - `seed_all` seeds `<id>-preview.png|jpg` as a standalone iroh blob →
   `SEEDED_PREVIEWS` (GC-protected); private dApps skipped.
 - mDNS announce: new per-app TXT record **`p{i}`** with the preview blob hash
   (mirrors `o{i}`/`l{i}`; old clients ignore it).
 - `TrackerAnnounceApp.preview` / `TrackerApp.preview` plumbed through
-  (skip-if-empty, NOT part of the ECDSA signature — Phase 2 groundwork).
+  (skip-if-empty, NOT part of the ECDSA signature - Phase 2 groundwork).
 - New Tauri command **`discovery_preview(id, previewHash, nodeIds)`**; the
   logo path was refactored into a shared `discovery_media` pipeline: cache
   `data/discovery_cache/<appId>/<logo|preview>-<hash>.<png|jpg>`, tmp-file
@@ -1219,23 +1219,23 @@ frontend's blocking load order + stale marker.
 
 ---
 
-## [1.130.1] - 2026-06 (Fix: 1.130.0 compile errors — missing logo constants + export() return type)
+## [1.130.1] - 2026-06 (Fix: 1.130.0 compile errors - missing logo constants + export() return type)
 
 ### Fixed
 
-- `src-tauri/src/p2p.rs` — the `LOGO_MAX_BYTES` / `PNG_MAGIC` module constants
+- `src-tauri/src/p2p.rs` - the `LOGO_MAX_BYTES` / `PNG_MAGIC` module constants
   referenced by `seed_all` and `discovery_logo` were missing from the file
   (E0425 ×4), breaking the 1.130.0 build. Constants are now defined at module
   top: `LOGO_MAX_BYTES = 256 * 1024`, `PNG_MAGIC = [0x89, 'P', 'N', 'G',
   0x0D, 0x0A, 0x1A, 0x0A]`.
-- `fetch_logo` — `store.blobs().export()` returns `Result<u64, _>` (bytes
+- `fetch_logo` - `store.blobs().export()` returns `Result<u64, _>` (bytes
   written), not `Result<(), _>` (E0308); mapped with `.map(|_| ())`.
 
 ---
 
-## [1.130.0] - 2026-06 (Catalog logos for non-installed dApps — P2P logo blobs + discovery cache)
+## [1.130.0] - 2026-06 (Catalog logos for non-installed dApps - P2P logo blobs + discovery cache)
 
-### Added — PNG logo distribution for non-installed apps
+### Added - PNG logo distribution for non-installed apps
 
 Until now a dApp's icon only appeared in the catalog after installation (the
 logo file lives inside the app folder). Non-installed apps always fell back to
@@ -1247,46 +1247,46 @@ content-addressed iroh blob:
     magic-bytes validated, **≤ 256 KB**) is imported into the iroh store as a
     small standalone blob. Hashes live in the new `SEEDED_LOGOS` map and are
     protected from blob-store GC alongside app tars.
-  - **Private dApps are skipped** — their visual identity is never announced.
+  - **Private dApps are skipped** - their visual identity is never announced.
   - mDNS announce: new per-app TXT record `l{i}` carries the logo blob hash
     (mirrors the `o{i}` owner-record pattern; `a{i}` format untouched, old
-    clients ignore the unknown key, TXT size stays safe — a hash is ~52 chars).
+    clients ignore the unknown key, TXT size stays safe - a hash is ~52 chars).
   - `TrackerAnnounceApp` gained an optional `logo` field
-    (`skip_serializing_if empty`, NOT part of the ECDSA signature) — current
+    (`skip_serializing_if empty`, NOT part of the ECDSA signature) - current
     trackers silently ignore it; groundwork for Phase 2 tracker passthrough.
 - **Client side**:
   - New Tauri command `discovery_logo(id, logoHash, nodeIds)`:
-    1. validates the hash (alphanumeric-only — path-traversal safe) and the id
+    1. validates the hash (alphanumeric-only - path-traversal safe) and the id
        (`sanitize`);
     2. checks the content-addressed cache
        **`data/discovery_cache/<appId>/logo-<hash>.png`** (per-app folder so
-       future discovery caches can live next to it) — instant data-URL hit;
+       future discovery caches can live next to it) - instant data-URL hit;
     3. on miss, downloads the blob from the given live P2P providers
        (`download_complete_any` race), enforces the 256 KB / PNG-magic limits
        (bad blob → deleted + rejected), evicts older `logo-*.png` files of the
-       same app (a changed logo means a new hash — automatic version
+       same app (a changed logo means a new hash - automatic version
        invalidation), prunes the cache root to 300 app folders (oldest-mtime
        first).
   - `PeerApp.logo` / `TrackerApp.logo` plumbed through `merge_tracker_apps`
     and the mDNS resolver.
 - **Frontend**:
-  - `store/discovery.ts` — `DiscoveredApp.logoHash` aggregated from announces
+  - `store/discovery.ts` - `DiscoveredApp.logoHash` aggregated from announces
     (first non-empty; private apps excluded); old localStorage catalog cache
     normalized.
-  - `views/Discovered.vue` — non-installed cards (and the details modal) now
+  - `views/Discovered.vue` - non-installed cards (and the details modal) now
     lazily fetch the announced logo via `discoveryLogo()`; identicon remains
     the fallback. Retries once providers appear if the first attempt ran
     provider-less.
-  - `views/Dashboard.vue` — the "Popular on the network" top-3 cards use the
+  - `views/Dashboard.vue` - the "Popular on the network" top-3 cards use the
     same lazy P2P logo path for non-installed apps.
-  - `lib/bridge.ts` — `PeerApp.logo?`, new `discoveryLogo()` wrapper.
+  - `lib/bridge.ts` - `PeerApp.logo?`, new `discoveryLogo()` wrapper.
 
 ### Out of scope (Phase 2, by design)
 
 - Tracker passthrough of the `logo` field (server change).
 - Cloud Seeder fallback thumbnails (clients with zero live P2P keep the
   identicon).
-- SVG logos over the network (PNG only — untrusted-peer safety).
+- SVG logos over the network (PNG only - untrusted-peer safety).
 
 ---
 
@@ -1294,7 +1294,7 @@ content-addressed iroh blob:
 
 ### Changed
 
-- `views/Dashboard.vue` — removed `max-width: 780px` from `.top-apps-row`.
+- `views/Dashboard.vue` - removed `max-width: 780px` from `.top-apps-row`.
   The three grid columns (`repeat(3, minmax(0, 1fr))`) now stretch to fill
   the entire welcome block width beneath the search bar, matching the width
   of the search input and the section title. Card content stays perfectly
@@ -1306,10 +1306,10 @@ content-addressed iroh blob:
 
 ### Fixed
 
-- `layouts/AppLayout.vue` — tab tooltip like `Установлено напрямую по P2P
+- `layouts/AppLayout.vue` - tab tooltip like `Установлено напрямую по P2P
   (iroh-blobs) · v1 · Invalid Date` was caused by the frontend calling
   `new Date(s.at).toLocaleString()` on a value that the Rust backend actually
-  writes as a Unix-seconds string (`crypto::now_iso()` — despite its name).
+  writes as a Unix-seconds string (`crypto::now_iso()` - despite its name).
   New `formatInstalledAt(raw)` helper accepts:
   - number,
   - numeric string in **seconds** (`> 10¹²` → ms, otherwise ×1000),
@@ -1317,7 +1317,7 @@ content-addressed iroh blob:
     and returns `''` on unparseable input (so the ` · <date>` part is
     simply omitted instead of showing `Invalid Date`).
 - Fix applies to both `"kind": "p2p"` (from `p2p.rs`) and
-  `"kind": "seeder"` (from `cloudseeder.rs`) — both branches write the
+  `"kind": "seeder"` (from `cloudseeder.rs`) - both branches write the
   same Unix-seconds string via `crypto::now_iso()`, so no Rust changes needed.
 
 
@@ -1325,20 +1325,20 @@ content-addressed iroh blob:
 
 ## [1.129.7] - 2026-02 (Remove Neumorphic Light theme + sidebar active-pill cleanup)
 
-### Removed — Neumorphic Light theme
+### Removed - Neumorphic Light theme
 
 - Theme `neumo` is no longer available in Settings → Interface → APPEARANCE.
   All CSS rules keyed on `[data-theme='neumo']` were deleted from `styles/base.css`,
   `styles/themes.css`, `views/Settings.vue`, `views/ChatWidget.vue`, and
   `components/SeedingCard.vue`, along with the `neumo` swatch and i18n label
   (`themes.neumo`) in `en/ru/id`.
-- `store/ui.ts` — `'neumo'` dropped from `ThemeId` union and `THEME_CYCLE`.
+- `store/ui.ts` - `'neumo'` dropped from `ThemeId` union and `THEME_CYCLE`.
   Users whose saved theme was `neumo` are transparently migrated to
   `default-light` on next launch (LocalStorage rewritten in `init()`).
 
-### Fixed — Sidebar active-item pill in default themes
+### Fixed - Sidebar active-item pill in default themes
 
-- `styles/base.css` — `html[data-theme^='default-'] .nav-item.active`
+- `styles/base.css` - `html[data-theme^='default-'] .nav-item.active`
   no longer paints `var(--accent-soft)` behind the label. Only the text
   colour switches to `var(--accent)`, giving a clean "text-highlight"
   active state in both `default-dark` and `default-light`. The 3px left
@@ -1351,11 +1351,11 @@ content-addressed iroh blob:
 
 ### Changed
 
-- `layouts/AppLayout.vue` — the active `.nav-item` no longer paints a rounded
+- `layouts/AppLayout.vue` - the active `.nav-item` no longer paints a rounded
   `var(--panel-2)` pill behind the label. Only the text highlight
   (`color: var(--text)`) and the accent left indicator (`::before`,
   `var(--secondary)`) remain. Applies to both default-dark and default-light
-  themes. Hover state is untouched — it still shows a subtle pill on
+  themes. Hover state is untouched - it still shows a subtle pill on
   non-active items to give a clear pointer target.
 
 ---
@@ -1364,23 +1364,23 @@ content-addressed iroh blob:
 
 ### Changed
 
-- `views/Discovered.vue` — removed the `text-decoration: underline` (with
+- `views/Discovered.vue` - removed the `text-decoration: underline` (with
   its thickness / underline-offset) that appeared on `.disc-cover-title`
-  when hovering a discover card. The whole card is already a link — an
+  when hovering a discover card. The whole card is already a link - an
   extra underline on the title read as visual noise.
 
 ---
 
 ## [1.129.4] - 2026-02 (Dashboard: deep-tint gradient for "Popular on the network" cards)
 
-### Changed — cover-art palette
+### Changed - cover-art palette
 
-- `src/lib/coverArt.ts` — the deterministic hue is still derived from the app id,
+- `src/lib/coverArt.ts` - the deterministic hue is still derived from the app id,
   but saturation/lightness are dropped (`28%/20%` → `20%/12%` → near-black `#0d1113`)
   and the second stop is a tiny hue shift (`+24°` instead of `+46°`). Cards remain
   visually distinct but now live inside NETFORY's dark palette instead of the old
   neon teal/orange combo that clashed with the UI.
-- `views/Dashboard.vue` (`.top-app-cover`) — added `border: 1px solid var(--border)`
+- `views/Dashboard.vue` (`.top-app-cover`) - added `border: 1px solid var(--border)`
   and `border-radius: 10px 10px 0 0` so the cover stitches into the card frame.
 - Softer highlight overlay (`rgba(255,255,255,0.22) → 0.08`) and slightly deeper
   bottom vignette (`0.28 → 0.35`).
@@ -1391,47 +1391,47 @@ content-addressed iroh blob:
 
 ## [1.129.3] - 2026-02 (Rebrand: SmartNet → NETFORY user-facing name + Russian dApps guide)
 
-### Changed — user-facing product name is now **NETFORY**
+### Changed - user-facing product name is now **NETFORY**
 
-- `frontend/index.html` — window `<title>` set to `NETFORY // SmartHoldem WEB4 P2P Network`.
-- `frontend/package.json` — package `name` renamed to `netfory-client`.
-- `frontend/src-tauri/tauri.conf.json` — `productName` is now `NETFORY`; window title updated.
-- `frontend/src-tauri/Cargo.toml` — package description now reads `NETFORY - SmartHoldem WEB4 P2P network`.
+- `frontend/index.html` - window `<title>` set to `NETFORY // SmartHoldem WEB4 P2P Network`.
+- `frontend/package.json` - package `name` renamed to `netfory-client`.
+- `frontend/src-tauri/tauri.conf.json` - `productName` is now `NETFORY`; window title updated.
+- `frontend/src-tauri/Cargo.toml` - package description now reads `NETFORY - SmartHoldem WEB4 P2P network`.
 - Chat widget title (`views/ChatWidget.vue`) and i18n messenger titles (`en/ru/id`) updated
   to `NETFORY // P2P MESSENGER` / `NETFORY // P2P МЕССЕНДЖЕР` / `NETFORY // PESAN P2P`.
 
   **Backwards compatibility preserved on purpose:**
-  - `smartnet_lib` / `smartnet-client` Rust package names — unchanged.
-  - Bundle identifier `io.smartholdem.smartnet` — unchanged (existing installs keep their profiles/data).
+  - `smartnet_lib` / `smartnet-client` Rust package names - unchanged.
+  - Bundle identifier `io.smartholdem.smartnet` - unchanged (existing installs keep their profiles/data).
 
-### Added — icon set regenerated
+### Added - icon set regenerated
 
 - Full desktop icon set (`icon.icns`, `icon.ico`, `32/128/128@2x`, `icon.png`), Windows Store logos,
   iOS AppIcon-* set and Android mipmap-{m,h,x,xx,xxx}hdpi with round + adaptive foreground.
 
-### Added — Locale bootstrap: browser-language auto-detection
+### Added - Locale bootstrap: browser-language auto-detection
 
-- `src/i18n/index.ts` — on first launch, when no `sth_locale` is stored, the app resolves the
+- `src/i18n/index.ts` - on first launch, when no `sth_locale` is stored, the app resolves the
   initial locale from `navigator.languages` / `navigator.language`, matching against
   supported set `{ru, en, id}`; falls back to `en` when no match. Stored user choice always wins.
 
-### Added — Translations for TORRENTS page
+### Added - Translations for TORRENTS page
 
 - New `torrents.*` i18n namespace (`en/ru/id`) covering:
   page subtitle (with new wording *"…seed in the NETFORY"*), `Create torrent`,
   `ADD` button, `Total download / upload / downloaded / uploaded` stats, and
   table headers `Name / Size / Progress / Status / Speed`.
-- `views/Torrents.vue` — imports `useI18n` and reads all those strings through `t(...)`;
+- `views/Torrents.vue` - imports `useI18n` and reads all those strings through `t(...)`;
   `Seeds/Leechers` kept as a language-agnostic BitTorrent term.
 
-### Added — Translations for SETTINGS → NETWORK (up to Network Doctor)
+### Added - Translations for SETTINGS → NETWORK (up to Network Doctor)
 
 - New `updates.*` i18n namespace (`en/ru/id`) with `title`, `hintPrefix`, `hintSuffix`,
   `checkNow`, `checking`, `foundVersion({version})`, `checkError({error})`, `upToDate`.
-- `views/Settings.vue` — `P2P-ОБНОВЛЕНИЯ` section header, hint text, action button
+- `views/Settings.vue` - `P2P-ОБНОВЛЕНИЯ` section header, hint text, action button
   and `manualUpdateCheck()` toast strings now go through `t('updates.*')` instead of hardcoded RU.
 
-### Fixed — Duplicate i18n keys `music.paid`
+### Fixed - Duplicate i18n keys `music.paid`
 
 - Each of `en/ru/id` had two `music.paid` entries (short badge label vs. purchase toast),
   which caused Vite/esbuild `Duplicate key "paid"` compile errors. Removed the unused short
@@ -1439,11 +1439,11 @@ content-addressed iroh blob:
 
 ### Docs
 
-- New Russian guide: [`docs/16-dApps-Guide-RU.md`](./docs/16-dApps-Guide-RU.md) —
+- New Russian guide: [`docs/16-dApps-Guide-RU.md`](./docs/16-dApps-Guide-RU.md) -
   end-to-end walkthrough of publishing dApps (Public / Private / Direct-Link),
   `sth://appId` routing in third-party browsers, repository views (Official / All / Private),
   paying and renewing domain names, editing/updating dApps (free & paid), Boost mechanics,
-  where to view stats and how to donate after opening a dApp — with a closing "why this rocks"
+  where to view stats and how to donate after opening a dApp - with a closing "why this rocks"
   section on why it works without any servers.
 
 ---
@@ -1461,17 +1461,17 @@ content-addressed iroh blob:
 
 ## [1.129.1] - 2026-06 (Fix: Direct Link / QR for FREE "link-only" dApps)
 
-### Fixed — Direct Link generation for free (unlisted) apps
+### Fixed - Direct Link generation for free (unlisted) apps
 - **`app_share_info` no longer depends on the tracker snapshot**
   (`frontend/src-tauri/src/p2p.rs`): the command previously looked up the
   seeded blob hash in `TRACKER_SNAPSHOT`, which only contains apps written to
-  the `announce:` index — i.e. **paid published** dApps. Free "link-only"
+  the `announce:` index - i.e. **paid published** dApps. Free "link-only"
   apps are seeded by the node just the same (`seed_all` archives every dApp
   in the `dapps/` folder), but were absent from the snapshot, so pressing
   **⚡ DIRECT LINK** or **▦ QR** on a free app failed with a bogus
   *"not seeding yet"* error and nothing was copied.
 - **New `SEEDED_APPS` registry** (`p2p.rs`): a global `id → tar-blob-hash`
-  map covering *everything* this node actually seeds — free link-only apps
+  map covering *everything* this node actually seeds - free link-only apps
   included. `seed_all` refreshes it on every re-seed pass (startup discovery,
   publish, delete/reclaim, blob-store optimize), so the map never goes stale.
 - `app_share_info` now resolves the hash from `SEEDED_APPS` and the node id
@@ -1480,12 +1480,12 @@ content-addressed iroh blob:
   `sth://<id>?n=<nodeId>&h=<hash>` links and their QR codes now work for
   both paid and free dApps.
 
-### Fixed — gold $-coin badge missing on ALL installed-app cards
+### Fixed - gold $-coin badge missing on ALL installed-app cards
 - **`hasEarnings` was too strict** (`frontend/src/views/Installed.vue`): the
   coin was only shown when the *user's own* accrual (`estSth`) or current-day
   forecast (`forecastSth`) was positive, so apps with a live payout pool but
   no personal accrual lost the badge entirely. The check now also accepts an
-  active funding bank (`bankSth > 0`) — the coin is hidden only when every
+  active funding bank (`bankSth > 0`) - the coin is hidden only when every
   stat is genuinely zero, as originally intended.
 - **Race with async wallet load**: `earnings.refresh()` silently no-ops when
   `auth.address` is still empty at page mount, leaving the earnings snapshot
@@ -1497,7 +1497,7 @@ content-addressed iroh blob:
 
 ## [1.129.0] - 2026-02 (Trackerless dApp sharing: `sth://<id>?n=<node>&h=<hash>` direct links + one-tap QR modal)
 
-### Added — Direct Link sharing (bypass trackers & seeders)
+### Added - Direct Link sharing (bypass trackers & seeders)
 - **Self-contained install URI** (`frontend/src/views/Resolve.vue`): the
   `sth://<id>` scheme now accepts two optional query parameters,
   `?n=<endpointId>&h=<blobHash>`, which together carry everything the
@@ -1505,7 +1505,7 @@ content-addressed iroh blob:
   cloud seeder or gossip peer. When both parameters are present,
   `Resolve.vue` skips the tracker lookup entirely, pre-populates the
   `direct` ref with `{ providers: [n], hash: h }` and calls
-  `discovery.installDirect(id, providers, hash)` straight away — the
+  `discovery.installDirect(id, providers, hash)` straight away - the
   P2P blob is pulled directly from the author's node over Iroh. If the
   tracker lookup happens to succeed in parallel it is still honoured as a
   richer source of metadata, but the direct link is always the
@@ -1526,7 +1526,7 @@ content-addressed iroh blob:
   the direct-link copy button opens a themed modal that renders the same
   `sth://<id>?n=<node>&h=<hash>` URL as a scannable QR code (via the
   existing `qrcode` package used by Oxid Mail contact sharing). Users can
-  now hand over a dApp in person — the phone camera reads the QR, the
+  now hand over a dApp in person - the phone camera reads the QR, the
   SmartNet mobile companion opens the URI scheme, and the P2P install
   begins over Iroh without a tracker round-trip. The modal is generic:
   it accepts arbitrary `link` / `name` / `title` / `hint` props, so the
@@ -1540,12 +1540,12 @@ content-addressed iroh blob:
 
 ### Rationale
 - Public trackers and cloud seeders are the "yellow pages" of the
-  network — great for discovery, but useless when the author just wants
+  network - great for discovery, but useless when the author just wants
   to hand a link to a friend or paste it into a private chat. The direct
   link is the SmartNet-equivalent of an IPFS `ipfs://<cid>#<providers>`
   URL: it is a self-contained pointer to a specific piece of content on
   a specific node, verifiable end-to-end by the client. No third-party
-  service is involved, and the URL degrades gracefully — a QR on a
+  service is involved, and the URL degrades gracefully - a QR on a
   business card still installs the dApp a year later, as long as the
   author's node is online.
 - Everything ships as a pure frontend change (Vue + i18n); the Rust
@@ -1556,13 +1556,13 @@ content-addressed iroh blob:
   consistency.
 
 ### Files touched
-- `frontend/src/views/Resolve.vue` — direct-link query parsing +
+- `frontend/src/views/Resolve.vue` - direct-link query parsing +
   `installDirect` fast-path + themed badge.
-- `frontend/src/views/MyApplications.vue` — direct-link copy button +
+- `frontend/src/views/MyApplications.vue` - direct-link copy button +
   QR button + FileQrModal wiring.
-- `frontend/src/components/FileQrModal.vue` — generalised to accept a
+- `frontend/src/components/FileQrModal.vue` - generalised to accept a
   raw `link` prop (previously hard-coded to `sn://file/...`).
-- `frontend/src/i18n/{en,ru,id}.ts` — 8 new keys.
+- `frontend/src/i18n/{en,ru,id}.ts` - 8 new keys.
 - `frontend/package.json`, `frontend/src-tauri/tauri.conf.json`,
   `frontend/src-tauri/Cargo.toml`, `frontend/src-tauri/Cargo.lock`
   (1.128.0 → 1.129.0).
@@ -1570,21 +1570,21 @@ content-addressed iroh blob:
 ### Notes
 - No Oxid Mail changes in this release; Oxid Mail stays on **0.8.0**.
 - Per user policy in this session, no `cargo check` / `yarn build` /
-  automated tests were executed by the agent — the release is
+  automated tests were executed by the agent - the release is
   user-verified locally.
 
 ---
 
 ## [1.128.0] - 2026-02 (Private dApps hardening: on-disk `content.json` fallback, cloud/tracker announce, gold catalog badge, "Private Repository" label, no-earnings coin hide)
 
-### Added — Private dApp catalog experience
+### Added - Private dApp catalog experience
 - **Gold "Private apps found (N)" badge** on `Discovered.vue`: appears next to
   the search bar whenever the network reveal payload decrypts at least one
   private dApp for the current wallet. Clicking the badge filters the catalog
   down to those private apps only (toggle). RU / EN / ID translations added
   in `frontend/src/i18n/{ru,en,id}.ts`.
 - **"🔒 Private Repository" label** replaces the "✔ Official Repository"
-  chip inside the private dApp modal (`Discovered.vue`) — clearer signal that
+  chip inside the private dApp modal (`Discovered.vue`) - clearer signal that
   the app is E2EE-gated and not part of the public official catalog.
 - **In-app RAM decryption progress page** (`private_dapp.rs`,
   `protocol.rs::serve_private_dapp`): when a private dApp is opened while the
@@ -1593,7 +1593,7 @@ content-addressed iroh blob:
   raw "App not found" error. The page auto-refreshes every 800 ms until
   `PRIVATE_RAM` has the entry and then swaps to the real `sth://` payload.
 
-### Fixed — Private dApp lifecycle
+### Fixed - Private dApp lifecycle
 - **`Manifest.private` compile error (E0609)** in
   `frontend/src-tauri/src/lib.rs`: added the missing
   `private: Option<bool>` field on `Manifest` so downstream code
@@ -1623,13 +1623,13 @@ content-addressed iroh blob:
   `apps.rs::publish_private` signs), unblocking peer discovery through
   headless seeders and public trackers.
 
-### Changed — Installed apps UX
+### Changed - Installed apps UX
 - **Golden "$" coin hidden when a dApp has no accruals**
   (`frontend/src/views/Installed.vue`): the earnings-summary popover trigger
   on each installed-app card is now gated by a new `hasEarnings(id)` helper
   that inspects the earnings snapshot (`useEarningsStore.byApp`). If neither
   the estimated (`estSth`) nor the forecast (`forecastSth`) reward is
-  positive, the coin is not rendered — cutting visual noise for apps that
+  positive, the coin is not rendered - cutting visual noise for apps that
   are installed but not currently being seeded / rewarded. The store is
   refreshed on mount so the first paint already reflects real trackers'
   data.
@@ -1643,14 +1643,14 @@ content-addressed iroh blob:
 
 ## [1.127.0] - 2026-06 (Private dApps: E2EE containers with on-chain access lists)
 
-### Added — Private dApp (owner-controlled access list)
+### Added - Private dApp (owner-controlled access list)
 - **Publish flow** (`MyApplications.vue` → PUBLISH tab): new "🔒 Private dApp
-  (E2EE)" checkbox with a textarea for SmartHoldem addresses (one per line) —
+  (E2EE)" checkbox with a textarea for SmartHoldem addresses (one per line) -
   who can discover, install and open the dApp. Native client only. Each listed
   address must have ≥1 outgoing on-chain tx (public key must be visible).
 - **E2EE container** (`private_dapp.rs`, `apps.rs::ingest_private`): the dist
   folder is tar-packed and encrypted with AES-256-GCM under a random container
-  key (CEK). CEK is ECIES-wrapped (secp256k1 ECDH — same crypto as private
+  key (CEK). CEK is ECIES-wrapped (secp256k1 ECDH - same crypto as private
   files) for every listed address + the owner. On disk everyone stores ONLY
   `app.enc` + `access.json`; both files are covered by the manifest merkle →
   protected by the v2 signature. The public manifest carries a placeholder
@@ -1664,17 +1664,17 @@ content-addressed iroh blob:
 - **Discovery/search visibility**: tracker announces carry a reveal payload
   (`§P1§` marker + encrypted meta + wrapped-key map) in the description
   field. Clients on the access list decrypt the real name/description/tags
-  and see the dApp in search/catalog (bypassing the Official filter — an
+  and see the dApp in search/catalog (bypassing the Official filter - an
   explicit owner invitation); all other clients hide it entirely
   (fail-closed). Results are cached in Sled per payload hash.
 - **Access list editing** (`ACCESS` button on published private cards):
   owner edits the address list at any time. Every save ROTATES the container
   key (re-encrypts `app.enc` with a fresh CEK, re-wraps for the new list,
-  version++, re-sign) — removed addresses lose access cryptographically, not
+  version++, re-sign) - removed addresses lose access cryptographically, not
   cosmetically. No source folder needed: the tar is recovered by decrypting
   the current container with the owner key.
 - **Seeding**: everyone may seed the encrypted container (owner's choice:
-  survivability over traffic privacy). Payment scheme is unchanged — private
+  survivability over traffic privacy). Payment scheme is unchanged - private
   dApps publish via the same escrow flow (or free, without tracker announce).
 
 ### Known trade-offs (documented by design)
@@ -1697,10 +1697,10 @@ A pure-P2P user (only `SADDR@sth`, registered name + messenger keys in
 SmartNet) could receive an encrypted P2P letter but could **not** reply:
 mail key lookup only checks the local address book and the mail blockchain
 registry, and the registry is populated exclusively by the email
-Proof-of-Ownership binding — which P2P accounts never perform. Messenger
+Proof-of-Ownership binding - which P2P accounts never perform. Messenger
 `xkey:` publications live in a different sink and carry no Iroh node ID,
 so mail cannot use them. On top of that, the "keys not found" error advised
-subscribing to the user in SmartNet, which never distributes mail keys —
+subscribing to the user in SmartNet, which never distributes mail keys -
 a misleading, unimplemented hint.
 
 ### Added
@@ -1708,22 +1708,22 @@ a misleading, unimplemented hint.
   optional `replyX25519Hex` / `replyIrohHex` fields in `EnvelopeContent`.
   They travel *inside* the ciphertext and under the sender's secp256k1
   signature, so they are private and authenticated. Old clients ignore the
-  unknown JSON fields; old letters deserialize with `None` — the format is
+  unknown JSON fields; old letters deserialize with `None` - the format is
   forward- and backward-compatible.
 - **Sender side** (`mail-core/service.rs::send_p2p_message`): every outgoing
   P2P letter now embeds the sender's own x25519 public key and Iroh node ID
   derived from the seed.
 - **Auto-contact on receive** (`mail-core/p2p.rs::store_incoming`): when an
   incoming letter carries reply keys (signature already verified, and the
-  sender address is derived from the same signing pubkey — keys are
+  sender address is derived from the same signing pubkey - keys are
   authentic), a `p2p` contact `SADDR@sth` is created automatically. Existing
   contacts with non-empty keys are never overwritten (Local Trust priority),
   contacts with empty keys are filled in. Result: *anyone who writes to you
-  first becomes instantly replyable* — no manual card exchange.
+  first becomes instantly replyable* - no manual card exchange.
 
 ### Changed
 - **Honest "keys not found" error** (`service.rs`): the false "subscribe in
-  SmartNet profile" advice replaced with real options — ask the recipient
+  SmartNet profile" advice replaced with real options - ask the recipient
   for their `sn://add-email?…` contact card (Oxid Mail → Contacts → My
   card), or let them write first (reply keys auto-save), or bind an email
   in the registry.
@@ -1747,7 +1747,7 @@ a misleading, unimplemented hint.
 ### Fixed
 - **Sidebar NETFORY wordmark in light themes** (`AppLayout.vue`): the white
   «NET» half was invisible on the white sidebar. Both halves now switch via
-  CSS `light-dark()` — dark ink + darkened teal in light themes, original
+  CSS `light-dark()` - dark ink + darkened teal in light themes, original
   white + neon cyan in dark themes.
 - **SETTINGS section top tabs in Default Light** (`Settings.vue`): the
   metallic dark-slate gradients were hardcoded, so the seg-buttons stayed
@@ -1767,7 +1767,7 @@ a misleading, unimplemented hint.
 - Consolidates the four UI-polish items originally landed under 1.125.0 into
   a single minor bump. No functional / API / storage / crypto changes.
   Rust backend (`frontend/src-tauri/Cargo.toml`) intentionally not bumped in
-  this release — no Rust code was touched.
+  this release - no Rust code was touched.
 
 ---
 
@@ -1783,7 +1783,7 @@ a misleading, unimplemented hint.
 ### Fixed
 - **Sidebar wordmark in light themes** (`AppLayout.vue`): the white «NET» part
   of the NETFORY wordmark was invisible on the white sidebar. Both halves now
-  use CSS `light-dark()` — dark ink + darkened teal in light themes, original
+  use CSS `light-dark()` - dark ink + darkened teal in light themes, original
   white + neon cyan in dark themes.
 - **SETTINGS section tabs in Default Light** (`Settings.vue`): the metallic
   dark-slate gradients were hardcoded, so the top seg-buttons stayed black on
@@ -1825,13 +1825,13 @@ a misleading, unimplemented hint.
 ### Changed
 - **Share My Contact modal** (`ShareContactModal.vue`):
   - The "classic email" block is hidden when no classic (SMTP/IMAP) mailbox
-    is added — for the system P2P account it merely duplicated the
+    is added - for the system P2P account it merely duplicated the
     "p2p address" row (`<addr>@sth`). Rows are renumbered dynamically.
   - When the user owns a registered `u://name`, a fourth row
-    **"u://name alias"** (`name@sth`) is shown with copy/QR — powered by the
+    **"u://name alias"** (`name@sth`) is shown with copy/QR - powered by the
     existing `/naming/my` reverse lookup.
 - **P2P send error** (`mail-core/src/service.rs`): when the recipient's keys
-  are not found, the error now explains the anti-spam rule — subscribe to the
+  are not found, the error now explains the anti-spam rule - subscribe to the
   user in their SmartNet profile to make their keys available (in addition to
   the existing "add contact / wait for registry binding" hints).
 
@@ -1840,7 +1840,7 @@ a misleading, unimplemented hint.
 ## [1.124.3] - 2026-06 (Fix: DEVELOPERS bypass for unverified dApps agreement)
 
 ### Fixed
-- **Discover Apps → "Show unknown DAPPs"** — addresses listed in `.env
+- **Discover Apps → "Show unknown DAPPs"** - addresses listed in `.env
   DEVELOPERS=` lost their free bypass of the on-chain
   `NETFORY_UNVERIFIED_ACCEPT` agreement: in a packaged build neither the
   runtime `.env` (no file next to the exe) nor the compile-time
@@ -1852,16 +1852,16 @@ a misleading, unimplemented hint.
     `CHUNK_SIZE` fallback in `lib.rs`).
   - `wallet.rs::check_unverified_accept` now uses
     `dns_manager::is_developer()`, which also honours the compile-time
-    `DEVELOPERS` constant — the same gate that already worked for reserved
+    `DEVELOPERS` constant - the same gate that already worked for reserved
     domain names.
 - Removed a duplicated `DEVELOPERS=` line in `frontend/.env`.
 
 ---
 
-## [1.124.2] - 2026-02 (Torrents & My Files modals i18n — RU / EN / ID)
+## [1.124.2] - 2026-02 (Torrents & My Files modals i18n - RU / EN / ID)
 
 ### Changed
-- **`TorrentLimitsModal.vue`** — «Настройки торрент-клиента» is now fully
+- **`TorrentLimitsModal.vue`** - «Настройки торрент-клиента» is now fully
   translatable. New `torrentLimits.*` namespace covers all three tabs
   (Connection / Speed / BitTorrent), the µTP protocol select, random-port row,
   UPnP checkbox, peer-limit input, download/upload sliders with `KiB/s` / `MiB/s`
@@ -1869,13 +1869,13 @@ a misleading, unimplemented hint.
   placeholder), OK / SAVING… / Cancel footer, and the ⚠ restart-required notes.
   The `label(kib)` helper now reads unit strings from the current locale
   (KiB/s → EN `KiB/s`, RU `КиБ/с`, ID `KiB/d`; MiB/s analogously).
-- **`TorrentCreateModal.vue`** — «Создание торрента» localised. New
+- **`TorrentCreateModal.vue`** - «Создание торрента» localised. New
   `torrentCreate.*` namespace covers header tag + title, file/folder pickers,
   path placeholder, piece-length select (Auto + KiB/MiB variants localised
   via computed), private-torrent checkbox with hint, start-hint, trackers
   textarea section label, comment field, error messages (no path, generic
   failure) and Cancel / CREATING… / CREATE TORRENT buttons.
-- **`AddFileModal.vue`** — «ДОБАВИТЬ ФАЙЛ» (My Files) localised. New
+- **`AddFileModal.vue`** - «ДОБАВИТЬ ФАЙЛ» (My Files) localised. New
   `addFile.*` namespace covers title, dropzone label «Pick a file from disk»,
   privacy toggle (🔒 Private file (E2EE)), recipients label + placeholder +
   E2EE hint (AES-256-GCM + ECDH), paid file toggle, price label, error
@@ -1885,45 +1885,45 @@ a misleading, unimplemented hint.
   note.
 
 ### Files touched
-- `frontend/src/components/TorrentLimitsModal.vue` — added `useI18n`,
+- `frontend/src/components/TorrentLimitsModal.vue` - added `useI18n`,
   ~35 template + 2 script substitutions, `label()` now uses reactive unit
   strings via `computed()`.
-- `frontend/src/components/TorrentCreateModal.vue` — added `useI18n`,
+- `frontend/src/components/TorrentCreateModal.vue` - added `useI18n`,
   ~20 template + 2 script substitutions, `pieceOptions` moved from static
   const to `computed()` so piece-size unit strings react to locale.
-- `frontend/src/components/AddFileModal.vue` — added `useI18n`, ~13 template
+- `frontend/src/components/AddFileModal.vue` - added `useI18n`, ~13 template
   + 4 script (error message) substitutions with `{addr}` interpolation for
     the bad-address error.
-- `frontend/src/i18n/{en,ru,id}.ts` — added `torrentLimits.*` (~30 keys),
+- `frontend/src/i18n/{en,ru,id}.ts` - added `torrentLimits.*` (~30 keys),
   `torrentCreate.*` (~20 keys), `addFile.*` (~15 keys).
 - `frontend/src-tauri/tauri.conf.json`, `Cargo.toml`, `frontend/package.json`
   (1.124.1 → 1.124.2).
 
 ### Rationale
-- Same treatment as 1.124.1 for Seeders.vue — frontend UX strings only,
+- Same treatment as 1.124.1 for Seeders.vue - frontend UX strings only,
   no auth/storage/network semantics touched. Rust backend untouched.
   Placeholder attributes bound reactively via `:placeholder="t(…)"` so
   language switches take effect without a modal remount.
 
 ---
 
-## [1.124.1] - 2026-02 (Seeders.vue full i18n — RU / EN / ID)
+## [1.124.1] - 2026-02 (Seeders.vue full i18n - RU / EN / ID)
 
 ### Changed
-- **`views/Seeders.vue` fully i18n-driven** — the `// PUBLIC NETWORK SEEDERS_`
+- **`views/Seeders.vue` fully i18n-driven** - the `// PUBLIC NETWORK SEEDERS_`
   screen no longer contains any hard-coded Russian. New `pubSeeders.*` namespace
   in `frontend/src/i18n/{en,ru,id}.ts` (~130 keys) covers:
   - Header (title, subtitle with `<b>` interpolation via `v-html`)
-  - Session summary (`/ntfryseed · SESSION`) — plural rules for archive count
+  - Session summary (`/ntfryseed · SESSION`) - plural rules for archive count
     (RU: 1/2/many via i18n plural, EN: n/n archives, ID: n arsip)
-  - Publish card — description, publish button (idle/busy), no-account gate,
+  - Publish card - description, publish button (idle/busy), no-account gate,
     "→ Open Crypto Vault" link
   - Secondary drive selector (label, off-option, hint)
   - Mail.ru manual weblink block (open folder, apply button, hint)
   - Live progress lines (meta phase, archive phase, packing/uploading/done/error,
     retry badge with `progAttempt` count, finishing state)
   - Publish result (archives label, `updated {when}`, mirror URI label)
-  - Auto-replication row (`Auto-replication every 30 min — ON/OFF`,
+  - Auto-replication row (`Auto-replication every 30 min - ON/OFF`,
     last-publish text with `{when}` slot, pending hint)
   - Replicate Profiles switch (label with `<b>`, ON/hourly text, last-replication,
     "publish only when changed" note, PUBLISH NOW button)
@@ -1937,10 +1937,10 @@ a misleading, unimplemented hint.
     LOAD / DOWNLOAD buttons)
   - Known Seeders registry (title with count `{n}`, holding badge+tooltip,
     CHECK ALL button, description, empty state, HOLDING marker, REMOVE button)
-  - Origin badges (own/manual/gossip/seeders.enc/bootstrap) — label + title
+  - Origin badges (own/manual/gossip/seeders.enc/bootstrap) - label + title
   - Status text (`not checked`, `fetch OK · {when}`, `unavailable · last success: {when}`,
     ETA states `~N s / ~N min / ~H h M min left`, server-processing)
-  - Units (MB / KB / MB/s / KB/s — localized per locale)
+  - Units (MB / KB / MB/s / KB/s - localized per locale)
   - Toasts (open MR folder, bad link, check done, installed from cloud,
     QR failed, published, copied, copy failed, already in registry,
     added to registry)
@@ -1950,18 +1950,18 @@ a misleading, unimplemented hint.
   `ru-RU`), matching the SystemConsole i18n pass from 1.124.0.
 
 ### Files touched
-- `frontend/src/views/Seeders.vue` — `useI18n` wired in setup, ~90 template
+- `frontend/src/views/Seeders.vue` - `useI18n` wired in setup, ~90 template
   substitutions + ~15 script substitutions (toasts, error messages, badge
   labels, status strings, size/speed/ETA formatters)
-- `frontend/src/i18n/en.ts` — added `pubSeeders.*` (English strings)
-- `frontend/src/i18n/ru.ts` — added `pubSeeders.*` (Russian — verbatim from
+- `frontend/src/i18n/en.ts` - added `pubSeeders.*` (English strings)
+- `frontend/src/i18n/ru.ts` - added `pubSeeders.*` (Russian - verbatim from
   the original hard-coded copy)
-- `frontend/src/i18n/id.ts` — added `pubSeeders.*` (Bahasa Indonesia)
+- `frontend/src/i18n/id.ts` - added `pubSeeders.*` (Bahasa Indonesia)
 - `frontend/src-tauri/tauri.conf.json`, `Cargo.toml`, `frontend/package.json`
   (1.124.0 → 1.124.1)
 
 ### Rationale
-- Same treatment as the SystemConsole i18n pass — user-facing labels belong to
+- Same treatment as the SystemConsole i18n pass - user-facing labels belong to
   the frontend translation layer; there is no functional change (no auth flow,
   API contract, encryption or storage code was touched). Vue-i18n plural rules
   used for archive/posts/comments counts so the RU locale renders proper
@@ -1992,7 +1992,7 @@ a misleading, unimplemented hint.
   `translator.rs`, `swarm/{engine,bandit}.rs`, `netwatch.rs`, `stealth.rs`,
   `profile_seeder.rs`, `social.rs`, `protocol.rs`, `official.rs`).
   Emoji markers (🚀 📈 💀 🎉 🏆 🎲 🎯 ✅ ⛔ ⚠️) preserved as visual level
-  indicators. Semantics unchanged — every message reads the same, just
+  indicators. Semantics unchanged - every message reads the same, just
   now in English. This aligns with the industry convention that low-level
   P2P / network / DHT / updater logs are English-only (technical logs
   should be searchable and copy-pastable into GitHub issues without a
@@ -2000,7 +2000,7 @@ a misleading, unimplemented hint.
 
 ### Rationale
 - Return-error / dialog-filter strings in Rust that surface as UI toasts
-  or system file dialogs were intentionally left in Russian — they are
+  or system file dialogs were intentionally left in Russian - they are
   end-user messages, not technical logs, and belong to a separate i18n
   pass. Only `syslog::log(...)` (which feeds the System Console) was
   switched to English in this release.
@@ -2026,7 +2026,7 @@ a misleading, unimplemented hint.
   (`oxid-mail/crates/mail-crypto/src/armor.rs`). When a NETFORY 0xID user
   sends an end-to-end-encrypted letter to a legacy mail provider
   (Gmail / Outlook / etc.), the pre-payload sniff banner that is visible
-  to non-NETFORY recipients used to contain three lines — two Russian
+  to non-NETFORY recipients used to contain three lines - two Russian
   and one English. Two of them have been consolidated into a single
   English pair so that international recipients do not see Cyrillic text
   they cannot read:
@@ -2036,7 +2036,7 @@ a misleading, unimplemented hint.
     ```
   The `-----NTFRY START-----` / `-----NTFRY END-----` sentinels and the
   base64 payload are unchanged, so decryption on the receiver side is
-  fully backward-compatible — only the human-readable preamble was
+  fully backward-compatible - only the human-readable preamble was
   reworded. `docs/13-Oxid-Mail-E2E-Encryption-Plan.md` was refreshed to
   match the new wording.
 
@@ -2057,7 +2057,7 @@ a misleading, unimplemented hint.
   public folder via the HTML `embeddedfolderview` endpoint (per-level path
   resolution for `dapps/…` and `users/…` subfolders) and download blobs via
   `drive.usercontent.google.com/download`, including a fallback that replays
-  the hidden-input form of the large-file virus-scan interstitial — the same
+  the hidden-input form of the large-file virus-scan interstitial - the same
   anonymous-read model already used for Mail.ru weblinks.
 - **Resilient Google uploads**: the shared `resilient_put` engine (progress
   stall guard, 3 attempts, live progress callbacks) is reused; strict
@@ -2066,7 +2066,7 @@ a misleading, unimplemented hint.
   `gdrive_upload_seed`, `gdrive_upload_seed_file`, `gdrive_upload_subpath`,
   `gdrive_delete_seed_dapp_file`, `gdrive_delete_seed_root_file`,
   `gdrive_delete_subpath`, `gdrive_fetch_public` (+parser unit tests).
-- **Secondary drive (dual replication)** — a second cloud account from
+- **Secondary drive (dual replication)** - a second cloud account from
   Crypto Vault (Yandex / Mail.ru / Google) can be selected as a mirror in
   `[ PUBLISH NETWORK STATE ]`. Manual publish, the 30-minute auto-replication
   and *Replicate Profiles* now push `/ntfryseed` to BOTH drives sequentially;
@@ -2084,7 +2084,7 @@ a misleading, unimplemented hint.
   (or `google`) as `provider` plus a new optional `secondary` flag;
   `cloud_seeder_delete_dapp` also cleans mirrors. `cloud_seeder_fetch`,
   cloud-fallback scans and cloud installs (`cloud_seeder_install*`) now fully
-  support `g@` URIs — the «Google Drive seeders — next phase» stubs are gone.
+  support `g@` URIs - the «Google Drive seeders - next phase» stubs are gone.
 - Seeders page: provider badge shows *Google*, a `SECONDARY DRIVE` selector
   appears when more than one cloud account is connected, mirror errors are
   shown as a non-fatal amber warning and the mirror URI is rendered under the
@@ -2092,38 +2092,38 @@ a misleading, unimplemented hint.
 - Background replication failures of the mirror never fail the primary
   publish (best-effort semantics confirmed by the user).
 
-## [1.122.3] - 2026-02 (`DonateModal` i18n — English + Indonesian translations of «SUPPORT THE NETWORK_»)
+## [1.122.3] - 2026-02 (`DonateModal` i18n - English + Indonesian translations of «SUPPORT THE NETWORK_»)
 
 ### Added
 - **Full i18n coverage for the `SUPPORT THE NETWORK_` donation modal**
   (`frontend/src/components/DonateModal.vue`,
   `frontend/src/i18n/{ru,en,id}.ts`). Every hard-coded Russian string in
-  the modal — title, subtitle, both intro paragraphs, the "pick an
+  the modal - title, subtitle, both intro paragraphs, the "pick an
   address below" CTA, the copy / copied button captions and their
-  tooltips — is now driven by the new `donateModal.*` namespace. Vue-i18n
+  tooltips - is now driven by the new `donateModal.*` namespace. Vue-i18n
   `useI18n()` is wired into the component and switches all copy in place
   when the user flips the sidebar language selector, so a Russian user
   keeps the current wording, an English user gets:
   * *"Contribute to the freedom of the network"*
-  * *"SmartNet is a fully independent project — no censorship, no
+  * *"SmartNet is a fully independent project - no censorship, no
     venture investors, no corporate control. …"*
-  * *"Back independent Web4 — pick the address that suits you below:"*
+  * *"Back independent Web4 - pick the address that suits you below:"*
   * COPY / ✓ COPIED buttons + "Copy address" tooltip.
     and an Indonesian (`id`) user gets:
   * *"Berkontribusi untuk kebebasan jaringan"*
-  * *"SmartNet adalah proyek yang sepenuhnya independen — tanpa sensor,
+  * *"SmartNet adalah proyek yang sepenuhnya independen - tanpa sensor,
     tanpa investor ventura, tanpa kendali korporat. …"*
-  * *"Dukung Web4 yang independen — pilih alamat yang sesuai di bawah:"*
+  * *"Dukung Web4 yang independen - pilih alamat yang sesuai di bawah:"*
   * SALIN / ✓ TERSALIN buttons + "Salin alamat" tooltip.
     Because "SmartNet" opens the first sentence in all three locales and
     needs to stay bold, the template keeps `<b>SmartNet</b>` and simply
     appends the localised continuation of the sentence via
-    `t('donateModal.intro1')` — a pragmatic compromise that avoids
+    `t('donateModal.intro1')` - a pragmatic compromise that avoids
     `v-html` while still preserving the bold brand accent.
 
 ---
 
-## [1.122.2] - 2026-02 (Sidebar brand refresh — raster NETFORY logo, retired Mail & Seeders entries, Dashboard `Micro Blog` card)
+## [1.122.2] - 2026-02 (Sidebar brand refresh - raster NETFORY logo, retired Mail & Seeders entries, Dashboard `Micro Blog` card)
 
 ### Added
 - **Raster NETFORY logo in the sidebar** (`frontend/public/netfory_logo.png`,
@@ -2146,7 +2146,7 @@ a misleading, unimplemented hint.
   changing the tile itself.
 
 ### Changed
-- **Retired `ПОЧТА` (Oxid Mail) launcher from the sidebar** — the standalone
+- **Retired `ПОЧТА` (Oxid Mail) launcher from the sidebar** - the standalone
   bottom-cluster button that spawned the native mail app is no longer
   rendered. The Rust launcher command and the `openOxidMail` handler are
   intentionally kept in place because the `new_mail` toast handler still
@@ -2158,7 +2158,7 @@ a misleading, unimplemented hint.
   sidebar was pulling visual attention away from the core P2P storage and
   discover flows for DEV/GEEK modes as well. Fetch/publish/registry
   management remains reachable from the internal registry APIs, Settings,
-  and the Discover page fallback — the background replication timer keeps
+  and the Discover page fallback - the background replication timer keeps
   running unchanged.
 
 ---
@@ -2170,22 +2170,22 @@ a misleading, unimplemented hint.
   (`frontend/src-tauri/src/dns_manager.rs`, `frontend/src/lib/bridge.ts`,
   `frontend/src/components/DomainManager.vue`). Previously the tier-price
   ladder allowed *any* wallet to buy an ultra-short label as long as it
-  paid the (very low) base fee — only the `CONFIG_ADMIN` wallet was gated
+  paid the (very low) base fee - only the `CONFIG_ADMIN` wallet was gated
   in `register_domain`, and reserved-name lookup completely ignored the
   1–2 char class. The three-layer defence now enforces the same
   `DEVELOPERS` allowlist that already applies to reserved names:
-  * `ingest_tx` (chain replay) — drops any historical short-label
+  * `ingest_tx` (chain replay) - drops any historical short-label
     registration that was not signed by a `DEVELOPERS` address, so the
     client-side registry can never "resurrect" a squatted 1-char name.
-  * `domain_lookup` — reports `reason: "reserved"` for short labels to
+  * `domain_lookup` - reports `reason: "reserved"` for short labels to
     non-developer callers so the UI grays out the register button and
     shows a clear explanation instead of a misleading price.
-  * `register_domain` — hard-rejects the command with
-    `"RESERVED — имена из 1–2 символов доступны только разработчикам сети"`
+  * `register_domain` - hard-rejects the command with
+    `"RESERVED - имена из 1–2 символов доступны только разработчикам сети"`
     as a belt-and-braces backstop for wallets that would try to bypass
     the UI. The web preview mirrors the same rule in `webDomainLookup`
     so the browser build cannot mislead the user either.
-- **`dns_manager.rs` "unexpected closing delimiter" compilation hotfix** —
+- **`dns_manager.rs` "unexpected closing delimiter" compilation hotfix** -
   a previous `search_replace` operation left three stray lines
   (`memo_matches(&other_trunc, &full));\n    }\n}`) below the real end of
   the `#[cfg(test)]` module, which broke the entire Tauri build with
@@ -2196,7 +2196,7 @@ a misleading, unimplemented hint.
 ### Changed
 - Doc-comments and error messages that still referred to the legacy
   "admin only" concept for 1–2 char labels are now uniformly phrased
-  as "DEVELOPERS-only" to match the new gate — including the field
+  as "DEVELOPERS-only" to match the new gate - including the field
   documentation on `DomainStatus::admin_only`, the `tier_price` header
   and the human-readable rejection strings.
 
@@ -2205,7 +2205,7 @@ a misleading, unimplemented hint.
 ## [1.122.0 / Oxid Mail 0.7.0] - 2026-02 (Paid unlock for unverified dApps, reserved-names guard, recipient chips + contact autocomplete, ReaderView empty-screen fix)
 
 ### Added
-- **Paid on-chain unlock for unverified dApps** — the SmartNet dApp catalog
+- **Paid on-chain unlock for unverified dApps** - the SmartNet dApp catalog
   now surfaces a modal (`frontend/src/components/UnverifiedDappUnlockModal.vue`)
   the first time a user opens a dApp that is not on the official/verified
   list. The user acknowledges the risk (unaudited code, potential loss of
@@ -2213,22 +2213,22 @@ a misleading, unimplemented hint.
   the platform address; the transaction carries a signed marker
   `vendorField: NETFORY_UNVERIFIED_ACCEPT:<dappId>`. Once the transaction is
   confirmed, the acceptance is cached locally (per-address, per-dappId) and
-  the user is admitted straight into the dApp on subsequent launches — no
+  the user is admitted straight into the dApp on subsequent launches - no
   second payment, no repeated modal.
-- **DEVELOPERS bypass for the 9999 STH fee** — a comma-separated
+- **DEVELOPERS bypass for the 9999 STH fee** - a comma-separated
   `DEVELOPERS` list in `frontend/.env` (also mirrored via `vite.config.js`
   into `import.meta.env`) whitelists SmartHoldem addresses that skip the
   paid unlock entirely. `frontend/src-tauri/src/wallet.rs` reads the same
   variable at runtime, so both the UI gate and the Tauri command paths
   short-circuit the transaction for whitelisted developer wallets. This is
-  a `.env`-only knob — no UI, no persistence, no bypass without editing the
+  a `.env`-only knob - no UI, no persistence, no bypass without editing the
   file.
 - **New environment flag `FEE_ALLOW_ALL_DAPPS`** (`frontend/.env`,
-  `vite.config.js`) — a global escape hatch that disables the paid-unlock
+  `vite.config.js`) - a global escape hatch that disables the paid-unlock
   gate entirely for development / testnet builds. Off by default.
 - **Reserved-names guard for `u://name` and `sth://name` registration**
   (`frontend/public/reserved.txt`, `frontend/src-tauri/src/naming.rs`,
-  `frontend/src-tauri/src/dns_manager.rs`) — the naming layer now refuses
+  `frontend/src-tauri/src/dns_manager.rs`) - the naming layer now refuses
   to register any human-readable name that appears in the shipped
   `reserved.txt`. The list is fetched at UI startup and mirrored inside the
   Rust `naming` module so the guard is enforced on **both** sides (UI form
@@ -2237,14 +2237,14 @@ a misleading, unimplemented hint.
   in the `DEVELOPERS` allowlist can still register reserved names (e.g. for
   bootstrapping official handles).
 - **Compose recipient chips + contact autocomplete**
-  (`oxid-mail/ui/src/components/ComposeModal.vue`) — the "To" field is now
+  (`oxid-mail/ui/src/components/ComposeModal.vue`) - the "To" field is now
   a chip-based input. As the user types, matches from the local address
   book (`mail-core::contacts`) are surfaced live under the field; commas,
   Enter and blur promote the input to a chip, Backspace on the empty input
   removes the last chip. Up to **20 recipients** per message are allowed;
   duplicates are collapsed silently. Each chip has a per-item ✕ delete
   affordance.
-- **Multi-recipient SMTP send in `mail-core`** — `send_message` now accepts
+- **Multi-recipient SMTP send in `mail-core`** - `send_message` now accepts
   a `to: string[]` array end-to-end. `smtp_client::send_mail` serialises the
   full list into the `To:` header and passes every address to `RCPT TO`, so
   a single compose can fan out to many mailboxes with one SMTP session.
@@ -2253,19 +2253,19 @@ a misleading, unimplemented hint.
   encrypted sends.
 
 ### Changed
-- **P2P (`<addr>@sth`) sends are capped at a single recipient** — mixing
+- **P2P (`<addr>@sth`) sends are capped at a single recipient** - mixing
   multiple `@sth` peers, or an `@sth` peer with a classic e-mail, in the
   same compose is rejected with an inline error before any transport
   fires. This keeps the NTFRY envelope semantics honest: one sealed
   envelope, one target NodeId, one Iroh stream. Multi-address blasts stay
   on the SMTP path.
-- **Naming error copy** — the naming module now returns a dedicated
+- **Naming error copy** - the naming module now returns a dedicated
   `Reserved` error variant (formerly folded into the generic invalid-name
   bucket) so the UI can render a distinct red hint referencing
   `reserved.txt`.
 
 ### Fixed
-- **1–2 char `.sth` names were purchasable by ordinary users** — the domain
+- **1–2 char `.sth` names were purchasable by ordinary users** - the domain
   registration panel showed `available: ok` (with the correct `adminOnly`
   flag set, but never enforced) for 1–2 character labels, letting anyone
   reach the payment confirmation for e.g. `ab.sth`. Such names are reserved
@@ -2278,13 +2278,13 @@ a misleading, unimplemented hint.
   list (compile-time constant + runtime `.env`). The web-preview mirror
   (`frontend/src/lib/bridge.ts` → `webDomainLookup`) applies the same rule.
 - **`mail-core` compile error `E0603: function finish_progress is private`**
-  — the progress-finalisation helper introduced in 0.6.0 was left with
+  - the progress-finalisation helper introduced in 0.6.0 was left with
   default (private) visibility while a sibling module needed to invoke it
   after the SMTP fallback path resolved. It is now `pub(crate)`, which
   restores a clean build across the workspace without widening the public
-  API surface. No behaviour change — the same "100 % only after the ack /
+  API surface. No behaviour change - the same "100 % only after the ack /
   SMTP success" contract still holds.
-- **Empty screen on open message in Oxid Mail (`ReaderView.vue`)** — Vue 3
+- **Empty screen on open message in Oxid Mail (`ReaderView.vue`)** - Vue 3
   requires a single root node when the template is compiled with the
   runtime + compiler split we use; a stray sibling comment/element next to
   the root `<article>` slipped in during the 0.6.0 attachment-overlay work
@@ -2296,7 +2296,7 @@ a misleading, unimplemented hint.
 - The unverified-dApp acceptance record is stored **only locally** per
   wallet address; nothing about which dApps a user chose to unlock leaves
   the device. The on-chain footprint is exactly one transfer with a
-  well-known `vendorField` marker — no metadata about the user's browsing
+  well-known `vendorField` marker - no metadata about the user's browsing
   history is ever broadcast.
 - The `DEVELOPERS` allowlist and `FEE_ALLOW_ALL_DAPPS` flag are read from
   `frontend/.env` at build/launch time and are never exposed to the dApp
@@ -2319,7 +2319,7 @@ a misleading, unimplemented hint.
     `oxid-mail/crates/oxid-bridge/Cargo.toml`,
     `oxid-mail/ui/package.json`).
 - Per user policy in this session, no `cargo check` / `yarn build` /
-  automated tests were executed by the agent — the release is
+  automated tests were executed by the agent - the release is
   user-verified locally.
 
 ---
@@ -2327,7 +2327,7 @@ a misleading, unimplemented hint.
 ## [1.121.0 / Oxid Mail 0.6.0] - 2026-02 (Attachments Dropzone + inline NTFRY, attachment preview overlay, honest P2P delivery progress)
 
 ### Added
-- **Compose Dropzone with a 25 MB total-size limit** (`ui/src/components/ComposeModal.vue`) —
+- **Compose Dropzone with a 25 MB total-size limit** (`ui/src/components/ComposeModal.vue`) -
   drag-and-drop overlay ("Drop files to attach"), footer button and file
   counter `N files · X MB / 25 MB`, per-file remove. Files are read as
   base64 via `FileReader.readAsDataURL` and passed to the existing
@@ -2336,32 +2336,32 @@ a misleading, unimplemented hint.
   of decoded attachment bytes is checked before sealing/sending, returning a
   human-readable `CoreError::Msg` on violation. Mirrors the UI cap and
   protects P2P delivery from bloating a single envelope past SMTP quotas.
-- **Inline attachments in the NTFRY envelope** — for P2P (`<addr>@sth`) and
+- **Inline attachments in the NTFRY envelope** - for P2P (`<addr>@sth`) and
   SMTP-encrypted flows, all files go **inside** the sealed envelope
   (`envelope::Attachment { filename, mime, data_b64 }`). No separate
   `sn://file/` payloads, no side-channel: the recipient unseals a single
   ciphertext and gets all files at once. Same code path works for the
   SMTP-fallback case.
-- **P2P attachment activity toast** — after a successful send to `<addr>@sth`
+- **P2P attachment activity toast** - after a successful send to `<addr>@sth`
   with attachments, a new Pinia store `stores/toast.js` + `ToastHost.vue`
   surface a persistent notification that the encrypted envelope is being
   seeded via Iroh while `oxid-mail` is open; if the peer is offline, the
   envelope will be delivered as soon as both sides come online.
-- **Attachment preview overlay in `ReaderView.vue`** — clicking an
+- **Attachment preview overlay in `ReaderView.vue`** - clicking an
   attachment chip now opens a full-screen preview modal on top of the mail
   window. Images are rendered via `<img>`; PDFs via an `<iframe>` fed a
   `blob:` URL. Data is streamed straight into memory: inline NTFRY payloads
   reuse the base64 from `dec.attachments`, SMTP payloads are pulled through
-  `GET /accounts/:id/messages/:mid/attachments/:idx` — **without ever
+  `GET /accounts/:id/messages/:mid/attachments/:idx` - **without ever
   touching the disk**. Buttons **Download** and **Close**, Esc key and
   backdrop click all dismiss the overlay; `URL.revokeObjectURL` is called on
   close, on message switch and on unmount. All other MIME types keep the
   legacy click-to-download behaviour.
-- **Honest "file X of Y" P2P delivery progress** — end-to-end pipeline:
+- **Honest "file X of Y" P2P delivery progress** - end-to-end pipeline:
   - `mail-core::p2p::send_with_progress` slices the NTFRY payload into
     **256 KB QUIC chunks** and updates a shared
     `PROGRESS: Mutex<HashMap<progress_id, ProgressState>>` after each chunk.
-    The `sent` counter is kept one byte below `total` on purpose — the final
+    The `sent` counter is kept one byte below `total` on purpose - the final
     100 % is only set by `finish_progress` after the receiver's `OK` ack, so
     the UI never shows a fake "done".
   - `SendRequest` gained a `progressId: Option<String>` field
@@ -2376,8 +2376,8 @@ a misleading, unimplemented hint.
     every **500 ms**. It recomputes "file X of Y · N%" by mapping
     `sent/total` of the payload back onto the cumulative sum of the
     original file sizes. When the send resolves, the same toast morphs into
-    a success — **"✓ all N files delivered"** for pure P2P, or
-    **"Delivered via SMTP"** when the Iroh fallback fired — with `ttl=6000`.
+    a success - **"✓ all N files delivered"** for pure P2P, or
+    **"Delivered via SMTP"** when the Iroh fallback fired - with `ttl=6000`.
     On send error the toast is dismissed cleanly.
   - `stores/toast.js` now supports `progress: number|null` and an
     `update(id, patch)` method that safely reschedules the `ttl` timer.
@@ -2385,7 +2385,7 @@ a misleading, unimplemented hint.
     item has a `progress` field.
 
 ### Changed
-- `p2p::send` is now a thin wrapper over `send_with_progress(None)` — one
+- `p2p::send` is now a thin wrapper over `send_with_progress(None)` - one
   code path for both the progress-instrumented compose flow and any
   ad-hoc/legacy caller.
 - `LRU-style trim in `PROGRESS`: the map self-cleans finished entries once
@@ -2395,19 +2395,19 @@ a misleading, unimplemented hint.
   making the two actions visually distinct without extra buttons.
 
 ### Security / Privacy
-- The preview overlay never persists attachment bytes to disk — data lives
+- The preview overlay never persists attachment bytes to disk - data lives
   only in a `Blob` and its `blob:` URL, which is revoked on close/unmount
   and on any message switch. Same guarantee applies to inline NTFRY
   attachments (already in memory only) and to SMTP attachments fetched on
   demand.
 - The progress channel exposes only `{ sent, total, fileSizes, done, ok }`
-  — no message body, subject, recipient or key material is ever surfaced
+  - no message body, subject, recipient or key material is ever surfaced
   over the progress endpoint.
 
 ### Notes
 - Chunk size (256 KB) is a deliberate compromise between smooth UI
   animation (~4 progress ticks per MB) and QUIC head-of-line efficiency;
-  it does not change the on-wire format — the ciphertext is still one
+  it does not change the on-wire format - the ciphertext is still one
   contiguous NTFRY envelope streamed over a single bi-directional Iroh
   stream, exactly as before.
 
@@ -2416,7 +2416,7 @@ a misleading, unimplemented hint.
 ## [1.120.0 / Oxid Mail 0.5.0] - 2026-06 (Iroh P2P delivery, external links, one-click sender contact, QR share)
 
 ### Added
-- **Iroh P2P transport (`mail-core::p2p`)** — an iroh 1.0 endpoint (preset N0:
+- **Iroh P2P transport (`mail-core::p2p`)** - an iroh 1.0 endpoint (preset N0:
   n0 relays + DNS/pkarr discovery, QUIC hole-punching) starts with the session;
   the node key is seed-derived (`oxid-mail/iroh-node/v1`), ALPN
   `oxid-mail/p2p/1`. Sending to `<SADDR>@sth` seals a NTFRY envelope (keys from
@@ -2429,7 +2429,7 @@ a misleading, unimplemented hint.
   TRUSTED CONTACT verdicts.
 - **External links open in the default browser**: plain-text bodies are
   linkified (clickable http/https), HTML bodies keep the sandboxed iframe but
-  clicks are intercepted (`allow-same-origin`, scripts still blocked) — both
+  clicks are intercepted (`allow-same-origin`, scripts still blocked) - both
   routes go through the new `open_external` Tauri command (`open` crate) with
   a `window.open` fallback in web mode. Only http/https URLs are allowed.
 - **One-click "add sender to contacts"** button next to the sender in the
@@ -2453,7 +2453,7 @@ a misleading, unimplemented hint.
 ## [1.120.0 / Oxid Mail 0.4.0] - 2026-06 (Contacts module: Local Trust Layer over blockchain discovery)
 
 ### Added
-- **Local address book (`mail-core::contacts`)** — Web-of-Trust style direct
+- **Local address book (`mail-core::contacts`)** - Web-of-Trust style direct
   contact exchange. Three contact kinds: **plain** (classic e-mail),
   **encrypted** (e-mail + pinned STH address + X25519/Iroh public keys),
   **p2p** (internal `<sthAddress>@sth`). Stored in the encrypted sled tree
@@ -2470,7 +2470,7 @@ a misleading, unimplemented hint.
 - **Contact exchange formats** parsed by `contacts::parse_any`: full URI
   `sn://add-email?v=1&email=…&addr=…&x=…&node=…&name=…`, short form
   `SADDR:email`, p2p `SADDR@sth`, plain e-mail.
-- **Share card** (`contacts::my_card`): three ready-to-send strings — classic
+- **Share card** (`contacts::my_card`): three ready-to-send strings - classic
   e-mail, encrypted contact URI (keys derived from seed), p2p `@sth` address.
 - **API**: `GET/POST /api/contacts`, `POST /api/contacts/parse`,
   `DELETE /api/contacts/:email`, `GET /api/accounts/:id/contact-card` +
@@ -2498,13 +2498,13 @@ a misleading, unimplemented hint.
 ## [1.120.0 / Oxid Mail 0.3.0] - 2026-06 (Encrypted mail protocol v1: NTFRY envelope, email↔STH binding, Anti-Spoofing)
 
 ### Added
-- **New crate `mail-crypto`** — frozen protocol v1 primitives:
+- **New crate `mail-crypto`** - frozen protocol v1 primitives:
   - Registry index hash: `Argon2id(m=128MiB, t=3, p=1)` over normalized e-mail
     with a global BLAKE3-derived salt, finished with keyed BLAKE3 → `H32`;
     on-chain index is `H16 = H32[..16]`, envelope slot hint is a
     domain-separated 8-byte BLAKE3 derivation (unlinkable to `H16`).
   - Seed-derived keys (HKDF-SHA256 from `sha256(mnemonic)`): X25519 static key
-    (`oxid-mail/x25519/v1`) and Iroh ed25519 NodeId (`oxid-mail/iroh-node/v1`) —
+    (`oxid-mail/x25519/v1`) and Iroh ed25519 NodeId (`oxid-mail/iroh-node/v1`) -
     restoring the wallet restores all mail crypto, no separate key backup.
   - **NTFRY envelope**: ECIES (ephemeral X25519 → HKDF → XChaCha20-Poly1305) +
     zstd, multi-recipient CEK wrapping, secp256k1 ECDSA signature over the whole
@@ -2515,20 +2515,20 @@ a misleading, unimplemented hint.
     for anti-spoofing badges on PLAIN (unencrypted) mail.
   - Registry vendorField codec: `oxid1:<H16>:<X25519>:<IrohNodeId>` (116 chars,
     base64url) and `oxid1:revoke:<H16>`.
-- **`mail-core::chain`** — autonomous SmartHoldem chain client: node pool with
+- **`mail-core::chain`** - autonomous SmartHoldem chain client: node pool with
   failover, balance/nonce, legacy bip-schnorr signing (byte-identical to
   SmartNet `sth_node.rs`), v2 transfer build/broadcast, tx confirmation polling,
   and the **registry indexer** with deterministic rules: earliest-wins per H16,
   key rotation only by the owner address, revoke frees the hash, foreign late
   bindings flagged `conflict`.
-- **`mail-core::crypto_mail`** — service layer: cached Argon2 e-mail hashes,
+- **`mail-core::crypto_mail`** - service layer: cached Argon2 e-mail hashes,
   persistent registry index (sled), **Proof-of-Ownership binding flow**
   (balance check → signed proof e-mail to self via SMTP → IMAP verify with
   DKIM presence check → 0.5+0.5 STH transfer to `SMaiL…` registry address →
   chain confirmation), NTFRY decrypt with sender verification verdicts
   (`verified` / `mismatch` / `unknown` / `invalid`) and plain-mail
   X-Ntfry-Sig verification.
-- **Send path** (`service::send_message`): `encrypt` flag — recipients resolved
+- **Send path** (`service::send_message`): `encrypt` flag - recipients resolved
   through the on-chain registry (clear error if a recipient is not bound), the
   sender always gets its own decryption slot; plain mail from bound accounts is
   automatically signed with `X-Ntfry-Sig`.
@@ -2557,47 +2557,47 @@ a misleading, unimplemented hint.
   `encrypted`) → decrypt endpoint → hidden subject/body recovered, sender STH
   address extracted. Binding flow verified up to the graceful
   "insufficient STH balance" guard (the on-chain transaction itself requires a
-  funded wallet — user-side test).
+  funded wallet - user-side test).
 
 ---
 
 ## [1.120.0] - 2026-06 (Oxid Mail 0.2.0 · Gmail App-Password-only sign-in, custom seed passthrough, sled lock fix)
 
 ### Added
-- **Oxid Mail: "Connect SmartNet" onboarding shortcut** — the mail app now
+- **Oxid Mail: "Connect SmartNet" onboarding shortcut** - the mail app now
   detects an active SmartNet session over the local IPC channel and offers a
   one-click sign-in that skips the 12-word input entirely. If SmartNet is
   running, the user never sees the raw seed prompt again
   (`oxid-mail/ui/src/views/Onboarding.vue`).
-- **Docs: encrypted Sled store rationale** — `oxid-mail/README.md` now
+- **Docs: encrypted Sled store rationale** - `oxid-mail/README.md` now
   documents the local store threat model (BIP-39 / custom secret → HKDF-SHA256
   → XChaCha20-Poly1305 + zstd, sled) and the reasoning behind the
   PIN-derived unlock flow.
 
 ### Changed
-- **`mail-core::identity`: accept arbitrary secrets, not only BIP-39** — the
+- **`mail-core::identity`: accept arbitrary secrets, not only BIP-39** - the
   SmartNet wallet may emit non-BIP-39 strings for advanced users, so the
   identity layer now uses `from_secret(...)` (raw KDF over the string bytes)
   as the primary path. `from_mnemonic(...)` is still available for wallets
   that generate real BIP-39 phrases. The onboarding "invalid BIP-39 mnemonic"
   error class is gone.
-- **Gmail login is App-Password-only** — the OAuth "Sign in with Google"
+- **Gmail login is App-Password-only** - the OAuth "Sign in with Google"
   button has been removed from onboarding to eliminate a confusing UX where
   Google would silently reject headless OAuth. Onboarding now shows a
   step-by-step guide to generating a Google App Password and pasting it into
   the standard IMAP/SMTP account form.
-- **SmartNet Mail launcher: `mail_launcher.rs`** — the child process lifecycle
+- **SmartNet Mail launcher: `mail_launcher.rs`** - the child process lifecycle
   is now idempotent (repeated "Open Mail" clicks reuse the running instance
   and re-focus its window instead of spawning duplicates).
 
 ### Fixed
-- **Sled lock error on re-open** — `oxid-bridge` did not always drop the
+- **Sled lock error on re-open** - `oxid-bridge` did not always drop the
   previous `sled::Db` handle before `POST /api/session/open` fired again,
   causing `IO error: could not acquire lock`. The bridge now closes the
   previous session (and its DB handles) synchronously in
   `POST /api/session/close`, and `session_open` waits for the file lock to
   clear before re-opening (`oxid-mail/crates/oxid-bridge/src/main.rs`).
-- **HTML body vanished during background IMAP IDLE refresh** — a diff-merge
+- **HTML body vanished during background IMAP IDLE refresh** - a diff-merge
   on the message cache dropped the parsed body when the server pushed an
   updated flag-set for an already-cached UID. The cache now preserves the
   full body when only metadata changes.
@@ -2625,17 +2625,17 @@ a misleading, unimplemented hint.
 ## [1.119.0] - 2026-06 (Dashboard Mail badge + unread counter over IPC)
 
 ### Added
-- **Mail card unread badge in the SmartNet Dashboard** — the "Mail" tile now
+- **Mail card unread badge in the SmartNet Dashboard** - the "Mail" tile now
   shows a live badge with the number of unread messages, sourced from Oxid
   Mail over the local IPC channel. The badge listens to
   `mail://unread-updated` events pushed by `oxid-bridge` and stays consistent
   across window focus changes (`frontend/src/store/mailBadge.ts`,
   `frontend/src/views/Dashboard.vue`).
-- **`mailBadge.ts` Pinia store** — small dedicated store so any view can
+- **`mailBadge.ts` Pinia store** - small dedicated store so any view can
   subscribe to the unread counter without importing the whole IPC layer.
 
 ### Changed
-- **Dashboard IPC listeners consolidated** — the Mail card, the unread badge
+- **Dashboard IPC listeners consolidated** - the Mail card, the unread badge
   and the "Open Mail" action now share a single IPC subscription lifecycle,
   so switching between routes no longer leaks Tauri event handlers.
 
@@ -2652,27 +2652,27 @@ a misleading, unimplemented hint.
 ## [1.118.0] - 2026-06 (Mail integration: IPC seed handoff + IMAP IDLE system notifications)
 
 ### Added
-- **Seamless IPC handoff of the SmartNet seed** — when the user launches Oxid
+- **Seamless IPC handoff of the SmartNet seed** - when the user launches Oxid
   Mail from the SmartNet dashboard, SmartNet passes the active seed over a
   private local IPC channel (stdin + short-lived HTTP diagnostic on the
   loopback bridge). Oxid Mail derives the same identity SmartNet uses,
   without the user ever seeing or typing a 12-word phrase
   (`frontend/src-tauri/src/mail_launcher.rs`,
   `oxid-mail/crates/oxid-bridge/src/main.rs`).
-- **System notifications on IMAP IDLE push** — Oxid Mail now surfaces a
+- **System notifications on IMAP IDLE push** - Oxid Mail now surfaces a
   native OS notification when the IMAP server pushes a new message via
   `IDLE`, including sender + subject snippet. Notifications are throttled
   per-account to avoid burst-storming after long offline periods.
-- **Bridge diagnostic endpoints for the handoff** — new internal, loopback-
+- **Bridge diagnostic endpoints for the handoff** - new internal, loopback-
   only routes on `oxid-bridge`:
-  - `/__diag?cmd=request_smartnet_seed` — the mail app asks SmartNet for a
+  - `/__diag?cmd=request_smartnet_seed` - the mail app asks SmartNet for a
     seed (SmartNet grants only if the request came from a child process it
     just spawned).
-  - `/__diag?cmd=handoff_take` — one-shot consumption of the handoff token;
+  - `/__diag?cmd=handoff_take` - one-shot consumption of the handoff token;
     the token is deleted from memory after the first successful read.
 
 ### Changed
-- **Mail-core session bootstrap** — accepts an already-derived key from the
+- **Mail-core session bootstrap** - accepts an already-derived key from the
   IPC channel and skips the manual BIP-39 form when the caller is trusted
   (i.e., SmartNet's own process).
 
@@ -2685,11 +2685,11 @@ a misleading, unimplemented hint.
 
 ### Added
 - **Seeders page → vDapps panel**: trusted developers now see when and what
-  was announced in `vdapps.enc` — publish timestamp, developers count,
+  was announced in `vdapps.enc` - publish timestamp, developers count,
   official dApps count and known dApp seeders count (new `vdapps_status` IPC;
   the publish commit now also stores an announce summary in Sled).
 - **docs/14-Official-Repository.md**: rationale for the two-tier catalog
-  (official | all) — why it protects regular users from malicious content
+  (official | all) - why it protects regular users from malicious content
   without violating decentralization or free content distribution (mark,
   don't censor; on-chain transparent lists; client-side filtering; direct
   links never filtered), including the vDapps cloud-seeder fallback and its
@@ -2704,7 +2704,7 @@ a misleading, unimplemented hint.
   localStorage) and guards async responses against route races.
 
 ### Added
-- **UPDATE ALL** button in the Installed screen's update banner — applies all
+- **UPDATE ALL** button in the Installed screen's update banner - applies all
   pending app updates sequentially.
 - **System notifications for updates**: when a background scan discovers new
   app versions, a native OS notification lists them
@@ -2712,11 +2712,11 @@ a misleading, unimplemented hint.
   localStorage, so each update notifies once).
 - **vDapps cloud fallback (PUBLIC NETWORK SEEDERS)**: trusted developers
   (wallet ∈ DEVELOPERS) publishing their network state now also announce
-  `vdapps.enc` — the official developers list, approved dApps and known
+  `vdapps.enc` - the official developers list, approved dApps and known
   seeder nodeIds of official apps. Publish is gated by a content hash over
   the stable lists (devs+dapps), committed only after a successful upload, so
   the 30-min auto-replication never re-uploads unchanged data. On fetch,
-  peers WITHOUT blockchain access import these lists — but only when the
+  peers WITHOUT blockchain access import these lists - but only when the
   publisher's address is already in their known DEVELOPERS set (trust chain
   anchored at the .env admin seed). `SEED_FILES` grew to 4 entries
   (backward compatible: missing file → null).
@@ -2732,14 +2732,14 @@ a misleading, unimplemented hint.
 - **Settings → Official Repository panel**: shows trusted-developer count,
   approved-dApps count and the last on-chain scan time, plus a
   "REFRESH OFFICIAL LIST NOW" button (`official_refresh` IPC) that rescans
-  both registries immediately — no need to wait for the 24h cycle — and
+  both registries immediately - no need to wait for the 24h cycle - and
   re-marks the DISCOVER catalog on the spot.
 
 ## [1.114.0] - 2026-06 (Official status in app details + build fixes)
 
 ### Added
-- **App details modal**: new "VERIFICATION" row — green "✔ Official
-  Repository" for verified apps, amber "⚠ Not verified — install at your own
+- **App details modal**: new "VERIFICATION" row - green "✔ Official
+  Repository" for verified apps, amber "⚠ Not verified - install at your own
   risk" otherwise; new "DEVELOPER" row shows the signed owner address as a
   link to the developer's profile (`/profile/<owner>`).
 
@@ -2752,7 +2752,7 @@ a misleading, unimplemented hint.
 
 ### Fixed
 - **Messenger black screen**: `ChatWidget.vue` referenced `useUiStore()`
-  without importing it (lost during the 1.108.0 messenger redesign) — the
+  without importing it (lost during the 1.108.0 messenger redesign) - the
   setup crashed with `ReferenceError` and the native chat window rendered
   black. Import restored; window renders again.
 - **Build breakage**: stray duplicated code fragments at the end of
@@ -2762,7 +2762,7 @@ a misleading, unimplemented hint.
 
 ### Security
 - **Signed owner (canon v2)**: the publish/update signature now covers the
-  developer address — `sha256(id|name|description|merkle|owner)`. The Official
+  developer address - `sha256(id|name|description|merkle|owner)`. The Official
   badge can no longer be forged by attaching a foreign `owner` to an announce:
   - client `verify_app` accepts v2 with a legacy (no-owner) fallback, so
     already-installed apps stay valid until their next republish;
@@ -2789,7 +2789,7 @@ a misleading, unimplemented hint.
     registry addresses are overridable via `OFFICIAL_DEVELOPERS` /
     `OFFICIAL_DAPPS`. New IPC: `official_lists`, `official_refresh`.
 - **Owner propagation**: dApp announces now carry the developer address
-  (manifest `owner`) end-to-end — mDNS TXT (separate backward-compatible
+  (manifest `owner`) end-to-end - mDNS TXT (separate backward-compatible
   `o{i}` records), tracker announce/directory (`owner` field on
   `TrackerAnnounceApp`/`TrackerApp`/`AppOut`), and Cloud Seeder listings
   (already included `owner`). An app is **official** when
@@ -2800,7 +2800,7 @@ a misleading, unimplemented hint.
   USER mode is always official-only. Verified cards show a green ✔ badge.
   Direct `sn://` links keep working unfiltered (mark, don't censor).
 - **Tracker** (`/app/tracker`): same 24h registry scanner (sled-persisted),
-  `/apps` now exposes `owner` + `official` per app — marking only, nothing is
+  `/apps` now exposes `owner` + `official` per app - marking only, nothing is
   removed from the index.
 - **Headless Seeder** (`/app/seeder`): relays the manifest `owner` in tracker
   announces and runs the same 24h registry scanner (logged; seeding itself
@@ -2827,13 +2827,13 @@ a misleading, unimplemented hint.
 - **Persistent avatar cache** (`store/users.ts`): avatar data-URLs are now
   persisted to localStorage (`sn.avatars.v1`, LRU 30 addresses, items > 96 KB
   skipped, quota-exceeded fallback shrinks to 10). Avatars paint instantly on
-  app start — before a single IPC call — eliminating the Identicon flash in
+  app start - before a single IPC call - eliminating the Identicon flash in
   the messenger, contact list and reaction tooltips. A fresh blob is still
   fetched in the background (once per session per address).
 
 ### Changed
 - **Wall post headers & comment avatars** migrated from per-CID media fetch
-  (`fetch_wall_media`) to the shared `UserAvatar` component — the same instant
+  (`fetch_wall_media`) to the shared `UserAvatar` component - the same instant
   cache now serves the wall, comments and the messenger uniformly, and avatar
   updates propagate everywhere at once.
 
@@ -2843,7 +2843,7 @@ a misleading, unimplemented hint.
 - **Wall post cache** (`store/wallCache.ts`): opening a profile now renders
   instantly from cached posts (localStorage `sn.wallCache.v1`, LRU up to
   20 authors × 50 posts), then silently checks for updates in the background.
-  A thin accent progress bar (`wall-bg-refresh`) indicates the silent refresh —
+  A thin accent progress bar (`wall-bg-refresh`) indicates the silent refresh -
   no spinner, no feed flash.
 - **Session media cache**: wall images (data-URLs) and audio/video object-URLs
   are now cached in the Pinia store keyed by CID (content-addressed →
@@ -2855,7 +2855,7 @@ a misleading, unimplemented hint.
 ### Fixed
 - **WallFeed crashed on mount**: `mergeNew`, `loadMore`, `loadingMore`,
   `sentinel` and `feedObserver` were referenced but never defined (lost in a
-  previous refactor) — the component threw `ReferenceError` on mount. All
+  previous refactor) - the component threw `ReferenceError` on mount. All
   restored: live-event merge keeps paginated posts intact, infinite scroll
   works again via the bottom sentinel + `IntersectionObserver`.
 
@@ -2865,7 +2865,7 @@ a misleading, unimplemented hint.
 - **Torrents / My Files / Music cards on the Storages page** blended into the
   page background on DEFAULT themes: `.st-card` uses `var(--surface)`, and the
   `--surface` variable was never defined anywhere (transparent), while DEFAULT
-  themes also made `--border` transparent — so the cards lost both fill and
+  themes also made `--border` transparent - so the cards lost both fill and
   outline. `--surface` is now defined in both DEFAULT themes (`#2D2E31` dark /
   `#FFFFFF` light) and the cards get the standard elevation shadow + 12px
   radius. Legacy themes are untouched (they still show the bordered look).
@@ -2882,7 +2882,7 @@ a misleading, unimplemented hint.
 - **Human copy pass for USER mode (all three locales):**
   message input placeholder «Сообщение (видно только участникам)…» instead of
   "Encrypted message (E2EE)…"; network-features list rewritten from benefit
-  perspective — Social: «посты никто не может удалить или заблокировать»,
+  perspective - Social: «посты никто не может удалить или заблокировать»,
   Messenger: «сообщения идут напрямую, без серверов и посредников» (no more
   iroh-gossip), Storage: «всё хранится у вас и всегда под рукой».
   DEV/GEEK still see the full technical descriptions.
@@ -2893,7 +2893,7 @@ a misleading, unimplemented hint.
 - **Mode switcher on DEFAULT LIGHT:** the pill container used a dark
   `rgba(0,0,0,.28)` film (looked like a grey blob) and the active mode was
   pale tinted text with poor contrast. Now the container is a white card with
-  a soft shadow, and the active mode is a solid filled chip with white text —
+  a soft shadow, and the active mode is a solid filled chip with white text -
   green for USER, blue for DEV, amber for GEEK (Adminex-style).
 
 ## [1.107.0] - 2026-06 (Omnibox search from the address bar + store card covers)
@@ -2904,17 +2904,17 @@ a misleading, unimplemented hint.
   app-store search (`// НАЙТИ ПРИЛОЖЕНИЯ_`) with the query pre-filled.
   Precedence is preserved: `sth:// api:// u:// f:// dev:// sn:// cdn://` links
   and magnet links keep their behaviour; a bare word is first checked against
-  app ids (S-address) and the `.sth` name registry — only when nothing matches
+  app ids (S-address) and the `.sth` name registry - only when nothing matches
   does it fall through to search. `sth://`-prefixed unknown domains still stay
   in the bar (no silent search).
-- **Store cards got the showcase covers** — the same deterministic colour
+- **Store cards got the showcase covers** - the same deterministic colour
   gradient (from the app id) as the Dashboard top-apps, flush with the card
   top, with the app logo or identicon centred on it (shared helper
   `lib/coverArt.ts`).
 
 ### Fixed
 - USER-mode green online dot on store cards (instead of the "● N seeds"
-  counter) — the earlier change had been lost in a later edit; re-applied.
+  counter) - the earlier change had been lost in a later edit; re-applied.
 
 ## [1.106.0] - 2026-06 (DEFAULT LIGHT restyled after the Adminex reference)
 
@@ -2926,7 +2926,7 @@ a misleading, unimplemented hint.
   pills (`--radius-btn: 10px`; tile "Launch →" buttons are 10px in light,
   still pill in dark).
 - **"Network features" rows fixed on light:** they used a hard-coded dark
-  `rgba(0,0,0,.18)` film designed for dark themes and looked muddy — now
+  `rgba(0,0,0,.18)` film designed for dark themes and looked muddy - now
   white cards with a light hover.
 
 ## [1.105.1] - 2026-06 (Fix: blank Dashboard after leaving Profile; store buttons less round)
@@ -2935,10 +2935,10 @@ a misleading, unimplemented hint.
 - **Blank page when navigating Profile → Dashboard.** The router view was
   wrapped in `<transition mode="out-in">`: the incoming page waited for the
   outgoing (heavy Profile) view's leave animation to finish, and when that
-  leave hook stalled the next view never mounted — an empty client area.
+  leave hook stalled the next view never mounted - an empty client area.
   The transition no longer serialises enter/leave (the leaving view is taken
   out of flow with `position: absolute`), so the next page always mounts
-  instantly. Verified with 12 rapid Profile/Store ↔ Dashboard round-trips —
+  instantly. Verified with 12 rapid Profile/Store ↔ Dashboard round-trips -
   no blank state.
 - **Global Vue error handler** (`[vue-error]` in the console) so any future
   view render failure is visible instead of a silent blank page.
@@ -2951,12 +2951,12 @@ a misleading, unimplemented hint.
 
 ### Changed
 - **☀/☾ toggle is now always visible** between the ♫ and ⚙ icons, on every
-  theme. Clicking it switches straight to DEFAULT DARK / DEFAULT LIGHT — even
+  theme. Clicking it switches straight to DEFAULT DARK / DEFAULT LIGHT - even
   if a custom theme (Focus, Neon, …) is active, one click brings you to the
   new default look. (Previously the button only appeared while a DEFAULT theme
   was already selected, which made it undiscoverable.)
 - **"Popular on the network" cards became a showcase.** Each top-app card now
-  has a colourful cover — a deterministic gradient derived from the app id —
+  has a colourful cover - a deterministic gradient derived from the app id -
   with the app logo (or identicon) centred on it, and the name + online dot
   underneath. Three covers in a row read like a storefront.
 - **Stealth Mode moved into "// SITES YOU SEED_"** as the sixth block
@@ -2966,7 +2966,7 @@ a misleading, unimplemented hint.
 
 ### Added
 - **Top-3 network apps under the search box.** The freed space below the
-  Dashboard omnibox now shows «Популярно в сети» — the three network apps with
+  Dashboard omnibox now shows «Популярно в сети» - the three network apps with
   the most seeders as compact cards (logo/identicon + name + green online dot;
   DEV/GEEK also see the seeder count). Click opens the app if installed,
   otherwise jumps to the store with the search pre-filled.
@@ -2978,13 +2978,13 @@ a misleading, unimplemented hint.
 ### Changed
 - **NameService moved into "// SITES YOU SEED_"** as the first tile, restyled
   to match the service tiles (`// NAMES` tag, names-in-network status, your
-  `u://name` or a "register name" action) — the banner is now lighter.
+  `u://name` or a "register name" action) - the banner is now lighter.
 - **Search box is impossible to miss:** elevated surface with a soft teal
   ring, brighter ring + shadow on hover/focus (Google omnibox behaviour).
 - **"Network features" block stands out:** lighter elevated background, subtle
-  border and a real shadow — its edges no longer melt into the banner.
+  border and a real shadow - its edges no longer melt into the banner.
 - **Tile "Launch →" buttons are pill-shaped** on DEFAULT themes.
-- Note: the ☀/☾ toggle has been between the ♫ and ⚙ icons since v1.101.0 —
+- Note: the ☀/☾ toggle has been between the ♫ and ⚙ icons since v1.101.0 -
   it only appears while a DEFAULT theme is active.
 
 ## [1.103.0] - 2026-06 (First-run onboarding + USER store search-only)
@@ -2992,14 +2992,14 @@ a misleading, unimplemented hint.
 ### Added
 - **First-run onboarding.** A friendly three-step intro shown once on first
   launch (privacy → apps → cloud): "Absolute privacy", "Apps without servers"
-  and "Your personal cloud" — written in plain human language with soft
+  and "Your personal cloud" - written in plain human language with soft
   circular icons, step dots and Skip / Next / Get-started buttons. Dismissing
   it stores `sth_onboarding_seen`, so it never re-appears; native child
   webviews are hidden underneath while it is open.
 
 ### Changed
 - **App store in USER mode is search-only.** The #tag filter strip is now
-  DEV/GEEK-only — a regular user gets just the search box and clean cards.
+  DEV/GEEK-only - a regular user gets just the search box and clean cards.
 - Note: the "TRACKERLESS MODE ACTIVE · N seeders via DHT" pill on the
   Dashboard was already USER-hidden since v1.101.0.
 
@@ -3008,7 +3008,7 @@ a misleading, unimplemented hint.
 ### Changed
 - **Cleaner sidebar in USER mode.** The "Network map" entry is now DEV/GEEK-only
   (a P2P mesh visualisation only overloads a regular user), and "STORAGES" is
-  renamed to a human word — «Облако» / "Cloud" — in USER mode (DEV/GEEK still
+  renamed to a human word - «Облако» / "Cloud" - in USER mode (DEV/GEEK still
   see STORAGES). On DEFAULT themes the sidebar loses its hard right border and
   the active item becomes a soft teal 10% pill fill with rounded corners,
   Google-drawer style.
@@ -3018,14 +3018,14 @@ a misleading, unimplemented hint.
   ⓘ icon button. DEV/GEEK keep the full technical card.
 - **Smooth theme switching.** Changing themes (including the ☀/☾ toggle) now
   cross-fades via the View Transitions API on Chromium/WebView2, with a CSS
-  colour-transition fallback (~300ms) for other webviews — like modern
+  colour-transition fallback (~300ms) for other webviews - like modern
   browsers, no more hard palette snap.
 
 ## [1.101.0] - 2026-06 (New DEFAULT theme: Google-style dark/light + USER-mode dashboard cleanup)
 
 ### Added
 - **DEFAULT theme family (new default).** Two new skins in the Google/Material
-  spirit: `DEFAULT DARK` (canvas `#202124`, cards `#2D2E31`, text `#E8EAED` —
+  spirit: `DEFAULT DARK` (canvas `#202124`, cards `#2D2E31`, text `#E8EAED` -
   deep grey instead of "hacker black", cards separated by tone + soft shadow,
   no hard borders) and `DEFAULT LIGHT` (canvas `#F8F9FA`, pure-white cards with
   a barely-visible `0 1px 3px` shadow). Rounded corners: 12px cards, pill
@@ -3033,7 +3033,7 @@ a misleading, unimplemented hint.
   active elements only. `DEFAULT DARK` is now the default theme for fresh
   installs; users with a previously saved theme keep their choice.
 - **Day/night toggle (☀/☾)** in the top bar, placed right before the Settings
-  gear. Visible only while a DEFAULT theme is active — switches dark ↔ light
+  gear. Visible only while a DEFAULT theme is active - switches dark ↔ light
   instantly. Custom themes are still managed from Settings, where both DEFAULT
   presets now appear first in the appearance grid.
 - **Chrome-like tabs.** On DEFAULT themes the tab strip mimics Google Chrome:
@@ -3058,7 +3058,7 @@ a misleading, unimplemented hint.
 ### Fixed
 - **Full offline-freeze audit across backend and frontend.** When the internet
   connection dropped, dozens of background network calls kept firing, hanging
-  in multi-second timeouts and piling pressure on the WebView2 IPC channel —
+  in multi-second timeouts and piling pressure on the WebView2 IPC channel -
   the root cause of the "app stops responding for a while" freezes. Every
   periodic network loop is now gated on the Rust TCP-probe (`netwatch::is_online()`
   in the backend, `useNetStore().online` in the frontend) and skips its tick
@@ -3070,7 +3070,7 @@ a misleading, unimplemented hint.
   indexer (60s), tracker announce loop (30s), node auto-selector (10min),
   DevHub author resync (30min), oracle price sync (24h; retries every 5min
   while offline), and the Earn-STH seeding supervisor (heartbeat POST +
-  per-tick tracker uptime/boost fetches with 8s timeouts are skipped offline —
+  per-tick tracker uptime/boost fetches with 8s timeouts are skipped offline -
   local metrics keep flowing to the UI).
 - **Frontend pollers hardened**: "My Files" no longer queries on-chain sales
   counts every 5s while offline (each call fetched up to 500 wallet txs from a
@@ -3102,7 +3102,7 @@ a misleading, unimplemented hint.
   encrypt the string with the seeder envelope and publish it to WebDAV as
   `/ntfryseed/update.enc` (`cloudseeder.rs`, `updater.rs`). Clients that cannot
   reach the blockchain API (DPI, dead nodes, mobile carrier filters) can still
-  discover the latest release string from any trusted seeder — closing the
+  discover the latest release string from any trusted seeder - closing the
   last remaining single-source dependency in the update path.
 - **Discovered-Apps last-known-good cache** (`store/discovery.ts`). The last
   successful P2P/cloud scan result is persisted to `localStorage` under
@@ -3118,7 +3118,7 @@ a misleading, unimplemented hint.
   requests, freezing the whole client UI. All affected intervals now gate on
   `useNetStore().online` before firing. Cloud-Seeder fallback pollers are
   kept alive when physical internet is available but P2P is dead (the two
-  connectivity signals stay independent — P2P health ≠ internet health).
+  connectivity signals stay independent - P2P health ≠ internet health).
 
 ### Notes
 - Behavior of the existing 30-min network-state + 1-h profile replicators is
@@ -3149,7 +3149,7 @@ a misleading, unimplemented hint.
   `run_p2p_installer`, plus the native-dialog / filesystem commands `pick_file`,
   `pick_folder`, `pick_image_file`, `pick_audio_files`, `save_file_dialog`,
   `save_file_as`, `open_file_native`, `wipe_all` (the `blocking_*` dialog API is
-  designed to be called off the main thread — this also removes a latent
+  designed to be called off the main thread - this also removes a latent
   GTK modal-loop deadlock risk).
 - Network calls in sync commands: **none found**. All wallet/chain REST
   (`node_get`/`node_post`/`fetch_*`) is already wrapped in `spawn_blocking` or runs
@@ -3161,13 +3161,13 @@ a misleading, unimplemented hint.
 ### Changed
 - **Wall proportions:** center microblog vs right sidebar is now **60/40**
   (`flex: 3` / `flex: 2`), and the right sidebar is capped at **380px** so it
-  can't get wide — the feed is always the widest column.
+  can't get wide - the feed is always the widest column.
 - **Profile column split into 4 sections** (`.id-sect`): (1) avatar → address →
-  name (+ actions), (2) rewards — reputation, subscriber/following counters,
+  name (+ actions), (2) rewards - reputation, subscriber/following counters,
   medals, (3) wallet balance + u:// link + QR, (4) visibility toggle.
 - **Responsive (`≤1280px`):** the left profile column reflows into a **horizontal
   bar on top** (4 sections split by vertical dividers); below it the right column
-  shows the two columns — microblog 60% + subscribers/playlists 40%. The wall
+  shows the two columns - microblog 60% + subscribers/playlists 40%. The wall
   only stacks to a single column below **820px** (was 1100px).
 
 
@@ -3194,7 +3194,7 @@ a misleading, unimplemented hint.
 
 
 ### Added
-- **`TRANSLATOR_MODEL_CLOUD` — public Mail.ru Cloud link as a model source**,
+- **`TRANSLATOR_MODEL_CLOUD` - public Mail.ru Cloud link as a model source**,
   now the **primary** attempt in `run_bootstrap`. Priority is
   **cloud (Mail.ru) → HTTPS → iroh**. The cloud source is tried first with a
   ~6s availability timeout (resolve + connect); if Mail.ru doesn't respond in
@@ -3218,7 +3218,7 @@ a misleading, unimplemented hint.
 - **DONATE button on the Dashboard topbar** (left of the MeshMeter pill, pulsing
   green pill) opening a terminal-styled **support modal** (`DonateModal.vue`):
   "// SUPPORT THE NETWORK_" heading, the manifesto text, and 7 crypto addresses
-  (BTC, ETH, BTS, STH, GRAM/TON, DOGE, LTC) — each with a one-click Copy button
+  (BTC, ETH, BTS, STH, GRAM/TON, DOGE, LTC) - each with a one-click Copy button
   (`navigator.clipboard`, per-row "✓ СКОПИРОВАНО" feedback). Pure frontend, no
   backend. Verified: `yarn build` clean + isolated visual render of the modal
   (the live Dashboard sits behind the Tauri vault gate, unavailable in web preview).
@@ -3250,7 +3250,7 @@ a misleading, unimplemented hint.
 - **Bonsai (llama.cpp) translations could run away and freeze the client.** The
   llama.cpp generation loop only stopped on `is_eog_token`; if a Bonsai GGUF does
   not mark `<|im_end|>` / `<|endoftext|>` as EOG, generation never stopped early
-  and ground out the full `MAX_NEW_TOKENS` on every translation — appearing as a
+  and ground out the full `MAX_NEW_TOKENS` on every translation - appearing as a
   hang. The loop now also breaks on the explicit `QWEN_EOS` token ids
   (`151645`, `151643`), exactly like the candle path. Inference still runs inside
   `spawn_blocking` (main thread / P2P never blocked); no `.await` under any
@@ -3285,15 +3285,15 @@ a misleading, unimplemented hint.
   in a static, and creates a fresh context per translation (clean KV cache).
   Greedy sampling, ChatML prompt reused from `build_prompt`, EOS via
   `is_eog_token`; all inference runs inside `spawn_blocking` and is serialized.
-- **Cargo features**: `bonsai` (CPU), `bonsai-cuda`, `bonsai-metal` — off by
+- **Cargo features**: `bonsai` (CPU), `bonsai-cuda`, `bonsai-metal` - off by
   default (heavy C++/cmake build), mirroring the existing `cuda`/`metal` gating.
   Build with e.g. `yarn tauri build -- --features p2p,bonsai`.
 
 ### Changed
-- Bonsai presets: `supported = cfg!(feature = "bonsai")` — the UI now enables
+- Bonsai presets: `supported = cfg!(feature = "bonsai")` - the UI now enables
   Bonsai only in a `bonsai`-built client and shows a clear "rebuild with
   `--features bonsai`" message otherwise (instead of the old "needs PrismML
-  fork" text, which was inaccurate — Q1_0 is upstream).
+  fork" text, which was inaccurate - Q1_0 is upstream).
 - Bonsai presets no longer reference a separate `tokenizer.json`: llama.cpp
   reads the vocabulary straight from the GGUF, so `is_installed`, `https_fetch`
   and `iroh_fetch` skip the tokenizer download for the llama.cpp engine.
@@ -3317,11 +3317,11 @@ a misleading, unimplemented hint.
 - **Crypto Vault delete no longer lies about a successful deletion.** When the
   backend returns `VaultError::GcFailed` (the file *was* removed from the vault
   index, but some orphan chunks could not be garbage-collected from the cloud),
-  the UI used to treat it as a total failure — it rolled the row back into the
+  the UI used to treat it as a total failure - it rolled the row back into the
   list **and** raised a red error, even though the file was actually gone.
   Now `CryptoVault.vue` (`removeRow` / `removeRecent`) detects this partial-
   success case, keeps the optimistic removal, refreshes status, and shows a
-  clear warning toast ("deleted, but not all chunks removed from the cloud — GC
+  clear warning toast ("deleted, but not all chunks removed from the cloud - GC
   will finish later") instead of a misleading error. True failures still roll
   back and surface the error as before.
 
@@ -3333,49 +3333,49 @@ a misleading, unimplemented hint.
 ## [1.94.0] - 2026-07 (Translator model config via .env: minimal knobs, presets carry everything)
 
 ### Added
-- **New Rust module** `frontend/src-tauri/src/translator_config.rs` — the
+- **New Rust module** `frontend/src-tauri/src/translator_config.rs` - the
   translator model definition (filename, HTTPS URL, iroh CID/node, size,
   architecture, chat template, EOS tokens, required disk space,
   supported flag) is no longer hardcoded in `translator.rs` but lives in
   a preset catalog. Adding a new model = one entry in `preset()`.
-- **Two environment variables — that's it:**
-  - `TRANSLATOR_MODEL=<preset>` — pick a preset (default `qwen25-1.5b`).
-  - `TRANSLATOR_MODEL_URL=<https>` — override the HTTPS mirror of the
+- **Two environment variables - that's it:**
+  - `TRANSLATOR_MODEL=<preset>` - pick a preset (default `qwen25-1.5b`).
+  - `TRANSLATOR_MODEL_URL=<https>` - override the HTTPS mirror of the
     active preset (for operators with a private HuggingFace mirror).
     Everything else (iroh CID, size, architecture, tokenizer, EOS tokens,
-    chat template) is baked into the preset — no byte-counting required.
+    chat template) is baked into the preset - no byte-counting required.
 - **Model presets** (built-in, `TRANSLATOR_MODEL=<name>`):
-  - `qwen25-1.5b` — default, Qwen2.5-1.5B-Instruct GGUF Q8_0 (~1.9 GB),
+  - `qwen25-1.5b` - default, Qwen2.5-1.5B-Instruct GGUF Q8_0 (~1.9 GB),
     same iroh seeder + HuggingFace HTTPS as v1.93.
-  - `qwen3-1.7b` — Qwen3-1.7B GGUF Q8_0 (~1.9 GB), HTTPS-only.
-  - `qwen3-4b` — Qwen3-4B GGUF Q4_K_M (~2.5 GB), balanced.
-  - `qwen3-8b` — Qwen3-8B GGUF Q4_K_M (~4.7 GB), max quality.
-  - `bonsai-4b`, `bonsai-8b` — Bonsai 1-bit (Q1_0) — **listed as
+  - `qwen3-1.7b` - Qwen3-1.7B GGUF Q8_0 (~1.9 GB), HTTPS-only.
+  - `qwen3-4b` - Qwen3-4B GGUF Q4_K_M (~2.5 GB), balanced.
+  - `qwen3-8b` - Qwen3-8B GGUF Q4_K_M (~4.7 GB), max quality.
+  - `bonsai-4b`, `bonsai-8b` - Bonsai 1-bit (Q1_0) - **listed as
     `supported=false`**: Q1_0 is a PrismML-proprietary GGUF quantization
     requiring their [llama.cpp fork](https://github.com/PrismML-Eng/llama.cpp);
     candle 0.9 can't parse it. The preset is present so a user gets a
-    clear human-readable message ("use qwen3-4b/8b — same Qwen3
+    clear human-readable message ("use qwen3-4b/8b - same Qwen3
     architecture, works out of the box") instead of a cryptic GGUF
     parser crash. When an FFI-based llama.cpp backend lands, flipping a
     single `supported` flag activates Bonsai.
-- **Second architecture backend** — `ModelBackend` enum dispatches
+- **Second architecture backend** - `ModelBackend` enum dispatches
   between `candle_transformers::models::quantized_qwen2::ModelWeights`
   and `quantized_qwen3::ModelWeights` (same `from_gguf` + `forward` API).
-- **New IPC command** `translator_presets` — returns the full preset
+- **New IPC command** `translator_presets` - returns the full preset
   catalog (`{name, description, supported, unsupported_reason}`) so a
   Settings UI can render a picker.
 - **`TranslatorStatus` extended** with `model_name`, `model_file`,
   `model_description`, `model_supported`, `model_unsupported_reason`
   so the UI can display the active model and warn about unsupported
   selections.
-- **`.env.example`** — added a small `TRANSLATOR_*` block documenting
+- **`.env.example`** - added a small `TRANSLATOR_*` block documenting
   the two knobs and the preset list.
 
 ### Changed
 - **Bootstrap priority reversed** to **HTTPS URL first → iroh CID
   fallback** (previous: iroh first, HTTPS as a separate manual command).
   Rationale: HTTPS is universally reachable; iroh (SmartNet's P2P /
-  "torrent" transport) is now the anti-censorship backup — matching the
+  "torrent" transport) is now the anti-censorship backup - matching the
   CloudSeeders philosophy. Fallback triggers on any HTTPS error with a
   syslog entry. `translator_download` is a thin wrapper around
   `translator_bootstrap`.
@@ -3390,7 +3390,7 @@ a misleading, unimplemented hint.
   with a clear error message before attempting to parse GGUF metadata.
 
 ### Migration notes
-- No user action required — the default preset `qwen25-1.5b` reproduces
+- No user action required - the default preset `qwen25-1.5b` reproduces
   the pre-1.94 constants byte-for-byte (same file name, same HTTPS URL,
   same iroh CID/node/size, same EOS tokens, same chat template).
 - To switch model, set `TRANSLATOR_MODEL=qwen3-4b` in `frontend/.env`
@@ -3402,7 +3402,7 @@ a misleading, unimplemented hint.
 ## [1.93.0] - 2026-07 (Public Profile Seeders: profiles, microblogs and attachments over cloud)
 
 ### Added
-- **Public Profile Seeders** — a new opt-in sub-layer on top of the existing
+- **Public Profile Seeders** - a new opt-in sub-layer on top of the existing
   Cloud Seeder (`/ntfryseed`) that mirrors the author's profile and microblog
   (plus the top-10 followed profiles) into Yandex.Disk / Mail.ru Cloud.
   Enables **cloud-only reading** of SmartNet social content when P2P is
@@ -3413,7 +3413,7 @@ a misleading, unimplemented hint.
   - **My profile** (`ProfilePublic` only) + wall_posts limit **25** + comments
   - **Top-10 follows** (first 10 addresses from `following_addresses`) + wall_posts
     limit **10** each + comments
-  - **Attached files** (`PostFile.cid` — BLAKE3 content-address) — only those
+  - **Attached files** (`PostFile.cid` - BLAKE3 content-address) - only those
     referenced by the replicated posts
     Cloud layout:
   ```
@@ -3422,13 +3422,13 @@ a misleading, unimplemented hint.
     <userId>.enc                       ← UserBundle: profile + posts + comments
     <userId>/files/<blake3-cid>.enc    ← attached files (immutable, dedup)
   ```
-- **`ntfry::seeder` — generic subpath API**: `yandex_upload_subpath`,
+- **`ntfry::seeder` - generic subpath API**: `yandex_upload_subpath`,
   `mailru_upload_subpath`, `yandex_delete_subpath`, `mailru_delete_subpath`.
   MKCOL-chains create missing parent dirs; upload path reuses the exact same
   hardened `resilient_put` pipeline (90 s idle watchdog, no `read_timeout` on
   the streaming body, 3 attempts with 2 s / 4 s backoff, permanent-error gate,
   sha256 pre-check on Yandex, size fallback on Mail.ru).
-- **`profile_seeder.rs`** — new Rust module (`frontend/src-tauri/src/`) that
+- **`profile_seeder.rs`** - new Rust module (`frontend/src-tauri/src/`) that
   builds `UserBundle` snapshots (v=1), signs them, and drives delta
   replication via a sled snapshot map (`cfg:profile_seeder_state`).
 - **Delta replication**: bundle is uploaded only if its content-hash
@@ -3438,7 +3438,7 @@ a misleading, unimplemented hint.
   (post deleted or edited) trigger a targeted `DELETE
   /ntfryseed/users/<uid>/files/<cid>.enc` on the seed disk so orphans do
   not accumulate.
-- **Cheap local hash-check** (`profile_seeder_has_changes`) — before making
+- **Cheap local hash-check** (`profile_seeder_has_changes`) - before making
   any network call the client rebuilds all target bundles and diffs their
   hashes against the sled snapshot; if nothing changed, the replication
   cycle exits without touching the cloud (zero network requests, honours
@@ -3457,7 +3457,7 @@ a misleading, unimplemented hint.
   (`collect | user | file | manifest | done`), `index`, `total`, `userId`,
   `fileCid`, `sizeBytes`, `uploadedBytes`, `kbps`, `attempt`, `status`,
   `error`. Wired into UI live.
-- **Seeders.vue** — new UX block **"Replicate Profiles"** under
+- **Seeders.vue** - new UX block **"Replicate Profiles"** under
   "Auto-replication every 30 min":
   - Toggle `data-testid="profile-replicate-toggle"` (default OFF, opt-in).
   - `PUBLISH NOW` button for manual runs (`data-testid="profile-replicate-publish-now"`).
@@ -3475,13 +3475,13 @@ a misleading, unimplemented hint.
     file via `cloud_seeder_fetch_profile_file` (base64 of the decrypted
     plaintext), converts it to a `Blob`, creates a session `objectURL`,
     and renders it inline as `<img>` / `<audio controls>` / `<video controls>`.
-  - `⇩ DOWNLOAD` button — universal for any MIME. Reuses the cached
+  - `⇩ DOWNLOAD` button - universal for any MIME. Reuses the cached
     objectURL if already loaded, otherwise fetches on demand, then
     triggers `<a download>`.
   - Deduped per-session (repeat clicks on the same CID never hit the
     network twice).
   - `URL.revokeObjectURL(...)` on modal close, on profile switch, on
-    `Fetch profiles` re-run, and on component unmount — no leaked Blob
+    `Fetch profiles` re-run, and on component unmount - no leaked Blob
     URLs even after a long browsing session.
   - Per-file inline error surface (a broken/tampered `<cid>.enc` shows an
     error on its own row without blocking the sibling files).
@@ -3489,18 +3489,18 @@ a misleading, unimplemented hint.
     `cloud-file-download-<cid>`, `cloud-file-preview-<cid>`.
 
 ### Documentation
-- **New**: `docs/12-Cloud-Seeders-Guide.md` — 20 Russian sections covering the
+- **New**: `docs/12-Cloud-Seeders-Guide.md` - 20 Russian sections covering the
   full anti-censorship layer: URI format, `/ntfryseed` layout, deterministic
   public-encryption crypto, mobile-network resilience, chain-replication,
   cloud fallback, VK-ID workaround, and the full Profile Seeders subsection
   with inline media preview.
-- **Updated**: `docs/11-Crypto-Vault-Guide.md` — version bumped to `1.93.0+`,
+- **Updated**: `docs/11-Crypto-Vault-Guide.md` - version bumped to `1.93.0+`,
   Mail.ru provider section added, cross-link to guide 12.
-- **Updated**: `docs/README.md` — table of contents now covers documents
+- **Updated**: `docs/README.md` - table of contents now covers documents
   09–12 (the ToC previously stopped at 08).
 
 ### Security / Privacy
-- **Only `ProfilePublic` is ever published** — the wallet's
+- **Only `ProfilePublic` is ever published** - the wallet's
   `ProfilePrivate` (`encrypted_secret`, private handles) is not sent to
   the module at all. Enforced at bundle-build time in `profile_seeder.rs`.
 - **Deleted posts and hidden comments are filtered out** at bundle build
@@ -3518,7 +3518,7 @@ a misleading, unimplemented hint.
 ### Compatibility
 - No breaking changes. The existing `sn://seed/...` URI format is reused
   as-is; readers on older clients simply won't see the `users/` subtree.
-- `resilient_put` internals unchanged — all 11 existing `ntfry::seeder`
+- `resilient_put` internals unchanged - all 11 existing `ntfry::seeder`
   unit tests still pass (crypto roundtrips, tamper detection, signature
   forgery rejection, deterministic seal, precheck skip, resume-without-
   reupload, streaming-body progress).
@@ -3527,7 +3527,7 @@ a misleading, unimplemented hint.
 
 ### Added
 - **Install-source badge in the dApp tab** (`AppLayout.vue`, `tabs.ts`): every
-  app tab now shows where the installed copy came from — «⇄» for a direct
+  app tab now shows where the installed copy came from - «⇄» for a direct
   iroh-blobs P2P install, «☁» for a Cloud Seeder archive (anti-censorship
   fallback). The tooltip carries the storage provider (yandex/mailru), the
   installed version and the install timestamp, making the fallback layer
@@ -3553,7 +3553,7 @@ a misleading, unimplemented hint.
 - **App id now travels in the URL query too** (`webview.rs`, `protocol.rs`):
   every dApp URL gets a `?sthapp=<id>` marker. If the platform WebView drops
   or mangles the custom-scheme authority (host), `resolve_request` recovers
-  the app id from the request query or the Referer query as a last resort —
+  the app id from the request query or the Referer query as a last resort -
   the initial page load can no longer 404 just because the host was stripped.
 - **Windows Referer host form `sth.<id>` was not recognized** (`protocol.rs`):
   wry 0.55 maps `sth://<id>/` to `http://sth.<id>/` (scheme becomes a host
@@ -3581,7 +3581,7 @@ a misleading, unimplemented hint.
 - **Publish guard for developers** (`apps.rs::ingest_app`): creating,
   previewing, publishing or updating a dApp now fails fast with
   «в корне dApp нет index.html…» when the build folder has no root
-  `index.html` — broken apps can no longer be published and distributed.
+  `index.html` - broken apps can no longer be published and distributed.
 - **Cloud archive gate on seeder publish** (`cloudseeder.rs::build_network_state`):
   a dApp folder without `index.html` is skipped as an archive candidate
   (logged to SYSCON) and advertised with `"archive": false` in `dapps.enc`,
@@ -3597,10 +3597,10 @@ a misleading, unimplemented hint.
 
 ### Verified
 - Full pipeline reproduced in an isolated Rust harness: tar → `seal_bytes`
-  → `open_bytes` → unpack → case-insensitive `sth://` serve — all OK; a
+  → `open_bytes` → unpack → case-insensitive `sth://` serve - all OK; a
   broken archive (no `index.html`) is rejected and cleaned up.
 
-## [1.90.10] - 2026-07 (FIX: self-discovery poisoned the peers table — cloud scan never fired)
+## [1.90.10] - 2026-07 (FIX: self-discovery poisoned the peers table - cloud scan never fired)
 
 ### Fixed
 - **Client discovered ITSELF as a live P2P peer** (`p2p.rs`): the mDNS browser
@@ -3638,7 +3638,7 @@ with auto-update picking newer cloud archives.
   live P2P peers**, the store immediately triggers a cloud-drive scan; the
   4-second background poll re-scans at most once per 2 minutes (throttled to
   avoid hammering Yandex/Mail.ru APIs). Cloud scans run ONLY while regular
-  seeders are unreachable — live P2P never triggers cloud traffic.
+  seeders are unreachable - live P2P never triggers cloud traffic.
 - **Discover UI indicators** (`views/Discovered.vue`): a matte-blue
   «☁ Scanning cloud drives of known Cloud Seeders…» progress strip, a note
   when the whole catalog is assembled from cloud drives, and an empty-state
@@ -3647,7 +3647,7 @@ with auto-update picking newer cloud archives.
 ### Fixed
 - **Background cloud fallback no longer dies permanently** (`cloudseeder.rs`):
   the `spawn_cloud_fallback` loop used to `break` forever the first time a
-  live P2P peer appeared — if P2P dropped later in the session, the client
+  live P2P peer appeared - if P2P dropped later in the session, the client
   never returned to the cloud layer. The loop now idles while P2P is alive
   (30 s re-check) and automatically resumes 5-minute cloud polling when P2P
   goes dark, logging each state transition once.
@@ -3655,7 +3655,7 @@ with auto-update picking newer cloud archives.
 ### Impact
 Clients whose regular seeders are unreachable now see the full dApp catalog
 in DISCOVER APPS (badged «☁ via seeder») and can install directly from
-encrypted cloud archives — previously installs were only possible from the
+encrypted cloud archives - previously installs were only possible from the
 PUBLIC NETWORK SEEDERS page in that scenario.
 
 ## [1.90.8] - 2026-07 ("Become a seeder" hint after 1 hour in Cloud mode)
@@ -3666,12 +3666,12 @@ PUBLIC NETWORK SEEDERS page in that scenario.
   the client has been running through the cloud fallback continuously for
   more than **1 hour** and has **no own seeder published yet**
   (`ownSeeder()` from `seederRep.ts` returns `null`). The hint reads
-  «Опубликуйте свой Cloud Seeder — станьте частью fallback-инфраструктуры.
+  «Опубликуйте свой Cloud Seeder - станьте частью fallback-инфраструктуры.
   Сеть держится на таких пирах, как вы» with a CTA button that jumps to
   `/seeders` and a close (×) button.
 - **7-day snooze**: dismissing the hint stores `sth_cloud_hint_dismissed_at`
   in `localStorage`; the hint stays hidden for a week (both explicit ×
-  and CTA click count as dismissal — CTA also navigates to Seeders).
+  and CTA click count as dismissal - CTA also navigates to Seeders).
 - **Continuous Cloud-mode session tracking**: `cloudModeSince` timestamp is
   set the moment the bar switches to `cloud=true` and cleared on any exit
   (P2P back OR seeders go dark). A 1-minute ticker drives the reactive
@@ -3679,7 +3679,7 @@ PUBLIC NETWORK SEEDERS page in that scenario.
 
 ### Impact
 Turns passive cloud-fallback consumers into active seed providers exactly
-when they've proven they benefit from the layer — the ask lands after a
+when they've proven they benefit from the layer - the ask lands after a
 full hour of visible reliance, not on first launch. Once dismissed, the
 prompt stays quiet for a week; publishing a seeder makes it never appear
 again (`ownSeeder()` gate).
@@ -3693,7 +3693,7 @@ again (`ownSeeder()` gate).
   from red "Нет соединения" to a matte-blue "Cloud mode →" plate
   (`linear-gradient(180deg, #142236, #0b1524)`, border `#2a4a75`, dot `#60a5fa`,
   text `#93c5fd`). Left side keeps `SmartNet // OFFLINE`. The bar is now a
-  keyboard-focusable button — click / Enter / Space navigates to
+  keyboard-focusable button - click / Enter / Space navigates to
   `/seeders#active-seeders` so the user can immediately see which seeders are
   holding the network. Seeder health is polled every 20 s while the bar is
   visible.
@@ -3711,38 +3711,38 @@ again (`ownSeeder()` gate).
 ### Changed
 - **MY_APPLICATIONS ordering**: `filteredPublished` and `filteredDrafts`
   are now sorted by `updated` (fallback `created`, treated as unix-seconds)
-  in descending order — the most recently updated dApp always floats to the
+  in descending order - the most recently updated dApp always floats to the
   top of the list. Sorting is applied after the search filter so results
   stay chronological.
 - **Discovery: updates via Cloud Seeders** (`store/discovery.ts`):
   `aggregate()` no longer requires an iroh blob hash (`a.hash`) to flag
-  `updateAvailable` — updates advertised by seeder-only peers (where the
+  `updateAvailable` - updates advertised by seeder-only peers (where the
   iroh blob may be absent) are now surfaced correctly. `updateProvider`
   is populated only for live P2P peers (`a.hash && peer.nodeId &&
   !peer.viaSeeder`); for seeder-only updates it stays `null`.
   `applyUpdate()` is now a two-step: (1) try the live P2P provider when
-  present; (2) fall back to `cloudSeederInstallAny(id)` — the newer version
+  present; (2) fall back to `cloudSeederInstallAny(id)` - the newer version
   is pulled from the encrypted cloud archive. Integrity gate
   (`verifyApp` + signed merkle) runs after either path. `handleUpdates()`
   no longer prefetches for seeder-only updates (nothing to prefetch over
-  iroh — the archive is fetched at apply time).
+  iroh - the archive is fetched at apply time).
 
 ### Impact
 - Clients with **zero direct P2P connectivity** (behind NATs, corporate
   firewalls, or fully offline WANs with only cloud-storage reachable) now
   receive new dApp versions automatically through the Yandex/Mail.ru
-  encrypted archives — the anti-censorship fallback layer completes its
+  encrypted archives - the anti-censorship fallback layer completes its
   original design goal.
 - The status bar communicates network topology at a glance: users no longer
   see a scary red "нет соединения" when the cloud fallback is doing its job.
 
-## [1.90.6] - 2026-07 (Seeder publish: pre-upload sha256 check — unchanged archives skipped with zero traffic)
+## [1.90.6] - 2026-07 (Seeder publish: pre-upload sha256 check - unchanged archives skipped with zero traffic)
 
 ### Added
 - **Pre-upload cloud check in `resilient_put`** (`ntfry/src/seeder.rs`):
   before the first PUT the client probes the target file's metadata; if an
   archive with the exact size **and sha256** already sits on the disk, the
-  upload is skipped entirely (0 bytes of traffic) — covers e.g. a failed
+  upload is skipped entirely (0 bytes of traffic) - covers e.g. a failed
   merkle-gate record after an interrupted previous publish. `verify(strict)`
   now has two modes: strict (pre-check, hash match required) and lenient
   (post-silence, size fallback while Yandex is still computing the hash).
@@ -3750,7 +3750,7 @@ again (`ownSeeder()` gate).
   skipping on size alone could silently keep a stale archive in the cloud).
 - Upload functions now return `bool` (`true` = bytes were transferred,
   `false` = identical archive already in the cloud); the publish log states
-  «идентичный уже в облаке (sha256 совпал) — заливка пропущена».
+  «идентичный уже в облаке (sha256 совпал) - заливка пропущена».
 
 ### Changed
 - **`seal_bytes` nonce is now deterministic (SIV-style)**:
@@ -3761,60 +3761,60 @@ again (`ownSeeder()` gate).
   only thing an observer learns is "content unchanged", and the seeder layer
   is deterministically decryptable by pubkey anyway. ECDSA signing is
   RFC 6979 deterministic and zstd is deterministic, so the whole pipeline is
-  reproducible. Envelope format (v3) and readers are unchanged — old
+  reproducible. Envelope format (v3) and readers are unchanged - old
   random-nonce blobs in the cloud remain fully readable.
 
 ### Tests
-- `seal_bytes_is_deterministic_for_same_content` — same content → same blob,
+- `seal_bytes_is_deterministic_for_same_content` - same content → same blob,
   different content → different blob;
-- `resilient_put_precheck_skips_upload_entirely` — strict pre-check hit →
+- `resilient_put_precheck_skips_upload_entirely` - strict pre-check hit →
   zero network PUTs, returns `uploaded=false` (target URL is unreachable on
   purpose, any PUT attempt would fail the test);
 - 30 tests total, all green.
 
-## [1.90.5] - 2026-07 (Seeder publish: verify-after-silence — no more 40 MB re-uploads when only the PUT response is lost)
+## [1.90.5] - 2026-07 (Seeder publish: verify-after-silence - no more 40 MB re-uploads when only the PUT response is lost)
 
 ### Added
 - **Post-attempt cloud verification in `resilient_put`** (`ntfry/src/seeder.rs`).
   User-confirmed scenario: disk history showed every upload actually
-  **landed successfully** on Yandex, yet the client kept looping — the file
+  **landed successfully** on Yandex, yet the client kept looping - the file
   was stored, only the HTTP response to the PUT was lost on the mobile
   network, so each retry re-uploaded the full 40 MB archive from scratch.
   Now after every failed non-permanent attempt the client performs a cheap
   metadata probe of the target file on the disk:
-    - **Yandex**: `GET /v1/disk/resources?fields=size,sha256` — success is
+    - **Yandex**: `GET /v1/disk/resources?fields=size,sha256` - success is
       declared when size **and** sha256 of the sealed archive match (sha256 of
       a just-written file may still be computing server-side; in that case a
-      size match is accepted — an older file of the same name would already
+      size match is accepted - an older file of the same name would already
       have its hash);
-    - **Mail.ru**: WebDAV `PROPFIND Depth:0` `getcontentlength` — size-only
+    - **Mail.ru**: WebDAV `PROPFIND Depth:0` `getcontentlength` - size-only
       (WebDAV exposes no hash; PUT is atomic, so an exact-size file means a
       complete upload landed);
     - any probe error → `false` → the normal retry flow continues.
 - `storage::mailru::xml_num` promoted to `pub(crate)` for reuse.
-- New test: `resilient_put_accepts_verified_file_without_reupload` — local
+- New test: `resilient_put_accepts_verified_file_without_reupload` - local
   HTTP server swallows the body and answers 503; with a positive verify the
   call succeeds after exactly **one** PUT (re-upload counter asserted).
   28 tests total, all green.
 
-## [1.90.4] - 2026-07 (Seeder publish: stall-guard instead of read_timeout — slow 3G uploads no longer aborted at 300s)
+## [1.90.4] - 2026-07 (Seeder publish: stall-guard instead of read_timeout - slow 3G uploads no longer aborted at 300s)
 
 ### Fixed
 - **"Yandex publish keeps resetting and never finishes on slow mobile
   networks."** Smoking gun from the user's screenshot: attempt 2 died at
-  exactly **33.8 MB of 40.8 MB at 113 KB/s** — that is 113 KB/s x 300 s =
+  exactly **33.8 MB of 40.8 MB at 113 KB/s** - that is 113 KB/s x 300 s =
   33.9 MB. Root cause: `reqwest::ClientBuilder::read_timeout(300s)` measures
   time since the **last byte received from the server**, but during a long
   HTTP PUT the server sends nothing until the whole body is uploaded. Any
   upload taking longer than 300 s (40 MB needs ~370 s on 3G) was therefore
   killed mid-transfer even though bytes were flowing fine, and every retry
-  hit the same 300-second ceiling — publish could never complete.
+  hit the same 300-second ceiling - publish could never complete.
 - Fix in `ntfry/src/seeder.rs`:
     - new `upload_client()` **without** `read_timeout` used for large archive
       PUTs (Yandex + Mail.ru); `http_client()` keeps `read_timeout(300s)` for
       downloads and short control calls where it is correct;
     - new `put_with_stall_guard()`: watches **actual stream progress** instead
-      of server silence — the attempt lives as long as bytes keep leaving the
+      of server silence - the attempt lives as long as bytes keep leaving the
       socket (no speed ceiling on EDGE/3G), aborts only if the stream makes no
       progress for 90 s (`UPLOAD_STALL`, dead TCP) or the server stays silent
       for 300 s **after the last byte** (`FINALIZE_WAIT`, server-side
@@ -3824,13 +3824,13 @@ again (`ownSeeder()` gate).
       `mailru_upload_seed_file`, removing ~120 lines of duplicated retry code;
     - new `StorageError::Stalled` variant, classified as transient
       (retryable) in `storage::is_transient`.
-- New test: `resilient_put_streams_body_reports_progress_and_succeeds` —
+- New test: `resilient_put_streams_body_reports_progress_and_succeeds` -
   real HTTP PUT against a local TCP server verifying streaming, progress
   callback reaching 100% and 201 handling (27 tests total, all green).
 
 ### Added
 - **Upload ETA in the publish progress bar** (`Seeders.vue`): the live line
-  now shows the estimated time remaining at the current speed — «45.2 МБ /
+  now shows the estimated time remaining at the current speed - «45.2 МБ /
   93.3 МБ (−69%) · 113 КБ/с · осталось ~2 мин…». Once the last byte has been
   sent it switches to «сервер обрабатывает…» so a slow 3G upload is clearly
   alive rather than frozen during the server-side finalization window.
@@ -3844,16 +3844,16 @@ again (`ownSeeder()` gate).
   provider's web UI), the code silently kept the stale encrypted index from
   the local `sled` cache. `init_vault_dir()` then re-created `/ntfry`, and
   the very next `push` / `mkdir` / `save_index` re-uploaded the ghost index
-  with references to already-deleted chunks — resurrecting the deleted
+  with references to already-deleted chunks - resurrecting the deleted
   folder with unusable phantom files.
 - Fix: `Vault::open` now distinguishes three cloud states explicitly:
-    1. `Ok(Some(rsha))` — cloud has index.enc → normal validate + sync (unchanged);
-    2. `Ok(None)` + `cache.synced_sha().is_some()` — we DID sync before but the
+    1. `Ok(Some(rsha))` - cloud has index.enc → normal validate + sync (unchanged);
+    2. `Ok(None)` + `cache.synced_sha().is_some()` - we DID sync before but the
        cloud is now empty → **cloud reset detected externally**, wipe the
        local `sled` cache via new `Cache::reset()` and start a clean vault;
-    3. `Err(_)` — transient network error, keep the local cached index
+    3. `Err(_)` - transient network error, keep the local cached index
        (offline mode), never wipe on connectivity blips.
-- New public API: `Cache::reset()` — clears `index_enc`, `synced_sha`, and
+- New public API: `Cache::reset()` - clears `index_enc`, `synced_sha`, and
   `stored_bytes` keys atomically.
 - Regression test `open_detects_external_cloud_wipe_and_resets_cache`
   covers the exact user-reported flow (init → push → external
@@ -3890,7 +3890,7 @@ again (`ownSeeder()` gate).
 ## [1.90.1] - 2026-07 (Cross-restart resume for Yandex chunked seeder upload)
 
 ### Added
-- **Persistent-resume for Yandex Disk chunked uploads** — chunk offset is
+- **Persistent-resume for Yandex Disk chunked uploads** - chunk offset is
   saved to the shared `sled` DB after every confirmed 4 MB chunk. When the
   app is closed / crashed / lock-screen-terminated mid-upload, the next
   publish call for the same file resumes from the last confirmed byte
@@ -3902,7 +3902,7 @@ again (`ownSeeder()` gate).
   30 min). Stale / mismatched entries are wiped on next attempt. On
   completion / permanent 4xx / 412 range-mismatch the entry is cleared.
 - `ntfry::seeder::ResumeStore` public trait (byte-oriented `load`/`save`/
-  `clear`) — keeps the ntfry crate free of a sled dependency at this layer;
+  `clear`) - keeps the ntfry crate free of a sled dependency at this layer;
   the tauri host wires in `SledResumeStore` backed by the shared `DB`.
 
 ## [1.90.0] - 2026-07 (Browser-like nav bar + Yandex chunked resumable seeder upload)
@@ -3920,13 +3920,13 @@ again (`ownSeeder()` gate).
   New bridge helpers: `dappHistoryBack/Forward/Reload`. i18n keys:
   `topbar.back`, `topbar.forward`, `topbar.reload` (ru/en/id).
 - **`open_app_webview_new` Tauri command + `openAppWindowNew` bridge helper**
-  — always spawns a NEW native window with a unique label (`app-<addr>-<nanos>`)
+  - always spawns a NEW native window with a unique label (`app-<addr>-<nanos>`)
   for the same dApp. Reserved for future "open in new window" flows; the
   address-bar `⧉` button still uses the classic single-window open.
 - **Yandex Disk seeder upload is now chunked & resumable** (4 MB chunks over
   the official `GET /v1/disk/resources/upload` → `PUT href` REST API with
   `Content-Range: bytes X-Y/TOTAL`). Broken chunks retry independently with
-  exponential backoff — already-confirmed chunks are NEVER re-uploaded on
+  exponential backoff - already-confirmed chunks are NEVER re-uploaded on
   transient network drops. Only when three chunk retries fail does the client
   request a fresh upload URL (30 min validity) and restart from zero. On a
   40 MB archive over 3G/EDGE, a mid-upload disconnect now wastes at most one
@@ -3939,7 +3939,7 @@ again (`ownSeeder()` gate).
 - **Yandex Cloud Seeder retried uploads that had already reached 100%.**
   `seeder.rs::http_client()` had `read_timeout(60s)`, which fired while the
   server was performing post-body finalization (checksum, replication) on
-  large encrypted archives — reqwest returned an error and the whole file was
+  large encrypted archives - reqwest returned an error and the whole file was
   re-queued. `read_timeout` raised to `300s`; dead sockets still caught by
   `tcp_keepalive(20s)` + `connect_timeout(15s)`. Together with the chunked
   resumable upload above, spurious retries are effectively eliminated on
@@ -3951,10 +3951,10 @@ again (`ownSeeder()` gate).
 - **Mail.ru seeder publishing is now a single one-time step for VK ID
   accounts.** WebDAV upload (identical to Crypto Vault) always runs; only the
   "publish folder" call fails for VK ID logins (Mail.ru does not accept app
-  passwords on its web API — verified: o2 rejects the app password, web login
+  passwords on its web API - verified: o2 rejects the app password, web login
   requires a captcha). When it fails, the UI shows an "Open ntfryseed folder"
   button + a link field: the user enables the public link once, pastes it, and
-  the weblink is remembered forever — every later publish and background
+  the weblink is remembered forever - every later publish and background
   auto-replication runs fully automatically over WebDAV (no o2/api-m1 calls).
   `cloud.mail.ru` added to the external-link allow-list so the folder opens in
   the system browser.
@@ -3962,17 +3962,17 @@ again (`ownSeeder()` gate).
 ## [1.89.2] - 2026-06 (Mail.ru seeder publish: User-Agent fix + manual weblink fallback)
 
 ### Fixed
-- **o2.mail.ru rejected token requests with `missing user-agent header`** —
+- **o2.mail.ru rejected token requests with `missing user-agent header`** -
   the seeder HTTP client now always sends a User-Agent, so the unofficial
   publish API works for regular Mail.ru accounts.
 
 ### Added
-- **Manual weblink fallback for Mail.ru publishing** — if automatic folder
+- **Manual weblink fallback for Mail.ru publishing** - if automatic folder
   publishing is unavailable (e.g. VK ID logins), the user shares the
   `ntfryseed` folder once in the Cloud web UI and pastes the public link
   (`https://cloud.mail.ru/public/...`) on the Seeders page. The weblink is
   extracted, remembered, and every subsequent publish (including background
-  auto-replication) goes over WebDAV only — no o2/api-m1 calls at all.
+  auto-replication) goes over WebDAV only - no o2/api-m1 calls at all.
 - Verified live against a real published folder: anonymous listing and
   chunk-file download (via dispatcher `weblink_get` + redirect follow) work
   without any authentication; missing files return proper 404.
@@ -3981,7 +3981,7 @@ again (`ownSeeder()` gate).
 
 ### Fixed
 - **`HTTP: error decoding response body` when publishing a seeder to Mail.ru
-  Cloud** — o2.mail.ru and api/m1 responses were parsed with strict JSON
+  Cloud** - o2.mail.ru and api/m1 responses were parsed with strict JSON
   decoding, so any non-token answer (e.g. `{"error":"invalid username or
   password"}` for VK ID logins, or an HTML page) crashed with a meaningless
   decode error. Token/publish/meta responses are now parsed leniently and the
@@ -3991,18 +3991,18 @@ again (`ownSeeder()` gate).
 ## [1.89.0] - 2026-06 (Mail.ru Cloud Seeders + configurable chunk size)
 
 ### Added
-- **Mail.ru Cloud as a Public Network Seeder provider** — new seed URI format
+- **Mail.ru Cloud as a Public Network Seeder provider** - new seed URI format
   `sn://seed/m@<folder_weblink>@<public_key>`. Authors publish the encrypted
   network state to `/ntfryseed` over WebDAV and the folder is made public via
   the unofficial `api/m1` publish endpoint (o2.mail.ru password-grant with the
   app password). Peers fetch files anonymously through the public weblink
-  (`weblink_get` base + optional download key) — no login required. Fetching,
+  (`weblink_get` base + optional download key) - no login required. Fetching,
   dApp cloud-install and the registry fully support `m@` URIs.
-- **Provider picker before publishing a seeder** — the Seeders page now lists
+- **Provider picker before publishing a seeder** - the Seeders page now lists
   every connected Yandex Disk and Mail.ru Cloud account from Crypto Vault;
   background auto-replication re-publishes to the same provider as the
   original seeder.
-- **Configurable vault chunk size** — new `.env` key `CHUNK_SIZE` (in KB,
+- **Configurable vault chunk size** - new `.env` key `CHUNK_SIZE` (in KB,
   clamped to 64–4096, default **512**). 512 KB cuts HTTP round-trips 4× versus
   the old 128 KB, keeps deduplication effective and gives ZSTD more context
   per block. Existing 128 KB chunks remain fully readable (decompression
@@ -4011,7 +4011,7 @@ again (`ownSeeder()` gate).
 ## [1.88.2] - 2026-06 (Crypto Vault: vault-level retry for all cloud providers)
 
 ### Added
-- **Automatic retry of transient cloud errors for every provider** — chunk
+- **Automatic retry of transient cloud errors for every provider** - chunk
   upload/download and index upload in the vault engine now retry transient
   failures (network/transport errors, HTTP 429/5xx) up to 3 times with
   backoff (1 s → 3 s → 7 s). This extends the Mail.ru-specific hardening from
@@ -4021,7 +4021,7 @@ again (`ownSeeder()` gate).
 ## [1.88.1] - 2026-06 (Crypto Vault: resilient Mail.ru WebDAV transfers)
 
 ### Fixed
-- **Large-file upload failure on Mail.ru Cloud** — pushing a big file
+- **Large-file upload failure on Mail.ru Cloud** - pushing a big file
   (hundreds of 128 KB chunks over 6 parallel PUTs) made Mail.ru WebDAV drop
   connections (reset / stale keep-alive, 429/5xx); a single
   `error sending request` aborted the whole upload. Chunk PUT/GET/DELETE now
@@ -4033,30 +4033,30 @@ again (`ownSeeder()` gate).
 ## [1.88.0] - 2026-06 (Crypto Vault: visible delete errors, safe chunk GC, instant UI)
 
 ### Fixed
-- **Silent delete failures on Yandex Disk / Google Drive** — `Vault::delete`
+- **Silent delete failures on Yandex Disk / Google Drive** - `Vault::delete`
   discarded every result of the cloud chunk-GC futures (`let _ = gc.next()`),
   so a 401/403/5xx from the provider was swallowed: the file disappeared from
   the index while its encrypted chunks stayed on the cloud drive forever.
   GC results are now inspected per chunk; failures surface to the UI as
   `VaultError::GcFailed` with the exact provider error (status + body).
-- **Permanent chunk orphaning** — dedup entries were removed from the index
+- **Permanent chunk orphaning** - dedup entries were removed from the index
   *before* the cloud delete was attempted. On failure the chunk became
   untracked and could never be GC'd again. Entries are now removed only
   after a successful `delete_chunk`, so a retry of the delete re-runs GC.
-- **Breadcrumb path duplication** — rapid double-clicking a folder row while
+- **Breadcrumb path duplication** - rapid double-clicking a folder row while
   the previous `refresh()` was still in flight appended the same segment to
   `cwd` twice (`/docs/docs`). `openRow()`/`goCrumb()` are now guarded by a
   `navBusy` navigation lock.
 
 ### Changed
-- **Optimistic file deletion** — the deleted row disappears from the list
+- **Optimistic file deletion** - the deleted row disappears from the list
   instantly; chunk GC runs in the background. On error the previous listing
   is restored and the exact error is shown.
 
 ## [1.87.0] - 2026-06 (Crypto Vault: fully async Sled cache + non-blocking IPC on drive switch)
 
 ### Fixed
-- **Drive-switching freeze in Crypto Vault** — synchronous `sled::open()` +
+- **Drive-switching freeze in Crypto Vault** - synchronous `sled::open()` +
   every sled read/write (`load_index_enc`, `save_index_enc`,
   `set_synced_sha`, `set_stored_bytes`, `synced_sha`, `stored_bytes`) was
   running on the tokio IPC thread, blocking the whole Rust command runtime
@@ -4072,29 +4072,29 @@ again (`ownSeeder()` gate).
   `tokio::task::spawn_blocking`. `sled::Db` is `Send + Sync + Clone`, so
   the handle is cheaply cloned into the blocking task; every fsync/flush
   now happens off the main runtime thread.
-- **`Vault::open` / `Vault::init` / `Vault::save_index`** — all Cache
+- **`Vault::open` / `Vault::init` / `Vault::save_index`** - all Cache
   calls awaited (no more sync sled ops from an async context).
 - **`cloud_vault_open` / `_reset` / `_open_raid` / `_reset_raid`**:
   BIP32/HKDF/secp256k1 key derivation (`vcrypto::derive_flexible`) is
-  CPU-bound and was running on the IPC thread — moved into
+  CPU-bound and was running on the IPC thread - moved into
   `spawn_blocking`.
 - **`detect_onedrive_folder`, `cloud_vault_seal`, `cloud_vault_unseal`**:
   converted from sync `#[tauri::command] fn` to `async fn` + inner
   `spawn_blocking`. Every project Tauri command is now async and never
   touches the main thread (project rule, `memory/RULES.md`).
-- **`cloud_vault_cached_stored`**: simplified — the new async `Cache` API
+- **`cloud_vault_cached_stored`**: simplified - the new async `Cache` API
   handles blocking internally, so the manual `spawn_blocking` wrapper
   around `Cache::open + stored_bytes` was removed.
 
 ### Verified
-- `cargo check --lib` in `ntfry` — clean; `cargo test --lib` — **22/22
-  passed**. `cargo check` in `smartnet-client` — clean (only pre-existing
+- `cargo check --lib` in `ntfry` - clean; `cargo test --lib` - **22/22
+  passed**. `cargo check` in `smartnet-client` - clean (only pre-existing
   warnings; no new errors).
 
 
-## 1.86.0 — 2026-06
+## 1.86.0 - 2026-06
 - CRYPTO VAULT: новый провайдер «Mail.ru Облако» (официальный WebDAV webdav.cloud.mail.ru):
-  - ntfry/storage/mailru.rs: MailruCloudProvider — Basic-аутентификация (email + пароль для внешнего приложения), полный трейт StorageProvider (чанки, index.enc, user.dict, meta, GC, RAID-совместимость)
+  - ntfry/storage/mailru.rs: MailruCloudProvider - Basic-аутентификация (email + пароль для внешнего приложения), полный трейт StorageProvider (чанки, index.enc, user.dict, meta, GC, RAID-совместимость)
   - Квота: RFC 4331 PROPFIND (quota-used/available-bytes) + фолбэк на неофициальный o2.mail.ru → api/m1/user
   - Таймауты по урокам seeder-фикса: connect 15с, read 60с, tcp_keepalive 20с
   - Понятные ошибки: 401 → «проверьте пароль приложения», 402/403 → «WebDAV Mail.ru только на платных тарифах Mail Space»
@@ -4105,7 +4105,7 @@ again (`ownSeeder()` gate).
 ## [1.86.0] - 2026-06 (Crypto Vault: Mail.ru Cloud provider via WebDAV)
 
 ### Added
-- **Mail.ru Cloud (`cloud.mail.ru`) provider in Crypto Vault** — new
+- **Mail.ru Cloud (`cloud.mail.ru`) provider in Crypto Vault** - new
   `MailruCloudProvider` in `ntfry::storage::mailru` implementing the full
   `StorageProvider` trait over `webdav.cloud.mail.ru/`. Uses HTTP Basic Auth
   (`email:app_password`, base64-encoded on every request); chunk upload/
@@ -4122,15 +4122,15 @@ again (`ownSeeder()` gate).
 - **`make_provider("mailru")`** wired in `cloudvault.rs` factory; `mailru`
   added to the account list serializer and `account_info` login resolver
   (returns the email address as login, total/used quota via `PROPFIND` on
-  the root — Mail.ru does not expose a REST quota endpoint).
+  the root - Mail.ru does not expose a REST quota endpoint).
 
 ### Notes
 - Mail.ru WebDAV requires a **paid Mail Space** subscription and an
   **App Password** (created in Mail.ru account security settings). The
   regular account password will not work. UI hint added to the form.
 
-## 1.85.0 — 2026-06
-- UI: бейдж «попытка N/3» в строке прогресса заливки архива на странице Seeders — при обрыве мобильной связи пользователь видит, что клиент повторяет загрузку, а не завис:
+## 1.85.0 - 2026-06
+- UI: бейдж «попытка N/3» в строке прогресса заливки архива на странице Seeders - при обрыве мобильной связи пользователь видит, что клиент повторяет загрузку, а не завис:
   - ntfry: колбэк прогресса `on_progress(sent, attempt)` теперь передаёт номер попытки
   - Rust IPC: поле `attempt` в событии `seeder-publish-progress` (смена попытки пробрасывается в UI мгновенно, минуя троттлинг 450мс)
   - Seeders.vue: пульсирующий янтарный бейдж (data-testid="seeders-publish-retry-badge") при attempt > 1
@@ -4152,13 +4152,13 @@ again (`ownSeeder()` gate).
   events on retry boundaries; `bridge.ts` `SeederPublishProgress`
   interface + `useSeedersStatsStore` updated accordingly.
 
-## 1.84.0 — 2026-06
+## 1.84.0 - 2026-06
 - FIX: Обрыв мобильной связи при публикации в Cloud Seeder больше не подвешивает загрузку навсегда:
-  - `http_client`: добавлены `read_timeout(60s)` и `tcp_keepalive(20s)` (у reqwest нет дефолтного таймаута запроса — оборванный TCP висел вечно)
-  - Загрузка архива dApp: общий таймаут попытки = 60с + размер/8КиБ/с, до 3 попыток с бэкоффом (2с/4с/6с); 4xx (кроме 408/429) — без повторов
+  - `http_client`: добавлены `read_timeout(60s)` и `tcp_keepalive(20s)` (у reqwest нет дефолтного таймаута запроса - оборванный TCP висел вечно)
+  - Загрузка архива dApp: общий таймаут попытки = 60с + размер/8КиБ/с, до 3 попыток с бэкоффом (2с/4с/6с); 4xx (кроме 408/429) - без повторов
   - Мета-файлы (dapps/nodes/seeders.enc): таймаут 60с + 3 попытки
   - Все управляющие запросы (MKCOL, publish, meta, DELETE, href): таймаут 30с
-- AUDIT (P1): подтверждено — `cloud_seeder_publish` требует разблокированный кошелёк (`signing_key()` → SESSION_SEED) ДО любых облачных операций; токен сам по себе публикацию не даёт
+- AUDIT (P1): подтверждено - `cloud_seeder_publish` требует разблокированный кошелёк (`signing_key()` → SESSION_SEED) ДО любых облачных операций; токен сам по себе публикацию не даёт
 
 
 ## [1.84.0] - 2026-06 (Cloud Seeders: origin badges, sidebar heartbeat, legacy cleanup)
@@ -4187,7 +4187,7 @@ again (`ownSeeder()` gate).
 
 ### Changed
 - `registry_add_internal(&[...])` → `registry_add_internal(&[...], source)`
-  — all three call sites (publish/gossip/seed_file merge) pass their
+  - all three call sites (publish/gossip/seed_file merge) pass their
   origin; the bootstrap defaults are stamped in `known_seeders_internal`.
 
 ## [1.83.1] - Mobile-network resilience for Cloud Seeder uploads
@@ -4206,13 +4206,13 @@ again (`ownSeeder()` gate).
 
 ### Security
 - Verified: `cloud_seeder_publish` requires an unlocked wallet session
-  (`SESSION_SEED` via `signing_key()`) — publishing is impossible without
+  (`SESSION_SEED` via `signing_key()`) - publishing is impossible without
   a valid session.
 
 ## [1.83.1] - 2026-06 (Cloud Seeders: clickable replication toast)
 
 ### Added
-- **Clickable "⇈ SEEDER — replicated to cloud" toast**: the background
+- **Clickable "⇈ SEEDER - replicated to cloud" toast**: the background
   replication toast now carries an `onOpen` handler that closes any active
   dApp tab (`tabs.goHome()`) and routes to `sn://seeders`. ToastHost already
   renders an "нажмите, чтобы открыть →" hint and hover accent for
@@ -4222,7 +4222,7 @@ again (`ownSeeder()` gate).
 ## [1.83.0] - 2026-06 (Cloud Seeders: auto URI exchange, /dapps subfolder, version-aware install)
 
 ### Added
-- **Global "⇈ SEEDER — replicated to cloud" toast**: background Cloud Seeder
+- **Global "⇈ SEEDER - replicated to cloud" toast**: background Cloud Seeder
   replication (30-min timer and the instant post-update trigger) was fully
   silent; AppLayout now listens to `seeder-replicated` and shows a toast
   with the dApps/archives counters, so users see the update actually landed
@@ -4237,7 +4237,7 @@ again (`ownSeeder()` gate).
 ### Added
 - **Automatic seeder-URI exchange over P2P gossip**: a new system topic
   (`SMARTNET-SEEDER-ANNOUNCE-BUS-v01`) carries signed announces
-  `{v,kind,uri,ts,sig}` — ECDSA over sha256("seeder-announce|uri|ts") with
+  `{v,kind,uri,ts,sig}` - ECDSA over sha256("seeder-announce|uri|ts") with
   the wallet key; receivers verify the signature against the pubkey embedded
   in the URI itself (spam with foreign URIs is rejected) and a ±1h freshness
   window, then merge the URI into their local registry. Announce fires
@@ -4248,7 +4248,7 @@ again (`ownSeeder()` gate).
   merged into the registry only during Cloud Fallback; now manual FETCH BY
   URI, "check all" and cloud installs merge them too (chain reaction). The
   UI live-refreshes via the new `seeder-registry-updated` event.
-- **Structured cloud layout — /ntfryseed/dapps/**: encrypted dApp archives
+- **Structured cloud layout - /ntfryseed/dapps/**: encrypted dApp archives
   are now published into a dedicated `dapps` subfolder as `<appId>.enc`
   (e.g. `dapps/SPVSeEN3ZXTUH2Y6EwoPhR2sj6TxYoQZXo.enc`, MKCOL on publish);
   fetch/install tries `dapps/<appId>.enc` first, then legacy
@@ -4268,8 +4268,8 @@ again (`ownSeeder()` gate).
   Yandex Disk are now streamed in 256 KiB zero-copy `Bytes` chunks
   (`reqwest::Body::wrap_stream`, explicit `Content-Length` for WebDAV), with
   a per-chunk progress callback throttled to ~2 events/sec. The publish
-  progress line shows real-time transferred bytes and speed — "загрузка
-  45.2 МБ / 93.3 МБ (−69%) · 2.4 МБ/с…" — and the progress bar advances by
+  progress line shows real-time transferred bytes and speed - "загрузка
+  45.2 МБ / 93.3 МБ (−69%) · 2.4 МБ/с…" - and the progress bar advances by
   actual bytes sent within the current archive, matching the Private Cloud
   UX. `SeederPublishProgress` gained an `uploadedBytes` field.
 - **Session average upload speed chip** in the /ntfryseed session summary
@@ -4281,7 +4281,7 @@ again (`ownSeeder()` gate).
 ### Added
 - **Session-scoped /ntfryseed statistics on the Seeders page**: a compact
   summary strip appears once any dApp archive has been uploaded in the
-  current session — "N архивов · ~X МБ · сэкономлено Y МБ · средн. сжатие
+  current session - "N архивов · ~X МБ · сэкономлено Y МБ · средн. сжатие
   −Z%". Aggregation is fully local, driven by the existing
   `seeder-publish-progress` events (both manual publish and background
   30-min replication feed it); archives are de-duplicated by `appId` so
@@ -4294,7 +4294,7 @@ again (`ownSeeder()` gate).
 ### Added
 - **Cloud-archive install fallback in Discover**: the INSTALL button now
   transparently falls back to encrypted dApp archives from known Cloud
-  Seeders — (1) when a discovered app has no live P2P providers, and
+  Seeders - (1) when a discovered app has no live P2P providers, and
   (2) after every P2P provider fails. New `cloud_seeder_install_any(appId)`
   command tries seeders that are known to host the app's archive first
   (in-memory `APP_SOURCES`, filled on every seeder fetch), then the whole
@@ -4305,7 +4305,7 @@ again (`ownSeeder()` gate).
 
 ### Added
 - **Encrypted dApp archives in /ntfryseed**: `cloud_seeder_publish` now also
-  uploads `dapp-<id>.enc` — a tar of each non-draft dApp folder, sealed with
+  uploads `dapp-<id>.enc` - a tar of each non-draft dApp folder, sealed with
   the same public-deterministic pipeline (HKDF key from the author's pubkey,
   ChaCha20-Poly1305, ECDSA author signature; new binary envelope v2
   `seal_bytes`/`open_bytes` in `ntfry::seeder`, 5/5 tests). Unchanged apps
@@ -4313,7 +4313,7 @@ again (`ownSeeder()` gate).
   background republish stays cheap. Per-archive failures are logged and do
   not fail the publish.
 - **Install dApps straight from a cloud seeder** (no P2P needed): new
-  `cloud_seeder_install(uri, appId)` command — anonymous download, signature
+  `cloud_seeder_install(uri, appId)` command - anonymous download, signature
   verification, storage-quota check, unpack + Sled registration; the UI then
   runs `verify_app`. FETCH BY URI on the Seeders page lists the seeder's
   dApps with an "⛁ архив" badge and an INSTALL button.
@@ -4341,7 +4341,7 @@ again (`ownSeeder()` gate).
   every step is logged to the System Console (`seeder` scope).
 - **Background chain replication**: while the wallet is unlocked, a frontend
   timer republishes the user's network state to their own `/ntfryseed`
-  Yandex folder every 30 minutes — only if a Yandex account is connected in
+  Yandex folder every 30 minutes - only if a Yandex account is connected in
   Crypto Vault AND the user has published a seeder before. ON/OFF switch +
   last-publication timestamp on the Seeders page (`sth_seeder_autorep`,
   `sth_seeder_own`, `sth_seeder_last_rep` in localStorage; shared helpers in
@@ -4366,7 +4366,7 @@ again (`ownSeeder()` gate).
 ### Fixed
 - **Non-p2p build unblocked (E0433 in `p2p.rs` + `devhub.rs`).**
   Three call sites referenced modules that only exist under
-  `#[cfg(feature = "p2p")]` — `crate::dht_dapp::album_infohash` inside
+  `#[cfg(feature = "p2p")]` - `crate::dht_dapp::album_infohash` inside
   `announce_album_keys` / `album_keys_discover` (`p2p.rs`), and
   `crate::chat::gossip::app_handle` inside `handle_gossip_announce`
   (`devhub.rs`). Default `cargo check`/`cargo build` (feature off) failed
@@ -4375,7 +4375,7 @@ again (`ownSeeder()` gate).
   `smartnet-client` crate. Fix: gate the p2p bodies with
   `#[cfg(feature = "p2p")]` and add no-op stubs under
   `#[cfg(not(feature = "p2p"))]` (returning `(Vec::new(), None)` for the
-  discover call). Production builds (`--features p2p`) are unchanged —
+  discover call). Production builds (`--features p2p`) are unchanged -
   same code path, identical behavior.
 
 ## [1.76.2] - 2026-02-07
@@ -4406,13 +4406,13 @@ again (`ownSeeder()` gate).
 ### Removed
 - Graph API provider `ntfry/storage/onedrive.rs` and OAuth commands
   `cloud_vault_onedrive_oauth`/`_refresh` (+ bridge wrappers, manual-token
-  option, `NTFRY_ONEDRIVE_CLIENT_ID`) — introduced in 1.76.0, superseded by
+  option, `NTFRY_ONEDRIVE_CLIENT_ID`) - introduced in 1.76.0, superseded by
   the folder-based approach before ever shipping to users.
 
 ### Verification
-- `cargo check`/`cargo test` in `ntfry` — clean, 14/14 PASSED; full workspace
-  `cargo check` — no errors in changed code (only the 3 known pre-existing
-  `E0433` in `p2p.rs`/`devhub.rs`); `yarn build` — clean; web-preview smoke of
+- `cargo check`/`cargo test` in `ntfry` - clean, 14/14 PASSED; full workspace
+  `cargo check` - no errors in changed code (only the 3 known pre-existing
+  `E0433` in `p2p.rs`/`devhub.rs`); `yarn build` - clean; web-preview smoke of
   the Settings modal (button + updated hint) OK.
 
 ## [1.76.0] - 2026-02-07
@@ -4421,7 +4421,7 @@ again (`ownSeeder()` gate).
 - **Crypto Vault: OneDrive provider (Microsoft Graph API v1.0).** New
   `ntfry/storage/onedrive.rs` implements the full `StorageProvider` trait via
   path addressing (`/me/drive/root:/ntfry/…`): chunk upload/download (simple
-  `PUT :/content`, 250 MB limit — ntfry chunks are 128 KB), index/dict/meta,
+  `PUT :/content`, 250 MB limit - ntfry chunks are 128 KB), index/dict/meta,
   cheap `chunk_exists`, tolerant delete (404 = ok), folder init with
   `conflictBehavior: fail` (409 = exists), drive quota via `$select=quota`.
   `remote_index_sha256` returns `None` (Graph exposes only sha1/quickXor).
@@ -4433,7 +4433,7 @@ again (`ownSeeder()` gate).
   Scope: `Files.ReadWrite offline_access User.Read`. Client ID comes from the
   `NTFRY_ONEDRIVE_CLIENT_ID` env var; a clear setup-instruction error is shown
   when it is missing. UI: `＋ OneDrive` button, `OD` provider badge, manual
-  token option, auto-refresh 60 s before expiry — fully symmetric with
+  token option, auto-refresh 60 s before expiry - fully symmetric with
   Yandex/Google drives, RAID-eligible.
 - **Clickable «⛁ … in vault» chip → "new since last sync" filter.** The vault
   usage chip in the drive dropdown is now a button: click switches to that
@@ -4445,27 +4445,27 @@ again (`ownSeeder()` gate).
   work directly from the filtered list. Filter clears on reconnect/drive switch.
 
 ### Verification
-- `cargo check` + `cargo test --lib` in `ntfry` — clean, 14/14 PASSED.
+- `cargo check` + `cargo test --lib` in `ntfry` - clean, 14/14 PASSED.
 - Full workspace `cargo check`: **no errors in new code**; only the 3 known
   pre-existing `E0433` errors in `p2p.rs`/`devhub.rs` (feature-gated modules).
-- `yarn build` — clean; UI smoke-verified in web preview (Settings modal shows
+- `yarn build` - clean; UI smoke-verified in web preview (Settings modal shows
   the OneDrive button and provider hint).
 
 ## [1.75.1] - 2026-02-06
 
 ### Added - Crypto Vault: «in vault» line in the drive list
 - **«Занято сейфом» row**: each drive row in the vault drive-switcher dropdown
-  now shows a second line under the free-space label — how many bytes the
+  now shows a second line under the free-space label - how many bytes the
   Zero-Knowledge vault currently occupies on that specific disk. Instant read
-  from the local Sled index cache — no network round-trip and no need to
+  from the local Sled index cache - no network round-trip and no need to
   open the vault on that drive.
 - **Live update**: the active drive (or every member of the active RAID set)
-  is updated in real time after every `push` — the number reflects the fresh
+  is updated in real time after every `push` - the number reflects the fresh
   `stats.storedBytes` from the running session without waiting for the
   dropdown to be re-opened.
 - **`ntfry/cache.rs`**: new `stored_bytes()`/`set_stored_bytes(u64)` helpers.
   A small plain-text hint (8-byte LE integer) is written next to the encrypted
-  `index_enc` blob. Metadata only — no vault contents are revealed.
+  `index_enc` blob. Metadata only - no vault contents are revealed.
 - **`ntfry/vault.rs`**: `save_index()` and the initial cloud-sync branch in
   `open()` update the hint after every mutation of the index.
 - **Rust IPC**: new command `cloud_vault_cached_stored(provider, account) -> u64`.
@@ -4483,14 +4483,14 @@ again (`ownSeeder()` gate).
 ### Added - Crypto Vault: «+ Local Safe Disk» (folder as encrypted virtual drive)
 - **Local Safe Disk**: the «+ Local mock» button is replaced by
   «+ Local Safe Disk». Clicking it opens the native folder picker; the chosen
-  folder becomes a full encrypted virtual drive — a `/ntfry` directory with
+  folder becomes a full encrypted virtual drive - a `/ntfry` directory with
   `index.enc`, `meta` and ChaCha20-Poly1305-encrypted ZSTD chunks is created
   inside it, exactly like on a cloud drive (Zero-Knowledge all the way down).
 - **Any number of local disks**: each picked folder is an independent drive
   (dedup by path; re-adding the same folder just switches to it). The drive
   list shows the folder path as the account login and the free space of the
   partition hosting the folder (`sysinfo` longest-mount-point-prefix match).
-- **RAID with local disks**: Local Safe Disks are RAID-capable — they get the
+- **RAID with local disks**: Local Safe Disks are RAID-capable - they get the
   ⛓ chip and can be combined with cloud drives in RAID-0 (stripe) or RAID-1
   (mirror) sets.
 - **Rust (`cloudvault.rs`)**: `make_provider("local")` now roots
@@ -4563,16 +4563,16 @@ again (`ownSeeder()` gate).
 ## [1.71.0] - 2026-07-25
 
 ### Added - Crypto Vault: RAID member selection + RAID-1 (mirror) mode
-- **Selectable RAID set**: every cloud drive row in Settings has a ⛓ chip —
+- **Selectable RAID set**: every cloud drive row in Settings has a ⛓ chip -
   only checked drives join the RAID set (e.g. 3 of 5 connected). Minimum 2;
   the rest keep working as independent vaults.
-- **RAID type selector**: RAID-0 (stripe, summed quota — default) or
+- **RAID type selector**: RAID-0 (stripe, summed quota - default) or
   **RAID-1 (mirror)**: every chunk is uploaded to ALL drives of the set,
   the vault survives the total loss of any drive; usable quota reported as
   the member with the least free space. `RaidMode` enum in ntfry,
   `mode` param on `cloud_vault_open_raid`/`reset_raid`, session key =
   `mode:sortedIds`. New unit test `raid_mirror_replicates_and_survives_drive_loss`
-  (kills drive A, pulls the file back from drive B) — 13/13 GREEN.
+  (kills drive A, pulls the file back from drive B) - 13/13 GREEN.
 - Header chip now shows `⛓ RAID-0/1 · N drives`; dropdown row shows the
   active type and `N of M` selected drives.
 
@@ -4580,14 +4580,14 @@ again (`ownSeeder()` gate).
 
 ### Added - Crypto Vault: PKCE, RAID mode, folder drag&drop queue, .env overrides, RU docs
 - **PKCE (RFC 7636)** in both OAuth flows: `code_challenge S256` in the
-  authorize URL + `code_verifier` on token exchange (Yandex & Google) —
+  authorize URL + `code_verifier` on token exchange (Yandex & Google) -
   intercepted authorization codes are useless without the verifier.
 - **RAID mode (optional toggle)**: all cloud drives merge into ONE big vault.
   New `ntfry::storage::raid::RaidProvider` places chunks via rendezvous
   hashing (HRW, no mapping table), falls back to the next drive when one is
   full/down, replicates `index.enc`/`meta`/`user.dict` to every member and
   sums quotas. New IPC `cloud_vault_open_raid` / `cloud_vault_reset_raid`.
-  UI: switch in Settings + "⛓ RAID — все диски вместе" row in the drive
+  UI: switch in Settings + "⛓ RAID - все диски вместе" row in the drive
   dropdown; picking a single drive turns RAID off. Unit test
   `raid_two_drives_distribute_and_roundtrip` (12/12 GREEN).
 - **Folder drag & drop with upload queue**: native OS drops are scanned
@@ -4599,7 +4599,7 @@ again (`ownSeeder()` gate).
   `.env` next to the executable / in cwd; `NTFRY_YANDEX_CLIENT_ID/SECRET`,
   `NTFRY_GDRIVE_CLIENT_ID/SECRET` can now be swapped without rebuilding.
   Template `.env` shipped in `src-tauri/`.
-- **Full Russian documentation**: `docs/11-Crypto-Vault-Guide.md` — setup,
+- **Full Russian documentation**: `docs/11-Crypto-Vault-Guide.md` - setup,
   multi-account, RAID, drag&drop, security model, own OAuth apps, FAQ
   (including "why the client secret is not secret for desktop apps").
 
@@ -4629,7 +4629,7 @@ again (`ownSeeder()` gate).
 ### Added - Crypto Vault phase 5: WebDAV fast path, disk quota, transfer speed, ZSTD dictionary, sealed tokens
 - **Yandex Disk WebDAV transport**: hot-path transfers (chunks, index.enc,
   user.dict, meta) switched from the two-phase REST flow (fetch href → send
-  bytes) to single-transaction WebDAV PUT/GET against `webdav.yandex.ru` —
+  bytes) to single-transaction WebDAV PUT/GET against `webdav.yandex.ru` -
   one HTTP round-trip per chunk instead of two. Directories are created via
   MKCOL. REST is kept for what WebDAV cannot do: remote `index.enc` sha256,
   disk quota, and permanent (trash-bypassing) deletes.
@@ -4657,7 +4657,7 @@ again (`ownSeeder()` gate).
 - **Parallel chunk pipeline (up to 6 concurrent transfers)**: `push` fills a
   bounded pool of concurrent uploads (FuturesUnordered), `pull` uses an
   order-preserving `buffered` stream (concurrent downloads, sequential
-  writes) — 3-6× faster on multi-chunk files, storage format unchanged.
+  writes) - 3-6× faster on multi-chunk files, storage format unchanged.
   `Vault.storage` became `Arc<dyn StorageProvider>`.
 - **"Sign in with Google"** (`cloud_vault_google_oauth`): RFC 8252 loopback
   flow on an ephemeral 127.0.0.1 port (Google forbids embedded webviews and
@@ -4696,14 +4696,14 @@ The user hit a raw "AEAD error" on Connect: the cloud `/ntfry/index.enc`
 (left over from the live CLI test) was encrypted with a different mnemonic
 than the wallet key derived by the client.
 
-- **ntfry**: new `VaultError::KeyMismatch` — `Vault::open` maps an AEAD
+- **ntfry**: new `VaultError::KeyMismatch` - `Vault::open` maps an AEAD
   failure while decrypting the freshly downloaded remote index into a
   semantic "the cloud vault belongs to another wallet" error. New trait
   method `StorageProvider::delete_vault()` (Local: `remove_dir_all`;
   Yandex: `DELETE resources?path=disk:/ntfry&permanently=true`; GDrive:
   folder delete by ID). Unit test: wrong key → KeyMismatch, then
   `delete_vault` + reopen succeeds (9/9 green).
-- **Client**: new IPC `cloud_vault_reset` — wipes the remote `/ntfry`,
+- **Client**: new IPC `cloud_vault_reset` - wipes the remote `/ntfry`,
   clears the local Sled cache and re-inits an empty vault for the CURRENT
   wallet key. UI shows an amber recovery panel on KeyMismatch with a
   two-step confirm button ("Reset cloud vault (erase /ntfry)" → "Click
@@ -4731,7 +4731,7 @@ dropped oneshot channel; 5-minute timeout guards abandoned sessions.
 
 ### Added - Crypto Vault phase 3: Yandex Disk LIVE-verified, "Sign in with Yandex" OAuth, GoogleDriveProvider
 - **Yandex Disk verified against the real cloud**: full CLI E2E on a live
-  user token — `init` (creates `disk:/ntfry/{index.enc, chunks/}`), `push`
+  user token - `init` (creates `disk:/ntfry/{index.enc, chunks/}`), `push`
   (3 encrypted chunks uploaded), `ls`, `pull` → byte-identical restore, plus
   a second-device scenario (fresh cache syncs the index from the cloud).
 - **"Sign in with Yandex"** (`cloud_vault_yandex_oauth`): built-in OAuth
@@ -4739,7 +4739,7 @@ dropped oneshot channel; 5-minute timeout guards abandoned sessions.
   opens the Yandex consent page, the client catches the redirect on
   `http://127.0.0.1:8971/callback`, exchanges the code for an access token
   (client id/secret embedded, overridable via `NTFRY_YANDEX_CLIENT_ID/SECRET`)
-  and returns it to the UI — zero manual token copying. The settings modal
+  and returns it to the UI - zero manual token copying. The settings modal
   gains a "Sign in with Yandex" button that auto-fills the token, saves and
   reconnects. NOTE: the redirect URI must be registered in the Yandex app.
 - **GoogleDriveProvider implemented** (Drive API v3, Bearer token): lazy
@@ -4755,7 +4755,7 @@ dropped oneshot channel; 5-minute timeout guards abandoned sessions.
 ### Changed - Crypto Vault: fully seamless key source (wallet phrase only)
 The mnemonic input was removed from the Vault settings modal. The master
 encryption key is now ALWAYS derived from the current SmartNet wallet
-phrase (`SESSION_SEED`) — zero extra passwords, seamless by design. The
+phrase (`SESSION_SEED`) - zero extra passwords, seamless by design. The
 modal shows a green "KEY SOURCE · SmartNet wallet (seamless)" badge and
 only asks for the storage provider + OAuth token.
 
@@ -4763,7 +4763,7 @@ only asks for the storage provider + OAuth token.
 ## [1.65.0] - 2026-07-23
 
 ### Added - Crypto Vault phase 2: Tauri IPC integration, live VFS UI, savings metrics
-The ntfry Zero-Knowledge vault is now wired into the SmartNet client — the
+The ntfry Zero-Knowledge vault is now wired into the SmartNet client - the
 CryptoVault page went from a skeleton to a fully working encrypted file
 manager backed by the Rust core.
 
@@ -4797,10 +4797,10 @@ manager backed by the Rust core.
 
 ## [1.64.0] - 2026-07-23
 
-### Added - `ntfry` Virtual Encrypted Cloud Storage (Zero-Knowledge) — phase 1
+### Added - `ntfry` Virtual Encrypted Cloud Storage (Zero-Knowledge) - phase 1
 New standalone Rust crate `/app/ntfry/` + UI skeleton: an In-Memory Encrypted
 Virtual File System over personal cloud drives. Files never touch the cloud
-(or local disk) in plaintext — only ChaCha20-Poly1305 ciphertext chunks.
+(or local disk) in plaintext - only ChaCha20-Poly1305 ciphertext chunks.
 
 - **Crate `ntfry` (CLI, clap v4)**: commands `init` / `push` / `pull` / `ls`.
   Pipeline: 128 KB chunk split → ZSTD compression (optional custom
@@ -4812,7 +4812,7 @@ Virtual File System over personal cloud drives. Files never touch the cloud
 - **`StorageProvider` trait** with three impls: `LocalStorageProvider`
   (zero-network mock), `YandexDiskProvider` (REST API, two-phase
   upload/download, remote sha256 validation) and `GoogleDriveProvider`
-  (skeleton — phase 2). Remote layout: `/ntfry/{index.enc, user.dict, chunks/}`.
+  (skeleton - phase 2). Remote layout: `/ntfry/{index.enc, user.dict, chunks/}`.
 - **Sled local cache**: encrypted `VaultIndex` snapshot loads instantly into
   RAM on startup; background validation compares remote `index.enc` SHA-256
   with the last synced hash and re-syncs when the cloud copy is newer.
@@ -4830,7 +4830,7 @@ Virtual File System over personal cloud drives. Files never touch the cloud
 ## [1.63.20] - 2026-07-22
 
 ### Added - `verify_app` returns per-file reason + streams failures to SystemConsole
-The red "content.json signature does NOT match" banner used to be silent —
+The red "content.json signature does NOT match" banner used to be silent -
 you'd see the ⚠, but not WHICH file was broken (`missing-file` /
 `file-hash-mismatch` didn't carry a path). Devs of large dApps had no way
 to jump straight to the file at fault.
@@ -4839,12 +4839,12 @@ to jump straight to the file at fault.
   offending file path when applicable: `missing-file:assets/logo.png`,
   `file-hash-mismatch:index.html`, `id-mismatch:<other-id>`. Every failure
   (all seven exit points) also logs one line to `crate::syslog::log("dapp",
-  format!("verify <shortid>… — FAIL: {reason}"))` — visible in the
+  format!("verify <shortid>… - FAIL: {reason}"))` - visible in the
   SystemConsole under the "dapp" scope filter. The old `verify_fail`
   helper is kept as `#[allow(dead_code)]` for backwards import safety.
 - **Frontend (`store/tabs.ts`)**: the `Tab` type gains a `verifyReason?:
   string` field, filled in whenever `verifyApp` returns `verified=false`.
-  Failures are also mirrored to `console.warn("[SmartNet verify] <id> —
+  Failures are also mirrored to `console.warn("[SmartNet verify] <id> -
   <reason>")` so the browser DevTools log picks them up too.
 - **Frontend (`AppLayout.vue`)**: the ⚠ tab badge tooltip now appends the
   reason: `WARNING · content.json signature does NOT match the app address
@@ -4855,7 +4855,7 @@ to jump straight to the file at fault.
 
 ### Fixed - Free logo replacement broke `content.json` signature ("signature does NOT match the app address")
 Field report: a user opened a big (~300 MB) dApp for a FREE metadata edit,
-swapped the logo, saved — and the next time they opened it the red banner
+swapped the logo, saved - and the next time they opened it the red banner
 "ВНИМАНИЕ · подпись content.json НЕ совпадает с адресом приложения" showed
 up. Root cause in `edit_app_metadata_blocking` (`apps.rs`):
 
@@ -4864,7 +4864,7 @@ up. Root cause in `edit_app_metadata_blocking` (`apps.rs`):
   disk, but `manifest.files` was left untouched and `manifest.merkle` was
   NOT recomputed. The re-sign was then done over the OLD `merkle`.
 - On the next `verify_app`, the walker iterated `manifest.files` and
-  re-hashed each entry from disk — the old logo entry either resolved to
+  re-hashed each entry from disk - the old logo entry either resolved to
   the NEW file bytes (`file-hash-mismatch`) or, if the extension changed,
   resolved to nothing (`missing-file`). Either way → `verified=false` →
   red banner. This affected any dApp whose initial ingest src folder had
@@ -4873,15 +4873,15 @@ up. Root cause in `edit_app_metadata_blocking` (`apps.rs`):
 Fix (`apps.rs`):
 - New helper `rescan_dest_files_and_merkle(dest_root)` walks the destination
   folder recursively, hashes every file (SHA-256 for `manifest.files`,
-  Blake3 for the merkle) and returns the fresh `(files, merkle)` — mirrors
+  Blake3 for the merkle) and returns the fresh `(files, merkle)` - mirrors
   what `collect_and_copy` does on initial ingest, but reads from `dest_root`
   instead of the dev src folder. Skips `content.json` itself.
 - `edit_app_metadata_blocking` now ALWAYS rescans + refreshes
   `manifest.files` and `manifest.merkle` from the on-disk state, then
   re-signs over the NEW merkle. Doing it unconditionally (not only when a
   new logo is uploaded) self-heals any dApp that was already broken by a
-  prior buggy edit — the next FREE text edit fixes it, no re-upload needed.
-- Cost: ~few seconds of disk IO for a 300 MB dApp on a metadata edit —
+  prior buggy edit - the next FREE text edit fixes it, no re-upload needed.
+- Cost: ~few seconds of disk IO for a 300 MB dApp on a metadata edit -
   acceptable for a rare operation. No change to publish/update paths.
 
 Preserves existing behaviour: text-only edits produce the identical merkle
@@ -4901,15 +4901,15 @@ the same file `frontend/public/reserved.json`:
   list ready by the time the user types a name.
 - **Backend (`dns_manager.rs`)**: `RESERVED_NAMES` const array replaced by a
   `once_cell::Lazy<Vec<String>>` built at start-up from
-  `include_str!("../../public/reserved.json")` — one source of truth, no drift
+  `include_str!("../../public/reserved.json")` - one source of truth, no drift
   between the two runtimes.
-- **`.env` — new `DEVELOPERS=<addr>,<addr>` list** (exposed to the frontend
+- **`.env` - new `DEVELOPERS=<addr>,<addr>` list** (exposed to the frontend
   via `vite.config.js` `envPrefix`). Addresses in this list bypass the
   reserved-name gate: they see reserved labels as `available` in the lookup
   and can pass the `register_domain` and `commit_record` checks. Everyone
   else still sees `reason=reserved`. Enforced on the Rust side via
   `can_register_reserved(name, addr) = !is_reserved(name) || is_developer(addr)`
-  — belt-and-braces, so a raw on-chain tx from a non-developer can't hijack
+  - belt-and-braces, so a raw on-chain tx from a non-developer can't hijack
   a reserved label either.
 
 To edit the reserved list, update `frontend/public/reserved.json` and rebuild
@@ -4920,17 +4920,17 @@ the desktop client.
 ### Added - "Check my relays" button next to the n1-relay URL field
 Field request: after the 1.63.16 fix, users of custom n1-relays (self-hosted
 `smartnet-relay` boxes) still had no cheap way to test whether their own
-relay is reachable from the current network — the full Network Doctor sweep
+relay is reachable from the current network - the full Network Doctor sweep
 takes ~30 seconds and probes DHT/DNS/QUIC on top. Added a targeted button
 directly next to the n1-relay textarea in Settings > Network:
 
-- **UI**: `Settings.vue` — new button `ПРОВЕРИТЬ МОИ РЕЛЕ` / `CHECK MY RELAYS`
+- **UI**: `Settings.vue` - new button `ПРОВЕРИТЬ МОИ РЕЛЕ` / `CHECK MY RELAYS`
   in `.tracker-actions` (data-testid `check-n1-relay-btn`). Results render in
   the same style as the main doctor's steps (green/amber/red dot + detail),
   one row per URL entered, with per-family v4/v6 timings (`v4 82мс · v6 74мс`).
 - **Backend (Rust, `p2p.rs`)**: new `net_doctor_check_relays(urls)` Tauri
   command reuses the existing `probe_relay_tls443` (pure TCP/TLS 443, SNI by
-  hostname, dual-stack A + AAAA with DoH fallback for the missing family) —
+  hostname, dual-stack A + AAAA with DoH fallback for the missing family) -
   no QUIC/UDP, so carriers that DPI-block UDP don't skew the answer.
   Emits per-URL `net-doctor-step` events (id `myrelay:<host>`) so the UI can
   paint results live as each probe finishes in parallel.
@@ -4938,7 +4938,7 @@ directly next to the n1-relay textarea in Settings > Network:
 
 Handles empty input (shows warn "list is empty"), URLs with or without the
 `https://` prefix, and preserves the order the user typed them in. Blocking
-`ureq` runs are wrapped in `spawn_blocking` — the async runtime stays clean.
+`ureq` runs are wrapped in `spawn_blocking` - the async runtime stays clean.
 
 ## [1.63.16] - 2026-07-22
 
@@ -4955,28 +4955,28 @@ Root causes on the client side (`p2p.rs`):
    `effective_relay_urls()` = built-ins + user's n1 relays (when enabled).
    The doctor now probes SmartNet relays FIRST, then the n0 pair.
 2. **IPv4-only resolution**: the probe used the system resolver via ureq's
-   default path — carrier DNS could return garbage/A-only, and a blackholed
+   default path - carrier DNS could return garbage/A-only, and a blackholed
    IPv4 ate the whole 5s timeout so IPv6 was never tried. Fixed with an
    honest dual-stack probe (`probe_relay_tls443`): A and AAAA are resolved
    separately (system DNS first, missing family backfilled via DoH to the
-   IP-literal `https://1.1.1.1/dns-query` — immune to carrier DNS), then
+   IP-literal `https://1.1.1.1/dns-query` - immune to carrier DNS), then
    IPv4 and IPv6 are probed IN PARALLEL and independently.
 3. **Probe honesty guaranteed**: each family probe is a real `TcpStream`
    connect to the resolved IPs + real rustls TLS handshake with SNI set to
    the DOMAIN name (fixed ureq resolver overrides only the socket
    addresses, never the hostname) + HTTP GET; any HTTP status (even 4xx)
-   counts as reachable. Strictly TCP 443 — no QUIC/UDP involved anywhere.
+   counts as reachable. Strictly TCP 443 - no QUIC/UDP involved anywhere.
 4. **Per-host verdict in the report**: detail line now shows each relay as
    `host: v4 51мс v6 32мс` / `v4✗ v6 28мс`. When IPv4 TCP is blocked but
    IPv6 TCP works, the probe is marked OK with an explicit
-   "IPv4 TCP зарезан — реле доступны по IPv6 TCP (в обход CGNAT)" note.
+   "IPv4 TCP зарезан - реле доступны по IPv6 TCP (в обход CGNAT)" note.
 
 ### Changed - SmartNet relays are now built into the endpoint relay map by default
 - `apply_smartnet_relays()` no longer requires the n1-relay toggle: the two
   built-in `relay-*.sth.cx` relays are ALWAYS inserted into the iroh relay
   map next to the n0 defaults (user relays remain opt-in). With UDP fully
   blocked, iroh's relay data path is WebSocket over TLS/443 (TCP), so
-  traffic flows through these relays automatically — no manual switch
+  traffic flows through these relays automatically - no manual switch
   needed. Stealth mode is untouched: it keeps its strict custom relay map
   (the apply helper is skipped when stealth is active).
 - Doctor verdict text updated accordingly ("SmartNet relays are built in,
@@ -4985,7 +4985,7 @@ Root causes on the client side (`p2p.rs`):
   relays; the textarea is for EXTRA user relays.
 - Note on direct TCP between IPv6 nodes: iroh direct paths are QUIC/UDP
   only; with a carrier dropping ALL UDP, direct connections are impossible
-  regardless of family — connectivity is carried by the TLS-443 relays.
+  regardless of family - connectivity is carried by the TLS-443 relays.
   A custom TCP peer-to-peer transport (iroh `unstable-custom-transports`)
   is a separate future work item.
 
@@ -5054,8 +5054,8 @@ GitHub issues, or the operator's Telegram without retyping every step.
   and a monospaced "Verdict" row at the bottom.
 - New copy button (⧉) appears next to the title once results are
   available. `copyDoctorReport()` builds a plain-text report
-  (`SmartNet Network Doctor — <iso>` header + client version + one
-  `[STATUS] TITLE — detail` line per probe) and writes it to the OS
+  (`SmartNet Network Doctor - <iso>` header + client version + one
+  `[STATUS] TITLE - detail` line per probe) and writes it to the OS
   clipboard via `navigator.clipboard.writeText`. Falls back gracefully
   with a red hint if clipboard access is denied.
 - New i18n keys `peers.docCopy` / `peers.docCopied` / `peers.docCopyFail`
