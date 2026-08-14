@@ -64,19 +64,19 @@ For commercial licensing inquiries (e.g., proprietary enterprise deployments), p
 ---
 **True Web 4.0. Don't visit the web. Be the web.**
 
-# Netfory — SmartHoldem Decentralized P2P App Client
+# Netfory - SmartHoldem Decentralized P2P App Client
 
 Vue 3 + Vite frontend with a Tauri v2 (Rust + Sled) native shell and a full
 Web Fallback (Pinia + localStorage/sessionStorage). Tactical-minimalist
 cyberpunk UI, 3 themes, RU/EN, real SmartHoldem crypto.
 
-## Run — Web (browser)
+## Run - Web (browser)
 ```bash
 yarn install
 yarn dev          # http://localhost:3000
 ```
 
-## Run / Build — Tauri (desktop, local)
+## Run / Build - Tauri (desktop, local)
 ```bash
 yarn tauri:dev    # native dev window
 yarn tauri:build  # production bundle
@@ -100,7 +100,7 @@ const isTauri = typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window
 `src/lib/crypto.ts` · `src/lib/bridge.ts` · `src/store/{auth,ui}.ts` ·
 `src/layouts/AppLayout.vue` · `src/views/*` · `src/i18n/*` · `src-tauri/*`
 
-## dApp tabs — native child webviews vs iframes (feasibility)
+## dApp tabs - native child webviews vs iframes (feasibility)
 
 **Question:** can `sth://` apps render in *real Tauri child webviews* embedded
 under the tab UI (instead of iframes used by the web fallback)?
@@ -110,7 +110,7 @@ under the tab UI (instead of iframes used by the web fallback)?
 - It requires the **`unstable`** Cargo feature (`tauri = { features = ["unstable"] }`).
   This API (`Window::add_child(WebviewBuilder, position, size)`) is **not part of
   the stable surface** and can change between minor Tauri releases.
-- A child webview is a real OS webview attached to the main window — **not a DOM
+- A child webview is a real OS webview attached to the main window - **not a DOM
   element**. So it always paints **on top** of the Vue layer at absolute OS
   coordinates. The frontend must therefore:
   1. measure the host `<div>`'s `getBoundingClientRect()` and push those bounds
@@ -125,7 +125,7 @@ under the tab UI (instead of iframes used by the web fallback)?
 - Rust commands in `src-tauri/src/lib.rs`: `open_embedded_webview`,
   `set_embedded_bounds`, `hide_embedded_webview`, `close_embedded_webview`
   (labels `embed-<sanitized-address>`), loading `sth://<id>/` via the custom
-  protocol — zero local HTTP server.
+  protocol - zero local HTTP server.
 - `AppLayout.vue` drives the lifecycle through a `ResizeObserver` + watchers on
   the active tab; the web fallback keeps the `<iframe>` placeholder.
 - Capabilities updated in `capabilities/default.json`
@@ -162,7 +162,7 @@ pairs in TXT) and browse the LAN for other SmartNet nodes.
   the API in the `p2p_impl` module (in `lib.rs`) if it drifted.
 
 ## Publishing requirements
-A title (name) **and** a short description are **mandatory** — `publish_app`
+A title (name) **and** a short description are **mandatory** - `publish_app`
 (native) and the web store both reject empty values. The description is part of
 the signed digest (`sha256(id|name|description|merkle)`), so it is tamper-evident.
 
