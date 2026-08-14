@@ -4118,13 +4118,11 @@ again (`ownSeeder()` gate).
 ### Notes
 - Mail.ru WebDAV requires a **paid Mail Space** subscription and an
   **App Password** (created in Mail.ru account security settings). The
-  regular account password will not work. UI hint added to the form.
-
 ## 1.85.0 
-- UI: бейдж «попытка N/3» в строке прогресса заливки архива на странице Seeders - при обрыве мобильной связи пользователь видит, что клиент повторяет загрузку, а не завис:
-  - ntfry: колбэк прогресса `on_progress(sent, attempt)` теперь передаёт номер попытки
-  - Rust IPC: поле `attempt` в событии `seeder-publish-progress` (смена попытки пробрасывается в UI мгновенно, минуя троттлинг 450мс)
-  - Seeders.vue: пульсирующий янтарный бейдж (data-testid="seeders-publish-retry-badge") при attempt > 1
+- UI: badge «Attempt N/3» in the archive upload progress line on the Seeders page - when mobile connectivity is lost, the user sees that the client is retrying the upload rather than being stuck:
+  - ntfry: progress callback `on_progress(sent, attempt)` now passes the attempt number
+  - Rust IPC: `attempt` field in the `seeder-publish-progress` event (attempt changes are propagated to the UI immediately, bypassing 450ms throttling)
+  - Seeders.vue: pulsating amber badge (data-testid="seeders-publish-retry-badge") when attempt > 1
 
 ## [1.85.0]  (Cloud Seeders: live retry badges in the publish UI)
 
@@ -4144,12 +4142,12 @@ again (`ownSeeder()` gate).
   interface + `useSeedersStatsStore` updated accordingly.
 
 ## 1.84.0 
-- FIX: Обрыв мобильной связи при публикации в Cloud Seeder больше не подвешивает загрузку навсегда:
-  - `http_client`: добавлены `read_timeout(60s)` и `tcp_keepalive(20s)` (у reqwest нет дефолтного таймаута запроса - оборванный TCP висел вечно)
-  - Загрузка архива dApp: общий таймаут попытки = 60с + размер/8КиБ/с, до 3 попыток с бэкоффом (2с/4с/6с); 4xx (кроме 408/429) - без повторов
-  - Мета-файлы (dapps/nodes/seeders.enc): таймаут 60с + 3 попытки
-  - Все управляющие запросы (MKCOL, publish, meta, DELETE, href): таймаут 30с
-- AUDIT (P1): подтверждено - `cloud_seeder_publish` требует разблокированный кошелёк (`signing_key()` → SESSION_SEED) ДО любых облачных операций; токен сам по себе публикацию не даёт
+- FIX: Mobile connectivity loss during Cloud Seeder publish no longer hangs the upload indefinitely:
+  - `http_client`: added `read_timeout(60s)` and `tcp_keepalive(20s)` (reqwest has no default request timeout - a broken TCP would hang forever)
+  - dApp archive upload: total attempt timeout = 60s + size/8KiB/s, up to 3 attempts with backoff (2s/4s/6s); 4xx (except 408/429) - no retries
+  - Meta files (dapps/nodes/seeders.enc): timeout 60s + 3 attempts
+  - All control requests (MKCOL, publish, meta, DELETE, href): timeout 30s
+- AUDIT (P1): confirmed - `cloud_seeder_publish` requires an unlocked wallet (`signing_key()` → SESSION_SEED) BEFORE any cloud operations; the token alone does not allow publishing
 
 
 ## [1.84.0]  (Cloud Seeders: origin badges, sidebar heartbeat, legacy cleanup)
@@ -4206,7 +4204,7 @@ again (`ownSeeder()` gate).
 - **Clickable "⇈ SEEDER - replicated to cloud" toast**: the background
   replication toast now carries an `onOpen` handler that closes any active
   dApp tab (`tabs.goHome()`) and routes to `sn://seeders`. ToastHost already
-  renders an "нажмите, чтобы открыть →" hint and hover accent for
+  renders a "click to open →" hint and hover accent for
   clickable toasts, so users get one-click access to the Cloud Seeders
   dashboard right after a successful publish.
 
@@ -4272,7 +4270,7 @@ again (`ownSeeder()` gate).
 ### Added
 - **Session-scoped /ntfryseed statistics on the Seeders page**: a compact
   summary strip appears once any dApp archive has been uploaded in the
-  current session - "N архивов · ~X МБ · сэкономлено Y МБ · средн. сжатие
+  current session - "N archives · ~X MB · saved Y MB · avg. compression
   −Z%". Aggregation is fully local, driven by the existing
   `seeder-publish-progress` events (both manual publish and background
   30-min replication feed it); archives are de-duplicated by `appId` so
@@ -4307,14 +4305,14 @@ again (`ownSeeder()` gate).
   `cloud_seeder_install(uri, appId)` command - anonymous download, signature
   verification, storage-quota check, unpack + Sled registration; the UI then
   runs `verify_app`. FETCH BY URI on the Seeders page lists the seeder's
-  dApps with an "⛁ архив" badge and an INSTALL button.
+  dApps with an "⛁ archive" badge and an INSTALL button.
 - **Instant replication on publish/update**: finalizing or updating a dApp
   triggers an immediate seeder republish (`replicateNow()`), respecting the
   auto-replication toggle.
 - **Known Seeders health**: every fetch (manual or fallback) records
   uri → {ok, checkedAt, lastOk, error} (`cfg:cloud_seeder_status`); the
   registry shows a green/red/gray dot + last successful fetch time and a
-  "ПРОВЕРИТЬ ВСЕ" button.
+  "CHECK ALL" button.
 
 ### Changed
 - `tar` is now a non-optional dependency of the Tauri crate (cloud install
