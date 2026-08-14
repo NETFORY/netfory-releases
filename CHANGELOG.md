@@ -488,8 +488,8 @@ Component versions covered in this file:
   next seeder is tried. Size (≤ 256 KB) and PNG/JPEG magic-byte validation,
   local `discovery_cache` caching and LRU pruning are shared with the P2P
   path, so a successful cloud rescue is cached exactly like a P2P download.
-  SYSLOG (`dapp` scope) distinguishes the outcomes: "взят с cloud seeder",
-  "cloud fallback тоже пуст", and `seeder` scope logs blake3 mismatches.
+  SYSLOG (`dapp` scope) distinguishes the outcomes: "fetched from cloud seeder",
+  "cloud fallback also empty", and `seeder` scope logs blake3 mismatches.
 
 ## [1.135.10] - 2026-08 (Linux/WebKitGTK/RDP fix: native dApp child webview no longer covers the sidebar/tab-strip after open or maximize)
 
@@ -530,7 +530,7 @@ Component versions covered in this file:
 - Version bump `1.135.9` → `1.135.10` (`package.json`, `tauri.conf.json`,
   `Cargo.toml`, `Cargo.lock`).
 
-## [1.135.9] - 2026-08 (Oxid Mail binary is now bundled as a Tauri sidecar on Linux/macOS - fixes "Oxid Mail не найден" in deb/AppImage)
+## [1.135.9] - 2026-08 (Oxid Mail binary is now bundled as a Tauri sidecar on Linux/macOS - fixes "Oxid Mail not found" in deb/AppImage)
 
 ### Fixed - `oxid-mail` binary missing from Linux deb/AppImage installs
 
@@ -772,7 +772,7 @@ yarn tauri:build:bonsai:mail
 
 ## [1.135.1]  (Discover header: hide-installed toggle, rounded SCAN pill, compact install button)
 
-### Added - «Hide installed» toggle (localStorage-persisted)
+### Added - "Hide installed" toggle (localStorage-persisted)
 
 - **`frontend/src/views/Discovered.vue`** - new `hideInstalled` reactive flag
   reads/writes `localStorage['ntfry.discover.hideInstalled']` (chose
@@ -872,7 +872,7 @@ yarn tauri:build:bonsai:mail
 - **dApp size** (`⛁ N MB`) moved onto the action row, one line before the ⓘ
   details icon (`.disc-actions-clean` switched from grid to flex; details
   icon is pushed right via `margin-left: auto`).
-- **«via seeder» badge** moved onto the preview area - bottom-right corner,
+- **"via seeder" badge** moved onto the preview area - bottom-right corner,
   the same glass pill styling as the seeds/status pill top-right
   (`.disc-seeder-overlay`).
 
@@ -1012,12 +1012,12 @@ magic-byte checks (`FF D8 FF`), the backend served a valid data URL, but the
 
 - **`p2p.rs`** - shared `jpeg_is_arithmetic()` (walks JPEG header segments up
   to SOS, flags SOF9/SOF10/SOF11). `discovery_media` now rejects such blobs
-  from peers (logged as «блоб не PNG/JPG (или арифм. JPEG)»).
+  from peers (logged as "blob is not PNG/JPG (or arithmetic JPEG)").
 - **`apps.rs` / `preview_ext`** - arithmetic JPEGs are never written to
   `<id>-preview.jpg` at publish/edit time, so they can't enter the network.
 - **`MyApplications.vue`** - the picker scans the bytes and shows a clear
-  message: «Этот JPEG сжат арифметическим кодированием - браузеры его не
-  отображают. Пересохраните как PNG или обычный JPEG» (i18n EN/RU/ID,
+  message: "This JPEG uses arithmetic coding - browsers cannot display it.
+  Re-save as PNG or standard JPEG" (i18n EN/RU/ID,
   `apps.previewArith`) instead of the misleading 440×180 error.
 
 ### Kept
@@ -1042,11 +1042,11 @@ image decode inside the user's WebView2.
 - **`syslog.rs`** - new `ui_log(scope, msg)` command: the frontend can write
   into the system journal (no DevTools needed in production builds).
 - **`views/Discovered.vue`** - one-shot (deduped) diagnostic entries:
-  - `preview <id>… - invoke вернул N симв. / null` - what the Vue layer
+  - `preview <id>… - invoke returned N chars. / null` - what the Vue layer
     actually received from `app_preview`;
-  - `preview <id>… - <img> декодирован и отрисован` - the `@load` event
+  - `preview <id>… - <img> decoded and painted` - the `@load` event
     fired (image decoded and painted);
-  - `preview <id>… - ОШИБКА декодирования <img>` - the `@error` event fired
+  - `preview <id>… - DECODING ERROR <img>` - the `@error` event fired
     (bad data URL / unsupported JPEG variant / CSP block).
 - `lib/bridge.ts` - `uiLog()` fire-and-forget wrapper.
 
@@ -1054,10 +1054,10 @@ image decode inside the user's WebView2.
 
 | Journal lines | Meaning |
 |---|---|
-| no `invoke вернул` line | Vue branch never ran (installed flag / marker) |
-| `invoke вернул null` | IPC returned nothing despite backend OK (serialization) |
-| `вернул N симв.` + `ОШИБКА декодирования` | WebView2 refused the JPEG (decode/CSP) |
-| `вернул N симв.` + `декодирован и отрисован` | image painted - CSS/layout issue |
+| no `invoke returned` line | Vue branch never ran (installed flag / marker) |
+| `invoke returned null` | IPC returned nothing despite backend OK (serialization) |
+| `returned N chars.` + `DECODING ERROR` | WebView2 refused the JPEG (decode/CSP) |
+| `returned N chars.` + `decoded and painted` | image painted - CSS/layout issue |
 
 ---
 
@@ -1068,7 +1068,7 @@ image decode inside the user's WebView2.
 - **`apps.rs` / `app_preview`** - every outcome is now written to the SYSLOG
   (`dapp` scope) with per-outcome dedup (no spam on the 4s catalog poll):
   - `app_preview <id>… - OK: <file> (<N> B)` - file found and returned;
-  - `app_preview <id>… - файл не найден: <full path>` - read miss (shows the
+  - `app_preview <id>… - file not found: <full path>` - read miss (shows the
     exact directory the backend checked);
   - `app_preview <id>… - private dApp, skip`.
     If NO `app_preview` lines appear at all while the catalog is open, the
@@ -1077,7 +1077,7 @@ image decode inside the user's WebView2.
 - **`p2p.rs` / `discovery_media`** (logo + preview of non-installed apps) -
   logs invalid announce hash, fetch failure (with provider count and the
   transport error), unreadable blob, bad-format / over-limit rejection, and
-  the success path (`скачан и закэширован (<N> B, <ext>)`).
+  the success path (`downloaded and cached (<N> B, <ext>)`).
 
 ### How to use
 
@@ -1304,7 +1304,7 @@ content-addressed iroh blob:
 
 ### Fixed
 
-- `layouts/AppLayout.vue` - tab tooltip like `Установлено напрямую по P2P
+- `layouts/AppLayout.vue` - tab tooltip like `Installed directly via P2P
   (iroh-blobs) · v1 · Invalid Date` was caused by the frontend calling
   `new Date(s.at).toLocaleString()` on a value that the Rust backend actually
   writes as a Unix-seconds string (`crypto::now_iso()` - despite its name).
@@ -1396,7 +1396,7 @@ content-addressed iroh blob:
 - `frontend/src-tauri/tauri.conf.json` - `productName` is now `NETFORY`; window title updated.
 - `frontend/src-tauri/Cargo.toml` - package description now reads `NETFORY - SmartHoldem WEB4 P2P network`.
 - Chat widget title (`views/ChatWidget.vue`) and i18n messenger titles (`en/ru/id`) updated
-  to `NETFORY // P2P MESSENGER` / `NETFORY // P2P МЕССЕНДЖЕР` / `NETFORY // PESAN P2P`.
+  to `NETFORY // P2P MESSENGER` / `NETFORY // P2P MESSENGER` / `NETFORY // PESAN P2P`.
 
   **Backwards compatibility preserved on purpose:**
   - `smartnet_lib` / `smartnet-client` Rust package names - unchanged.
@@ -1426,7 +1426,7 @@ content-addressed iroh blob:
 
 - New `updates.*` i18n namespace (`en/ru/id`) with `title`, `hintPrefix`, `hintSuffix`,
   `checkNow`, `checking`, `foundVersion({version})`, `checkError({error})`, `upToDate`.
-- `views/Settings.vue` - `P2P-ОБНОВЛЕНИЯ` section header, hint text, action button
+- `views/Settings.vue` - "P2P UPDATES" section header, hint text, action button
   and `manualUpdateCheck()` toast strings now go through `t('updates.*')` instead of hardcoded RU.
 
 ### Fixed - Duplicate i18n keys `music.paid`
@@ -1744,7 +1744,7 @@ a misleading, unimplemented hint.
 
 ### Fixed
 - **Sidebar NETFORY wordmark in light themes** (`AppLayout.vue`): the white
-  «NET» half was invisible on the white sidebar. Both halves now switch via
+  "NET" half was invisible on the white sidebar. Both halves now switch via
   CSS `light-dark()` - dark ink + darkened teal in light themes, original
   white + neon cyan in dark themes.
 - **SETTINGS section top tabs in Default Light** (`Settings.vue`): the
@@ -1779,7 +1779,7 @@ a misleading, unimplemented hint.
   while the mail window is starting. New i18n key `topbar.mail` (en/ru/id).
 
 ### Fixed
-- **Sidebar wordmark in light themes** (`AppLayout.vue`): the white «NET» part
+- **Sidebar wordmark in light themes** (`AppLayout.vue`): the white "NET" part
   of the NETFORY wordmark was invisible on the white sidebar. Both halves now
   use CSS `light-dark()` - dark ink + darkened teal in light themes, original
   white + neon cyan in dark themes.
@@ -1859,22 +1859,22 @@ a misleading, unimplemented hint.
 ## [1.124.2] - 2026-07 (Torrents & My Files modals i18n - RU / EN / ID)
 
 ### Changed
-- **`TorrentLimitsModal.vue`** - «Настройки торрент-клиента» is now fully
+- **`TorrentLimitsModal.vue`** - "Torrent Client Settings" is now fully
   translatable. New `torrentLimits.*` namespace covers all three tabs
   (Connection / Speed / BitTorrent), the µTP protocol select, random-port row,
   UPnP checkbox, peer-limit input, download/upload sliders with `KiB/s` / `MiB/s`
   unit switch, DHT/LSD toggles, RuTracker keeper-key field (label + hint +
   placeholder), OK / SAVING… / Cancel footer, and the ⚠ restart-required notes.
   The `label(kib)` helper now reads unit strings from the current locale
-  (KiB/s → EN `KiB/s`, RU `КиБ/с`, ID `KiB/d`; MiB/s analogously).
-- **`TorrentCreateModal.vue`** - «Создание торрента» localised. New
+  (KiB/s → EN `KiB/s`, RU `KiB/s`, ID `KiB/d`; MiB/s analogously).
+- **`TorrentCreateModal.vue`** - "Create Torrent" localised. New
   `torrentCreate.*` namespace covers header tag + title, file/folder pickers,
   path placeholder, piece-length select (Auto + KiB/MiB variants localised
   via computed), private-torrent checkbox with hint, start-hint, trackers
   textarea section label, comment field, error messages (no path, generic
   failure) and Cancel / CREATING… / CREATE TORRENT buttons.
-- **`AddFileModal.vue`** - «ДОБАВИТЬ ФАЙЛ» (My Files) localised. New
-  `addFile.*` namespace covers title, dropzone label «Pick a file from disk»,
+- **`AddFileModal.vue`** - "ADD FILE" (My Files) localised. New
+  `addFile.*` namespace covers title, dropzone label "Pick a file from disk",
   privacy toggle (🔒 Private file (E2EE)), recipients label + placeholder +
   E2EE hint (AES-256-GCM + ECDH), paid file toggle, price label, error
   messages (no file, no recipients, invalid SmartHoldem address with `{addr}`
@@ -1963,7 +1963,7 @@ a misleading, unimplemented hint.
   the frontend translation layer; there is no functional change (no auth flow,
   API contract, encryption or storage code was touched). Vue-i18n plural rules
   used for archive/posts/comments counts so the RU locale renders proper
-  «архив/архива/архивов» morphology.
+  "archive/archives" morphology.
 
 ---
 
@@ -1977,9 +1977,9 @@ a misleading, unimplemented hint.
   and no longer visually dominates the DASHBOARD row.
 - **System Console UI is now fully i18n-driven**
   (`frontend/src/components/SystemConsole.vue`). All hard-coded Russian
-  strings (title `СИСТЕМНАЯ КОНСОЛЬ`, filter placeholder, empty state
-  `Ожидание событий сети…`, action buttons `КОПИРОВАТЬ ВСЁ / EXPORT TXT /
-  ОЧИСТИТЬ / В ОКНО / ✓ СКОПИРОВАНО`, scope chip tooltip, repeat-badge
+  strings (title "SYSTEM CONSOLE", filter placeholder, empty state
+  "Waiting for network events…", action buttons "COPY ALL / EXPORT TXT /
+  CLEAR / TO WINDOW / ✓ COPIED", scope chip tooltip, repeat-badge
   tooltip, dApp detail-modal section headers) moved to a new
   `sysconsole.*` block in `en.ts` / `ru.ts` / `id.ts`. Time formatting
   now uses the current locale (`toLocaleTimeString(undefined, …)`) instead
@@ -2082,7 +2082,7 @@ a misleading, unimplemented hint.
   (or `google`) as `provider` plus a new optional `secondary` flag;
   `cloud_seeder_delete_dapp` also cleans mirrors. `cloud_seeder_fetch`,
   cloud-fallback scans and cloud installs (`cloud_seeder_install*`) now fully
-  support `g@` URIs - the «Google Drive seeders - next phase» stubs are gone.
+  support `g@` URIs - the "Google Drive seeders - next phase" stubs are gone.
 - Seeders page: provider badge shows *Google*, a `SECONDARY DRIVE` selector
   appears when more than one cloud account is connected, mirror errors are
   shown as a non-fatal amber warning and the mirror URI is rendered under the
@@ -2090,7 +2090,7 @@ a misleading, unimplemented hint.
 - Background replication failures of the mirror never fail the primary
   publish (best-effort semantics confirmed by the user).
 
-## [1.122.3] - 2026-07 (`DonateModal` i18n - English + Indonesian translations of «SUPPORT THE NETWORK_»)
+## [1.122.3] - 2026-07 (`DonateModal` i18n - English + Indonesian translations of "SUPPORT THE NETWORK_")
 
 ### Added
 - **Full i18n coverage for the `SUPPORT THE NETWORK_` donation modal**
@@ -2144,7 +2144,7 @@ a misleading, unimplemented hint.
   changing the tile itself.
 
 ### Changed
-- **Retired `ПОЧТА` (Oxid Mail) launcher from the sidebar** - the standalone
+- **Retired `MAIL` (Oxid Mail) launcher from the sidebar** - the standalone
   bottom-cluster button that spawned the native mail app is no longer
   rendered. The Rust launcher command and the `openOxidMail` handler are
   intentionally kept in place because the `new_mail` toast handler still
@@ -2179,7 +2179,7 @@ a misleading, unimplemented hint.
     non-developer callers so the UI grays out the register button and
     shows a clear explanation instead of a misleading price.
   * `register_domain` - hard-rejects the command with
-    `"RESERVED - имена из 1–2 символов доступны только разработчикам сети"`
+    `"RESERVED - 1-2 character names are only available to network developers"`
     as a belt-and-braces backstop for wallets that would try to bypass
     the UI. The web preview mirrors the same rule in `webDomainLookup`
     so the browser build cannot mislead the user either.
@@ -2722,7 +2722,7 @@ a misleading, unimplemented hint.
 ## [1.115.0]  (Update badge in sidebar + manual Official rescan)
 
 ### Added
-- **Sidebar update badge**: the "INSTALLED / Мои приложения" nav item now
+- **Sidebar update badge**: the "INSTALLED / My Applications" nav item now
   shows an amber `⟳N` badge whenever the cloud/P2P network advertises a newer
   version of an installed app (the Installed screen itself already had the
   banner + per-card update tag; update detection works for both live P2P and
@@ -2874,15 +2874,15 @@ a misleading, unimplemented hint.
 - **Chat bubbles are rounder, Telegram-style:** base radius 16→18px, softer
   joined-corner radii inside message groups (tail corners preserved).
 - **"Annihilate logs" is USER-friendly now:** in USER mode the button reads
-  «Очистить историю» / "Clear history" with a plain-language confirmation
-  («История переписки будет безвозвратно удалена с этого устройства»);
+  "Clear history" with a plain-language confirmation
+  ("Chat history will be permanently deleted from this device");
   DEV/GEEK keep the brutal 💀 wording.
 - **Human copy pass for USER mode (all three locales):**
-  message input placeholder «Сообщение (видно только участникам)…» instead of
+  message input placeholder "Message (visible only to participants)…" instead of
   "Encrypted message (E2EE)…"; network-features list rewritten from benefit
-  perspective - Social: «посты никто не может удалить или заблокировать»,
-  Messenger: «сообщения идут напрямую, без серверов и посредников» (no more
-  iroh-gossip), Storage: «всё хранится у вас и всегда под рукой».
+  perspective - Social: "posts cannot be deleted or blocked by anyone",
+  Messenger: "messages go directly, without servers or intermediaries" (no more
+  iroh-gossip), Storage: "everything is stored with you and always at hand".
   DEV/GEEK still see the full technical descriptions.
 
 ## [1.107.1]  (Light theme: USER/DEV/GEEK switcher fixed)
@@ -2964,12 +2964,12 @@ a misleading, unimplemented hint.
 
 ### Added
 - **Top-3 network apps under the search box.** The freed space below the
-  Dashboard omnibox now shows «Популярно в сети» - the three network apps with
+  Dashboard omnibox now shows "Popular on the network" - the three network apps with
   the most seeders as compact cards (logo/identicon + name + green online dot;
   DEV/GEEK also see the seeder count). Click opens the app if installed,
   otherwise jumps to the store with the search pre-filled.
 - **First-visit hints.** A gentle dismissible one-time hint banner (💡-style,
-  accent-tinted, «Понятно» button) on the first open of the app store
+  accent-tinted, "OK" button) on the first open of the app store
   ("This is the app store…") and the cloud/storages page ("This is your
   cloud…").
 
@@ -3006,7 +3006,7 @@ a misleading, unimplemented hint.
 ### Changed
 - **Cleaner sidebar in USER mode.** The "Network map" entry is now DEV/GEEK-only
   (a P2P mesh visualisation only overloads a regular user), and "STORAGES" is
-  renamed to a human word - «Облако» / "Cloud" - in USER mode (DEV/GEEK still
+  renamed to a human word - "Cloud" - in USER mode (DEV/GEEK still
   see STORAGES). On DEFAULT themes the sidebar loses its hard right border and
   the active item becomes a soft teal 10% pill fill with rounded corners,
   Google-drawer style.
@@ -3045,9 +3045,9 @@ a misleading, unimplemented hint.
 ### Changed
 - **USER mode hides the tech internals on Dashboard** (radical "normie" mode):
   the trackerless/DHT pill, the Stealth-mode block and the "+ PUBLISH APP"
-  button are now DEV/GEEK-only; the hero subtitle becomes "Твой личный,
-  безопасный и свободный интернет"; the network-features list shows
-  "Абсолютная приватность" with a plain-language subtitle instead of
+  button are now DEV/GEEK-only; the hero subtitle becomes "Your personal,
+  secure and free internet"; the network-features list shows
+  "Absolute privacy" with a plain-language subtitle instead of
   "secp256k1 + AES-256-GCM" jargon (full tech copy remains in DEV/GEEK).
 - Dashboard search field is rendered as a pill "omnibox" on DEFAULT themes.
 
@@ -3209,7 +3209,7 @@ a misleading, unimplemented hint.
   green pill) opening a terminal-styled **support modal** (`DonateModal.vue`):
   "// SUPPORT THE NETWORK_" heading, the manifesto text, and 7 crypto addresses
   (BTC, ETH, BTS, STH, GRAM/TON, DOGE, LTC) - each with a one-click Copy button
-  (`navigator.clipboard`, per-row "✓ СКОПИРОВАНО" feedback). Pure frontend, no
+  (`navigator.clipboard`, per-row "✓ COPIED" feedback). Pure frontend, no
   backend. Verified: `yarn build` clean + isolated visual render of the modal
   (the live Dashboard sits behind the Tauri vault gate, unavailable in web preview).
 
@@ -3517,8 +3517,8 @@ a misleading, unimplemented hint.
 
 ### Added
 - **Install-source badge in the dApp tab** (`AppLayout.vue`, `tabs.ts`): every
-  app tab now shows where the installed copy came from - «⇄» for a direct
-  iroh-blobs P2P install, «☁» for a Cloud Seeder archive (anti-censorship
+  app tab now shows where the installed copy came from - "⇄" for a direct
+  iroh-blobs P2P install, "☁" for a Cloud Seeder archive (anti-censorship
   fallback). The tooltip carries the storage provider (yandex/mailru), the
   installed version and the install timestamp, making the fallback layer
   visible to the user at a glance.
@@ -3562,15 +3562,15 @@ a misleading, unimplemented hint.
 ### Added
 - **Broken-archive guard on seeder install** (`cloudseeder.rs`): after
   unpacking a Cloud Seeder archive, the installer now requires `index.html`
-  at the dApp root. A broken archive (the cause of the reported «404 page
-  right after installing from seeds») is rejected with a clear error, the
+  at the dApp root. A broken archive (the cause of the reported "404 page
+  right after installing from seeds") is rejected with a clear error, the
   half-unpacked folder is removed, and `cloud_seeder_install_any` moves on
   to the next seeder instead of registering an unopenable app. Unpack /
   manifest-parse / id-mismatch failures now also clean up the target folder
   so a corrupt `data/dapps/<id>` never lingers to be served as a 404.
 - **Publish guard for developers** (`apps.rs::ingest_app`): creating,
   previewing, publishing or updating a dApp now fails fast with
-  «в корне dApp нет index.html…» when the build folder has no root
+  "no index.html in dApp root…" when the build folder has no root
   `index.html` - broken apps can no longer be published and distributed.
 - **Cloud archive gate on seeder publish** (`cloudseeder.rs::build_network_state`):
   a dApp folder without `index.html` is skipped as an archive candidate
@@ -3598,7 +3598,7 @@ a misleading, unimplemented hint.
   with `via_seeder=false`. Consequences in fully-offline (cloud-only) mode:
   `has_direct_peers()` was always `true`, so BOTH the backend cloud fallback
   and the v1.90.9 frontend cloud-drive scan never ran; DISCOVER APPS showed
-  only the user's own installed dApps («1 seed» each, no ☁ badge) and never
+  only the user's own installed dApps ("1 seed" each, no ☁ badge) and never
   the latest versions available on Cloud Seeder drives. Now `start_discovery`
   records the own identity (wallet address + iroh NodeId) in `OWN_IDENTITY`
   and `is_self_peer()` filters the own announce in the mDNS resolve handler,
@@ -3611,8 +3611,8 @@ a misleading, unimplemented hint.
   `MDNS_FULLNAMES` (fullname → peer key) map; `stop_discovery` clears it.
 
 ### Impact
-In cloud-only operation the client now correctly detects «no regular
-seeders», immediately scans the cloud drives of all known Cloud Seeders and
+In cloud-only operation the client now correctly detects "no regular
+seeders", immediately scans the cloud drives of all known Cloud Seeders and
 surfaces the LATEST published dApp versions in DISCOVER APPS (☁ via seeder),
 with auto-update picking newer cloud archives.
 
@@ -3630,7 +3630,7 @@ with auto-update picking newer cloud archives.
   avoid hammering Yandex/Mail.ru APIs). Cloud scans run ONLY while regular
   seeders are unreachable - live P2P never triggers cloud traffic.
 - **Discover UI indicators** (`views/Discovered.vue`): a matte-blue
-  «☁ Scanning cloud drives of known Cloud Seeders…» progress strip, a note
+  "☁ Scanning cloud drives of known Cloud Seeders…" progress strip, a note
   when the whole catalog is assembled from cloud drives, and an empty-state
   hint pointing to the Seeders page when nothing was found (en/ru/id i18n).
 
@@ -3644,7 +3644,7 @@ with auto-update picking newer cloud archives.
 
 ### Impact
 Clients whose regular seeders are unreachable now see the full dApp catalog
-in DISCOVER APPS (badged «☁ via seeder») and can install directly from
+in DISCOVER APPS (badged "☁ via seeder") and can install directly from
 encrypted cloud archives - previously installs were only possible from the
 PUBLIC NETWORK SEEDERS page in that scenario.
 
@@ -3656,8 +3656,8 @@ PUBLIC NETWORK SEEDERS page in that scenario.
   the client has been running through the cloud fallback continuously for
   more than **1 hour** and has **no own seeder published yet**
   (`ownSeeder()` from `seederRep.ts` returns `null`). The hint reads
-  «Опубликуйте свой Cloud Seeder - станьте частью fallback-инфраструктуры.
-  Сеть держится на таких пирах, как вы» with a CTA button that jumps to
+  "Publish your Cloud Seeder - become part of the fallback infrastructure.
+  The network relies on peers like you" with a CTA button that jumps to
   `/seeders` and a close (×) button.
 - **7-day snooze**: dismissing the hint stores `sth_cloud_hint_dismissed_at`
   in `localStorage`; the hint stays hidden for a week (both explicit ×
@@ -3680,7 +3680,7 @@ again (`ownSeeder()` gate).
 - **Clickable "Cloud mode" status bar** (`components/ConnectionBar.vue`):
   when SmartNet P2P is offline **but** at least one known Cloud Seeder answered
   successfully (either `ok:true` or `lastOk < 15 min`), the bottom bar switches
-  from red "Нет соединения" to a matte-blue "Cloud mode →" plate
+  from red "No connection" to a matte-blue "Cloud mode →" plate
   (`linear-gradient(180deg, #142236, #0b1524)`, border `#2a4a75`, dot `#60a5fa`,
   text `#93c5fd`). Left side keeps `SmartNet // OFFLINE`. The bar is now a
   keyboard-focusable button - click / Enter / Space navigates to
@@ -3692,9 +3692,9 @@ again (`ownSeeder()` gate).
   card glow (`box-shadow` + border), and pulses "live" seeders (three-cycle
   animation). Live seeders (`ok=true` or `lastOk < 15 min`) are hoisted to the
   top of the list and get a `☁ HOLDING` pill; the section header shows a
-  compact `☁ N держат сеть` counter.
+  compact `☁ N holding the network` counter.
 - **App size on `MY_APPLICATIONS` cards** (`views/MyApplications.vue`):
-  both draft and published cards now display `Размер: X МБ` (sum of
+  both draft and published cards now display `Size: X MB` (sum of
   `files[].size`, formatted via existing `fmtSize` helper) alongside the file
   count. Test IDs: `app-size-<id>`, `draft-size-<id>`.
 
@@ -3724,7 +3724,7 @@ again (`ownSeeder()` gate).
   encrypted archives - the anti-censorship fallback layer completes its
   original design goal.
 - The status bar communicates network topology at a glance: users no longer
-  see a scary red "нет соединения" when the cloud fallback is doing its job.
+  see a scary red "no connection" when the cloud fallback is doing its job.
 
 ## [1.90.6] - 2026-07 (Seeder publish: pre-upload sha256 check - unchanged archives skipped with zero traffic)
 
@@ -3740,7 +3740,7 @@ again (`ownSeeder()` gate).
   skipping on size alone could silently keep a stale archive in the cloud).
 - Upload functions now return `bool` (`true` = bytes were transferred,
   `false` = identical archive already in the cloud); the publish log states
-  «идентичный уже в облаке (sha256 совпал) - заливка пропущена».
+  "identical already in cloud (sha256 matched) - upload skipped".
 
 ### Changed
 - **`seal_bytes` nonce is now deterministic (SIV-style)**:
@@ -3820,9 +3820,9 @@ again (`ownSeeder()` gate).
 
 ### Added
 - **Upload ETA in the publish progress bar** (`Seeders.vue`): the live line
-  now shows the estimated time remaining at the current speed - «45.2 МБ /
-  93.3 МБ (−69%) · 113 КБ/с · осталось ~2 мин…». Once the last byte has been
-  sent it switches to «сервер обрабатывает…» so a slow 3G upload is clearly
+  now shows the estimated time remaining at the current speed - "45.2 MB /
+  93.3 MB (−69%) · 113 KB/s · ~2 min remaining…". Once the last byte has been
+  sent it switches to "server processing…" so a slow 3G upload is clearly
   alive rather than frozen during the server-side finalization window.
 
 ## [1.90.3] - 2026-07 (Detect external cloud wipe & auto-reset Sled index cache)
@@ -4082,12 +4082,12 @@ again (`ownSeeder()` gate).
 
 
 ## 1.86.0 
-- CRYPTO VAULT: new «Mail.ru Cloud» provider (official WebDAV webdav.cloud.mail.ru):
+- CRYPTO VAULT: new "Mail.ru Cloud" provider (official WebDAV webdav.cloud.mail.ru):
   - ntfry/storage/mailru.rs: MailruCloudProvider - Basic authentication (email + app password), full StorageProvider trait (chunks, index.enc, user.dict, meta, GC, RAID compatibility)
   - Quota: RFC 4331 PROPFIND (quota-used/available-bytes) + fallback to unofficial o2.mail.ru → api/m1/user
   - Timeouts based on seeder-fix lessons: connect 15s, read 60s, tcp_keepalive 20s
-  - Clear errors: 401 → «check app password», 402/403 → «WebDAV Mail.ru only on paid Mail Space plans»
-  - UI: «＋ Mail.ru Cloud» button + email/password form with credential validation BEFORE adding account, hint about app password and paid plan; Mail.ru added to «Add by token (advanced)» (format email:password)
+  - Clear errors: 401 → "check app password", 402/403 → "WebDAV Mail.ru only on paid Mail Space plans"
+  - UI: "＋ Mail.ru Cloud" button + email/password form with credential validation BEFORE adding account, hint about app password and paid plan; Mail.ru added to "Add by token (advanced)" (format email:password)
   - ⚠ NOT VERIFIED with a real account: the user does not have a paid Mail Space subscription (WebDAV Mail.ru is paid)
 
 
@@ -4117,7 +4117,7 @@ again (`ownSeeder()` gate).
 - Mail.ru WebDAV requires a **paid Mail Space** subscription and an
   **App Password** (created in Mail.ru account security settings). The
 ## 1.85.0 
-- UI: badge «Attempt N/3» in the archive upload progress line on the Seeders page - when mobile connectivity is lost, the user sees that the client is retrying the upload rather than being stuck:
+- UI: badge "Attempt N/3" in the archive upload progress line on the Seeders page - when mobile connectivity is lost, the user sees that the client is retrying the upload rather than being stuck:
   - ntfry: progress callback `on_progress(sent, attempt)` now passes the attempt number
   - Rust IPC: `attempt` field in the `seeder-publish-progress` event (attempt changes are propagated to the UI immediately, bypassing 450ms throttling)
   - Seeders.vue: pulsating amber badge (data-testid="seeders-publish-retry-badge") when attempt > 1
@@ -4255,12 +4255,12 @@ again (`ownSeeder()` gate).
   Yandex Disk are now streamed in 256 KiB zero-copy `Bytes` chunks
   (`reqwest::Body::wrap_stream`, explicit `Content-Length` for WebDAV), with
   a per-chunk progress callback throttled to ~2 events/sec. The publish
-  progress line shows real-time transferred bytes and speed - "загрузка
-  45.2 МБ / 93.3 МБ (−69%) · 2.4 МБ/с…" - and the progress bar advances by
+  progress line shows real-time transferred bytes and speed - "uploading
+  45.2 MB / 93.3 MB (−69%) · 2.4 MB/s…" - and the progress bar advances by
   actual bytes sent within the current archive, matching the Private Cloud
   UX. `SeederPublishProgress` gained an `uploadedBytes` field.
 - **Session average upload speed chip** in the /ntfryseed session summary
-  strip: "⇈ SPEED · X МБ/с", volume-weighted across all archives uploaded
+  strip: "⇈ SPEED · X KB/s", volume-weighted across all archives uploaded
   this session (manual publish and background replication alike).
 
 ## [1.81.0]  (Cloud Seeders: per-session /ntfryseed summary bar)
@@ -4369,7 +4369,7 @@ again (`ownSeeder()` gate).
 
 ### Added
 - **OneDrive auto-detect: one-click add of the standard synced folder.**
-  Clicking «＋ OneDrive» now first calls a new Rust command
+  Clicking "＋ OneDrive" now first calls a new Rust command
   `detect_onedrive_folder` which checks the official `%OneDrive%`,
   `%OneDriveConsumer%`, `%OneDriveCommercial%` env vars (Windows) and the
   home directory for `~/OneDrive` and any `~/OneDrive - <tenant>` variants
@@ -4382,7 +4382,7 @@ again (`ownSeeder()` gate).
 ### Changed
 - **OneDrive rework: local synced folder instead of Graph API (user decision).**
   The Microsoft OneDrive desktop client already mirrors a local folder to the
-  cloud, so no API/OAuth is needed at all. «＋ OneDrive» now opens the native
+  cloud, so no API/OAuth is needed at all. "＋ OneDrive" now opens the native
   folder picker (like Local Safe Disk): the chosen folder is registered as
   provider `onedrive` (token = path, label `OneDrive · <name>`), `/ntfry` with
   encrypted chunks is created inside and OneDrive itself uploads them.
@@ -4422,12 +4422,12 @@ again (`ownSeeder()` gate).
   when it is missing. UI: `＋ OneDrive` button, `OD` provider badge, manual
   token option, auto-refresh 60 s before expiry - fully symmetric with
   Yandex/Google drives, RAID-eligible.
-- **Clickable «⛁ … in vault» chip → "new since last sync" filter.** The vault
+- **Clickable "⛁ … in vault" chip → "new since last sync" filter.** The vault
   usage chip in the drive dropdown is now a button: click switches to that
   drive and shows a flat recursive list of files uploaded after the drive's
   previous connect (per-drive `syncMarks {prev,last}` persisted in
   `ntfry.settings`; `modified` in the index is the push timestamp). Filter bar
-  shows the cutoff date and file count with a "✕ показать все" reset; rows show
+  shows the cutoff date and file count with a "✕ show all" reset; rows show
   full VFS paths (click = open containing folder), download and 2-step delete
   work directly from the filtered list. Filter clears on reconnect/drive switch.
 
@@ -4440,8 +4440,8 @@ again (`ownSeeder()` gate).
 
 ## [1.75.1] - 2026-07-06
 
-### Added - Crypto Vault: «in vault» line in the drive list
-- **«Занято сейфом» row**: each drive row in the vault drive-switcher dropdown
+### Added - Crypto Vault: "in vault" line in the drive list
+- **"Occupied by vault" row**: each drive row in the vault drive-switcher dropdown
   now shows a second line under the free-space label - how many bytes the
   Zero-Knowledge vault currently occupies on that specific disk. Instant read
   from the local Sled index cache - no network round-trip and no need to
@@ -4467,9 +4467,9 @@ again (`ownSeeder()` gate).
 
 ## [1.75.0] - 2026-07-06
 
-### Added - Crypto Vault: «+ Local Safe Disk» (folder as encrypted virtual drive)
-- **Local Safe Disk**: the «+ Local mock» button is replaced by
-  «+ Local Safe Disk». Clicking it opens the native folder picker; the chosen
+### Added - Crypto Vault: "+ Local Safe Disk" (folder as encrypted virtual drive)
+- **Local Safe Disk**: the "+ Local mock" button is replaced by
+  "+ Local Safe Disk". Clicking it opens the native folder picker; the chosen
   folder becomes a full encrypted virtual drive - a `/ntfry` directory with
   `index.enc`, `meta` and ChaCha20-Poly1305-encrypted ZSTD chunks is created
   inside it, exactly like on a cloud drive (Zero-Knowledge all the way down).
@@ -4487,16 +4487,16 @@ again (`ownSeeder()` gate).
   login = path + partition total/used via `spawn_blocking` (non-blocking).
 
 ### Removed
-- The «+ Local mock» button (legacy mock accounts continue to work).
+- The "+ Local mock" button (legacy mock accounts continue to work).
 
 
 
-### Added - Profile: domain expiration + inline «Renew»
-- **Expiration dates in profile «My Domains»**: every `.sth` row now shows
+### Added - Profile: domain expiration + inline "Renew"
+- **Expiration dates in profile "My Domains"**: every `.sth` row now shows
   `DD.MM.YYYY · X d.` with an amber (`≤ 30 d`) / red (`≤ 7 d`) tint mirroring
   the accent used in `DomainManager` / `NodeTelemetryPanel`. Works both on
   own profile (`listMyDomains`) and on visited profiles (`domainsByOwner`).
-- **Inline «Renew» button** (own profile only), rendered strictly inside the
+- **Inline "Renew" button** (own profile only), rendered strictly inside the
   backend renewal window (30 days before `expires` and up to 30 days grace
   after). Click reveals a confirm form with the network `renewalPrice()`,
   balance check, and a one-shot `renewDomain(name, appId)` call - reuses the
@@ -4574,7 +4574,7 @@ again (`ownSeeder()` gate).
   hashing (HRW, no mapping table), falls back to the next drive when one is
   full/down, replicates `index.enc`/`meta`/`user.dict` to every member and
   sums quotas. New IPC `cloud_vault_open_raid` / `cloud_vault_reset_raid`.
-  UI: switch in Settings + "⛓ RAID - все диски вместе" row in the drive
+  UI: switch in Settings + "⛓ RAID - all disks together" row in the drive
   dropdown; picking a single drive turns RAID off. Unit test
   `raid_two_drives_distribute_and_roundtrip` (12/12 GREEN).
 - **Folder drag & drop with upload queue**: native OS drops are scanned
@@ -4843,7 +4843,7 @@ to jump straight to the file at fault.
 ### Fixed - Free logo replacement broke `content.json` signature ("signature does NOT match the app address")
 Field report: a user opened a big (~300 MB) dApp for a FREE metadata edit,
 swapped the logo, saved - and the next time they opened it the red banner
-"ВНИМАНИЕ · подпись content.json НЕ совпадает с адресом приложения" showed
+"WARNING: content.json signature does NOT match the app address" showed
 up. Root cause in `edit_app_metadata_blocking` (`apps.rs`):
 
 - The new logo bytes were written to `<id>-logo.<ext>` and the old logo file
@@ -4911,10 +4911,10 @@ relay is reachable from the current network - the full Network Doctor sweep
 takes ~30 seconds and probes DHT/DNS/QUIC on top. Added a targeted button
 directly next to the n1-relay textarea in Settings > Network:
 
-- **UI**: `Settings.vue` - new button `ПРОВЕРИТЬ МОИ РЕЛЕ` / `CHECK MY RELAYS`
+- **UI**: `Settings.vue` - new button `CHECK MY RELAYS`
   in `.tracker-actions` (data-testid `check-n1-relay-btn`). Results render in
   the same style as the main doctor's steps (green/amber/red dot + detail),
-  one row per URL entered, with per-family v4/v6 timings (`v4 82мс · v6 74мс`).
+  one row per URL entered, with per-family v4/v6 timings (`v4 82ms · v6 74ms`).
 - **Backend (Rust, `p2p.rs`)**: new `net_doctor_check_relays(urls)` Tauri
   command reuses the existing `probe_relay_tls443` (pure TCP/TLS 443, SNI by
   hostname, dual-stack A + AAAA with DoH fallback for the missing family) -
@@ -4954,9 +4954,9 @@ Root causes on the client side (`p2p.rs`):
    addresses, never the hostname) + HTTP GET; any HTTP status (even 4xx)
    counts as reachable. Strictly TCP 443 - no QUIC/UDP involved anywhere.
 4. **Per-host verdict in the report**: detail line now shows each relay as
-   `host: v4 51мс v6 32мс` / `v4✗ v6 28мс`. When IPv4 TCP is blocked but
+   `host: v4 51ms v6 32ms` / `v4✗ v6 28ms`. When IPv4 TCP is blocked but
    IPv6 TCP works, the probe is marked OK with an explicit
-   "IPv4 TCP зарезан - реле доступны по IPv6 TCP (в обход CGNAT)" note.
+   "IPv4 TCP blocked - relays available via IPv6 TCP (bypassing CGNAT)" note.
 
 ### Changed - SmartNet relays are now built into the endpoint relay map by default
 - `apply_smartnet_relays()` no longer requires the n1-relay toggle: the two
@@ -5014,7 +5014,7 @@ healthy networks.
   lookup via n0 infrastructure is deliberately NOT added - stealth keeps
   its strict custom-relay isolation, stealth relays keep priority.
 - Activation is logged to the System Console
-  (`мобильные фолбэки АКТИВНЫ (режим=...)`).
+  (`mobile fallbacks ACTIVE (mode=...)`).
 
 ### Added - Settings → Network: "MOBILE INTERNET (FILTER BYPASS)" segmented control
 - New `AUTO / ON / OFF` segmented switch (`data-testid="mobile-fb-row"`,
@@ -5050,7 +5050,7 @@ GitHub issues, or the operator's Telegram without retyping every step.
   `net-doctor-steps`, `net-doctor-step-<probeId>`, `net-doctor-copy-flash`.
 
 ### Added - User guide section explaining what the Network Doctor does
-`docs/РУКОВОДСТВО_ПОЛЬЗОВАТЕЛЯ.md` now has a dedicated "Сетевой доктор"
+`docs/USER_GUIDE.md` now has a dedicated "Network Doctor"
 section under the Settings chapter, describing each probe (IPv6 outbound,
 dual-stack bind, UDP/QUIC, NAT type, QUIC/TLS relays, Mainline DHT,
 DNS vs DoH) and how to read the three possible verdicts (direct-capable,
@@ -5185,7 +5185,7 @@ subscriptions model, P2P storage, deep links and the publish checklist.
 
 ### Fixed - `sth://<id>/<path>` deep-links with a dot in the route returned 404
 Opening `sth://SYEm…/trading/XBTSX.STH_XBTSX.USDT` in a new tab showed the
-cyberpunk 404 page ("Приложение не найдено") while the root
+cyberpunk 404 page ("Application not found") while the root
 `sth://SYEm…` worked fine.
 
 **Root cause.** The `sth://` scheme handler's SPA fallback (`protocol.rs::
@@ -5481,7 +5481,7 @@ UI (`DevRepoView.vue`, Releases tab): each release header now shows
 `✎ Edit` and `✕ Delete` pill buttons (visible only to the repo owner
 via `isOwn` guard). Clicking Edit swaps notes for an inline
 title+notes editor (Save changes / Cancel). Clicking Delete triggers an
-inline two-step confirmation (`Delete «tag»? [Yes, delete] [Cancel]`) -
+inline two-step confirmation (`Delete "tag"? [Yes, delete] [Cancel]`) -
 no modal - matching the light-touch pattern used elsewhere in the app.
 
 ### Added - Live per-asset progress bars on release cards
@@ -5504,8 +5504,8 @@ Implementation notes:
   repo page navigations.
 
 ### Changed - English sweep (finishing the localization pass)
-- `MyFiles.vue`: `Скачиваются` → `Downloading`, `Скачивается…` →
-  `Downloading…`, `Нет активных загрузок` → `No active downloads`,
+- `MyFiles.vue`: `Downloading` → `Downloading`, `Downloading…` →
+  `Downloading…`, `No active downloads` → `No active downloads`,
   drop-zone overlay strings → English (`Drop to publish` / `file to
   SmartNet`).
 - `bridge.ts` mock data (web-preview fallback): the six mock repository
@@ -5576,105 +5576,105 @@ three critical defects made downloads fail for every non-author peer:
 
 
 ### Added
-- **Release delivery via BitTorrent (полный pipeline)**. Раньше кнопка
-  «Download» на странице релиза пыталась дёрнуть iroh-blob по CID и падала
-  «not found» у всех, кроме исходного публикатора (у них не было
-  локального `FileManifest`). Теперь релизы раздаются через встроенный
-  BitTorrent-клиент (librqbit), который уже интегрирован под торренты.
-    - **При публикации релиза** (`devhub_create_release`): для каждого ассета
-      берётся физический файл из файлохранилища
-      (`files::file_store_path(cid)`), автоматически упаковывается в
-      single-file torrent через существующий
-      `torrent::create_torrent_from_path`, регистрируется в librqbit на
-      раздачу и получает `magnet:?xt=urn:btih:...`. Магнет-URI кладётся
-      прямо в `DevAsset { name, size, cid, magnet }` внутри подписанного
-      `IndexRecord` - целостность защищена подписью автора (secp256k1),
-      подделать невозможно без приватного ключа.
-    - **На стороне клиента**: кнопка «⇩ Download (torrent)» на вкладке
-      Releases вызывает `parse_magnet_link` → `start_torrent_download` и
-      открывает загрузку в существующем torrent-клиенте. Прогресс сразу
-      виден в `sn://torrents`. Для старых релизов (v<1.62) без магнета
-      сохраняется fallback на прежний `startFileDownload` через iroh.
-    - Публичный swarm BitTorrent = миллионы возможных пиров, WebSeed,
-      качественная параллельная раздача, зрелый uTP - все преимущества,
-      которых не хватало iroh-blob для static-релизных бинарников.
+- **Release delivery via BitTorrent (full pipeline)**. Previously the button
+  "Download" on the release page tried to pull an iroh-blob by CID and failed
+  with "not found" for everyone except the original publisher (they had no
+  local `FileManifest`). Now releases are distributed through the built-in
+  BitTorrent client (librqbit), which is already integrated for torrents.
+    - **On publish** (`devhub_create_release`): for each asset, the physical
+      file is taken from the file store
+      (`files::file_store_path(cid)`), automatically packed into a
+      single-file torrent via the existing
+      `torrent::create_torrent_from_path`, registered in librqbit for
+      distribution and receives a `magnet:?xt=urn:btih:...`. The magnet URI is placed
+      directly into `DevAsset { name, size, cid, magnet }` inside the signed
+      `IndexRecord` - integrity is protected by the author's signature (secp256k1),
+      impossible to forge without the private key.
+    - **On the client side**: the "⇩ Download (torrent)" button on the
+      Releases tab calls `parse_magnet_link` → `start_torrent_download` and
+      opens the download in the existing torrent client. Progress is immediately
+      visible in `sn://torrents`. For older releases (v<1.62) without a magnet
+      link, the fallback to the previous `startFileDownload` via iroh is preserved.
+    - Public BitTorrent swarm = millions of possible peers, WebSeed,
+      quality parallel distribution, mature uTP - all the advantages
+      that were missing from iroh-blob for static release binaries.
 
 ### Rust API
-- `DevAsset`: new field `magnet: String` (opt, `#[serde(default)]` для
-  обратной совместимости со старыми подписанными индексами).
-- `torrent::magnet_from_info_hash(info_hash) → String` - публичный
-  helper для сборки magnet-URI из инфохэша активной раздачи.
+- `DevAsset`: new field `magnet: String` (opt, `#[serde(default)]` for
+  backward compatibility with old signed indexes).
+- `torrent::magnet_from_info_hash(info_hash) → String` - public
+  helper for building magnet URI from the info hash of an active distribution.
 
 ### Fixed
-- **MyFiles: QR-код кнопка не открывалась** после этапа B (иерархия
-  Repo→Ver): в шаблоне остался ссылающийся `f` (loop-переменная
-  изменилась на `row`), из-за чего `@click="qrFile = f"` пытался
-  присвоить undefined и QR-модалка не рендерилась. Заменено на `row.f`.
+- **MyFiles: QR code button not opening** after stage B (Repo→Ver hierarchy):
+  in the template remained a reference to `f` (loop variable changed to `row`),
+  so `@click="qrFile = f"` tried to assign undefined and QR modal didn't render.
+  Replaced with `row.f`.
 
 ## [1.61.2] - 2026-07-15
 
 ### Added
-- **MyFiles - bulk-действия (C)**: чекбокс-колонка + чекбокс «выделить всё
-  на странице» в заголовке таблицы + плавающий toolbar снизу («N selected ·
-  📋 Copy links · 🗑 Delete · ✕ Clear»). Copy links пакетно кладёт в буфер
-  все `sn://f/<cid>` по одному в строке. Delete проходит через уже
-  существующие эндпоинты `deleteFile` (мои) / `deleteDownloadedFile` (чужие),
-  так что seed-разделение осталось в силе; массовое подтверждение через
-  модалку с явным ⚠ предупреждением.
-- **MyFiles - orphan-предупреждение (F)**: каждый файл, для которого я
-  единственный сидер (`seeds ≤ 1`), помечается жёлтой пилюлей `⚠ orphan`
-  прямо рядом с именем + мягкая жёлтая подложка строки. Tooltip объясняет:
-  «content may be lost when you go offline - add it to a release or archive
-  a backup». Приватные (encrypted) файлы не считаются orphan - они
-  специально ограниченно распространены.
-- **Storages - pie-bar disk usage (G)**: над карточками Torrents/MyFiles/
-  Music добавлен горизонтальный «pie» с 4 сегментами (Music / Dev / Images /
-  Other) и легендой-чипами `Music · 42 · 1.2 GB`. Категории считаются из
-  `parseFileTag(f.tag)` через `listMyFiles()`, тот же источник правды, что и
-  на странице MyFiles. Скрыт, если у пользователя нет файлов.
+- **MyFiles - bulk actions (C)**: checkbox column + "select all
+  on page" checkbox in the table header + floating toolbar at the bottom ("N selected ·
+  📋 Copy links · 🗑 Delete · ✕ Clear"). Copy links batch-copies to clipboard
+  all `sn://f/<cid>` one per line. Delete goes through the already
+  existing endpoints `deleteFile` (own) / `deleteDownloadedFile` (others),
+  so seed separation remains in effect; bulk confirmation via
+  modal with explicit ⚠ warning.
+- **MyFiles - orphan warning (F)**: every file for which I am
+  the only seeder (`seeds ≤ 1`) is marked with a yellow `⚠ orphan` pill
+  right next to the name + soft yellow row background. Tooltip explains:
+  "content may be lost when you go offline - add it to a release or archive
+  a backup". Private (encrypted) files are not counted as orphan - they
+  specially limited distribution.
+- **Storages - pie-bar disk usage (G)**: above the Torrents/MyFiles/
+  Music cards added a horizontal "pie" with 4 segments (Music / Dev / Images /
+  Other) and legend chips `Music · 42 · 1.2 GB`. Categories are calculated from
+  `parseFileTag(f.tag)` via `listMyFiles()`, the same source of truth as on
+  the MyFiles page. Hidden if the user has no files.
 
 ### Fixed
-- **Пагинация 1.61.0 крашила MyFiles на пустом экране**: использование
-  `watch` без импорта из Vue приводило к runtime-исключению в setup.
-  Восстановлен импорт, заодно исправил `f.seeders` → `f.seeds`
-  (правильное поле `FileManifest`).
+- **Pagination 1.61.0 crashed MyFiles on empty screen**: using
+  `watch` without import from Vue caused a runtime exception in setup.
+  Import restored, also fixed `f.seeders` → `f.seeds`
+  (correct field `FileManifest`).
 
 ## [1.61.0] - 2026-07-15
 
 ### Added
-- **File exchange tagging system (Этап 1: A + B из плана)** - каждый файл
-  в хранилище теперь имеет opaque JSON-тег `FileManifest.tag`, который
-  фронт разбирает в `ParsedTag { cat, repo, ver, os, kind }`.
-  Категории: `dev` / `music` / `image` / `other` / `private`. Всем новым
-  трекам, загружаемым как часть альбома, авто-присваивается `{cat:"music"}`;
-  релизные бинарники dev-hub получают `{cat:"dev",repo,ver,os}` с
-  автодетектом OS по расширению файла (`.exe/.msi → win`, `.dmg/.pkg → macos`,
+- **File exchange tagging system (Phase 1: A + B from plan)** - every file
+  in storage now has an opaque JSON tag `FileManifest.tag`, which
+  the frontend parses into `ParsedTag { cat, repo, ver, os, kind }`.
+  Categories: `dev` / `music` / `image` / `other` / `private`. All new
+  tracks uploaded as part of an album are auto-assigned `{cat:"music"}`;
+  dev-hub release binaries receive `{cat:"dev",repo,ver,os}` with
+  auto-detected OS by file extension (`.exe/.msi → win`, `.dmg/.pkg → macos`,
   `.deb/.rpm/.AppImage → linux`, `.apk/.aab → android`, `.zip/.gz/.tar → archive`).
-  Старые файлы без тега = «other» (обратная совместимость).
-- **MyFiles category sub-tabs + search**: под основным табом «Мои файлы»
-  появилась полоса из 5 pill-кнопок (All / Dev releases / Music / Images /
-  Other) с счётчиком и общим весом каждой категории («Music · 42 · 1.2 GB»),
-  чтобы пользователь сразу видел, где сидят гигабайты. Правее - узкий
-  search-input по имени файла / repo / версии.
-- **Repo → Version hierarchy в Dev-вкладке**: в таблице автоматически
-  вставляются группы-заголовки `⎇ repo · vX.Y (N · size)`, файлы
-  сортируются по репо → версии (свежие сверху) → имени. Ощущение
-  «пользовательского порядка» без свалки.
-- **DevRepoView Release DropZone**: старый список «выберите из уже
-  опубликованных файлов» заменён на настоящий DropZone. Drag&drop файла
-  или клик → системный picker → авто-загрузка в файлохранилище с тегом
-  `{cat:"dev",repo:"<repo>",ver:"<tag>",os:"…"}` и автоматическое добавление
-  в ассеты релиза. Плата/приватность форсированно `0/false`. Загружаемые
-  файлы показываются в отдельной строке с состоянием (`⟳ uploading… → ✓ done`),
-  готовые - с цветным OS-бейджем и кнопкой удаления.
+  Old files without a tag = "other" (backward compatibility).
+- **MyFiles category sub-tabs + search**: under the main "My Files" tab
+  appeared a row of 5 pill buttons (All / Dev releases / Music / Images /
+  Other) with a counter and total weight for each category ("Music · 42 · 1.2 GB"),
+  so the user can immediately see where the gigabytes sit. To the right - a narrow
+  search-input by file name / repo / version.
+- **Repo → Version hierarchy in Dev tab**: in the table automatically
+  inserted group headers `⎇ repo · vX.Y (N · size)`, files
+  sorted by repo → version (newest first) → name. The feel of
+  "user-ordered" without the mess.
+- **DevRepoView Release DropZone**: old list "choose from already
+  published files" replaced with a real DropZone. Drag&drop file
+  or click → system picker → auto-upload to file store with tag
+  `{cat:"dev",repo:"<repo>",ver:"<tag>",os:"…"}` and automatic addition
+  to release assets. Price/privacy forced to `0/false`. Uploaded
+  files are shown in a separate row with status (`⟳ uploading… → ✓ done`),
+  ready ones with a colored OS badge and delete button.
 
 ### Changed
-- `FileManifest` (Rust `struct` + TS `interface`) получил новое поле
-  `tag: String` (opaque JSON), `#[serde(default)]` - старые записи в Sled
-  читаются с пустым тегом без миграции.
-- `add_file(...)` Tauri-команда получила необязательный параметр `tag:
-  Option<String>`; frontend-`addFile` - `tag?: string`. Три существующих
-  вызова из `social.rs` (загрузка треков альбома) обновлены с тегом
+- `FileManifest` (Rust `struct` + TS `interface`) gained new field
+  `tag: String` (opaque JSON), `#[serde(default)]` - old records in Sled
+  are read with an empty tag without migration.
+- `add_file(...)` Tauri command received optional parameter `tag:
+  Option<String>`; frontend `addFile` - `tag?: string`. Three existing
+  calls from `social.rs` (album track uploads) updated with tag
   `{"cat":"music"}`.
 
 ## [1.60.0] - 2026-07-14
@@ -5683,7 +5683,7 @@ three critical defects made downloads fail for every non-author peer:
 - **Soft-paid albums (revert strict E2EE for new paid uploads)**: field
   experience showed that per-buyer ECIES key delivery over P2P was
   unreliable - if the album owner went offline the buyer would sit for
-  days on "владелец альбома сейчас офлайн - ключ пока недоступен", never
+  days on "album owner is currently offline - key not yet available", never
   actually getting to play tracks they had already paid for. `album_create`
   now publishes new paid albums the same way as free albums:
     - Full tracks are seeded via the file layer as plaintext (no AES-GCM
@@ -5702,57 +5702,57 @@ three critical defects made downloads fail for every non-author peer:
 - The strict E2EE codepath (`album_ak` generation, `album_fetch_key`,
   `album_sync_keys`, `Album.encrypted=true`, `crypto::aes_gcm_encrypt`)
   is **kept intact** and used ONLY for reading pre-1.60 albums that were
-  published under the old model. The «⚿ Получить ключ E2EE» button and
-  «🔐 Строгое E2EE» badge in `AlbumView.vue` are still rendered - but only
+  published under the old model. The "⚿ Get E2EE Key" button and
+  "🔐 Strict E2EE" badge in `AlbumView.vue` are still rendered - but only
   when `Album.encrypted === true` (legacy albums). New albums show a clean
   buy-and-play flow with no key-fetch step.
 
 ## [1.59.0] - 2026-07-13
 
 ### Added
-- **USER | DEV | GEEK - три режима UI** (Apple/Google-style progressive
-  disclosure). Три светящихся badge над «# WELCOME TO NETFORY» на Dashboard,
-  тап переключает режим, состояние persist в localStorage (`sth_ui_mode`,
-  ключ `mode` в `ui` store). Дефолт - **USER**.
-    - **USER** (для «нормиса»): sidebar показывает только Dashboard, Discover,
-      Installed, Файлообменник (по гейту), **новую страницу Хранилища**, Network
-      Map. `MeshMeter` на Dashboard стартует свёрнутым в пилюлю в правом верхнем
-      углу WELCOME-блока. Settings/Music иконки - в топ-баре.
-    - **DEV** (для авторов dApp'ов): + My Applications, + DevHub.
-    - **GEEK** (полный тех-режим): всё как раньше - все sidebar-пункты,
-      MeshMeter развёрнут, все хеши/CID/DHT-подсказки на месте.
-- **`sn://storages` (Хранилища & Медиа)** - новая зонтичная страница с тремя
-  большими карточками (Торренты / Мои файлы / Музыка) в стиле Dashboard.
-  Заменяет три отдельных пункта sidebar одним, снижая когнитивную нагрузку.
-  Прямой алиас: `sn://storages` (или `sn://storage`).
-- **Топ-бар: иконки «♫ Music» и «⚙ Settings»**. `Settings` и `Keys` теперь
-  не занимают место в sidebar (USER/DEV-режимы) - доступ идёт через иконку
-  топ-бара. `Keys` вложены как отдельная вкладка «Ключи» внутри страницы
-  Settings (`settings.tabKeys`), локализованы на ru/en/id. Прямой роут
-  `/keys` и `sn://keys` остаются рабочими.
-- **`ui.meshMeterOpen` + пилюля-тумблер MeshMeter** в правом верхнем углу
-  «# WELCOME TO NETFORY». Клик сворачивает/разворачивает крупный блок
-  Global Capacity Meter. Состояние persist в localStorage
-  (`sth_dashboard_mesh_open`), GEEK-режим стартует с открытым по умолчанию.
+- **USER | DEV | GEEK - three UI modes** (Apple/Google-style progressive
+  disclosure). Three glowing badges above "# WELCOME TO NETFORY" on Dashboard,
+  tap switches mode, state persists in localStorage (`sth_ui_mode`,
+  `mode` key in `ui` store). Default is **USER**.
+    - **USER** (for "regular users"): sidebar shows only Dashboard, Discover,
+      Installed, File Exchange (via gateway), **new Storage page**, Network
+      Map. `MeshMeter` on Dashboard starts collapsed into a pill in the upper right
+      corner of the WELCOME block. Settings/Music icons - in the top bar.
+    - **DEV** (for dApp authors): + My Applications, + DevHub.
+    - **GEEK** (full tech mode): everything as before - all sidebar items,
+      MeshMeter expanded, all hashes/CID/DHT hints in place.
+- **`sn://storages` (Storage & Media)** - new umbrella page with three
+  large cards (Torrents / My Files / Music) in Dashboard style.
+  Replaces three separate sidebar items into one, reducing cognitive load.
+  Direct alias: `sn://storages` (or `sn://storage`).
+- **Top bar: "♫ Music" and "⚙ Settings" icons**. `Settings` and `Keys` no longer
+  take up space in the sidebar (USER/DEV modes) - access is via the top bar
+  icon. `Keys` nested as a separate "Keys" tab inside the Settings page
+  (`settings.tabKeys`), localized in ru/en/id. Direct route
+  `/keys` and `sn://keys` remain working.
+- **`ui.meshMeterOpen` + MeshMeter pill toggle** in the upper right corner
+  of "# WELCOME TO NETFORY". Click collapses/expands the large
+  Global Capacity Meter block. State persists in localStorage
+  (`sth_dashboard_mesh_open`), GEEK mode starts with it open by default.
 
 ### Changed
-- **Discover («Найти приложения») - редизайн карточек в стиле Apple/Google**.
-  Верхняя техно-подсказка «Приложения, найденные у пиров в локальной сети
-  (mDNS). Установка тянет dApp через iroh-blobs и сразу проверяет подпись»
-  **удалена** - техно-жаргон пугает обычного пользователя.
-    - Карточка теперь показывает только: **логотип + название + число сидов +
-      описание + размер + теги**. Всё остальное (paid/boost/republish/updated/
-      sth://-адрес) переехало в модалку «Подробно».
-    - Ряд действий сведён к 3 кнопкам: **[Установить/Открыть]** (главная),
-      **[Подробно]** (открывает модалку), **[📋 Copy]** (квадратная icon-кнопка,
-      копирует sn://-ссылку).
-    - **Клик на заголовок приложения** = копирование ссылки (быстрая share-механика).
-    - **Пилюля «✓ УСТАНОВЛЕНО» удалена**, вместо неё - крохотная зелёная точка
-      возле заголовка (`data-testid="disc-installed-*"`) и мягкая зелёная
-      подсветка бордера карточки.
-- Компоненту `nav.config.ts` добавлено поле `modes?: NavMode[]` для
-  фильтрации пунктов sidebar по активному UI-режиму. Пустой массив ⇒ пункт
-  виден во всех режимах (обратная совместимость).
+- **Discover ("Find Apps") - Apple/Google-style card redesign**.
+  The top tech hint "Apps found from peers on the local network
+  (mDNS). Installation pulls dApp via iroh-blobs and immediately verifies the signature"
+  **was removed** - tech jargon scares regular users.
+    - Card now shows only: **logo + name + seeder count +
+      description + size + tags**. Everything else (paid/boost/republish/updated/
+      sth://-address) moved to the "Details" modal.
+    - Actions reduced to 3 buttons: **[Install/Open]** (primary),
+      **[Details]** (opens modal), **[📋 Copy]** (square icon button,
+      copies sn://-link).
+    - **Click on app title** = copy link (quick share mechanic).
+    - **"✓ INSTALLED" pill was removed**, replaced by a tiny green dot
+      near the title (`data-testid="disc-installed-*"`) and soft green
+      card border highlight.
+- `nav.config.ts` component gained `modes?: NavMode[]` field for
+  filtering sidebar items by active UI mode. Empty array ⇒ item
+  visible in all modes (backward compatibility).
 
 ## [1.58.1] - 2026-07-12
 
@@ -5777,10 +5777,10 @@ three critical defects made downloads fail for every non-author peer:
   to `tabs.openProfile(target, …)` with `target` used as an "address",
   yielding a broken UserProfile tab. Now the address bar validates:
   username-shaped input that fails `resolveUsername` shows a clear toast
-  «Пользователь с именем «X» не найден в реестре имён» and stays put;
+  "User with name 'X' not found in name registry" and stays put;
   non-username `u://<addr>` input must match the SmartHoldem Base58Check
-  address regex (`S[1-9A-HJ-NP-Za-km-z]{25,40}`), otherwise a «Некорректный
-  u://-адрес» toast is shown. No more silent navigation to nowhere.
+  address regex (`S[1-9A-HJ-NP-Za-km-z]{25,40}`), otherwise an "Invalid
+  u://-address" toast is shown. No more silent navigation to nowhere.
 
 ## [1.58.0] - 2026-07-11
 
@@ -5800,8 +5800,8 @@ three critical defects made downloads fail for every non-author peer:
   files + refs, never releases). Precise "ahead by N commits" count derived
   from the sliding SHA window of the git log. UI: "⇅ Sync fork" pill button
   in the "forked from …" strip of the repository header, visible only to the
-  fork owner. Toast feedback: "Форк уже актуален" / "⇅ Подтянуто N коммитов
-  из user/repo" / error.
+   fork owner. Toast feedback: "Fork is already up to date" / "⇅ Pulled N commits
+   from user/repo" / error.
 
 ## [1.57.0] - 2026-07-10
 
@@ -5809,11 +5809,11 @@ three critical defects made downloads fail for every non-author peer:
 - **Remote repo file tree from signed announce**: every `git push` / repo
   create / fork now embeds a lightweight file-tree manifest (`tree`: path +
   size, capped at 2000 entries, `skip_serializing_if` keeps old signatures
-  valid) into the author's signed DevHub index. Peers render the "Код" tab
+  valid) into the author's signed DevHub index. Peers render the "Code" tab
   of a remote repository instantly from the announce - no bundle download.
 - **On-demand P2P file sync**: new `devhub_sync_files` command - swarm-downloads
   the repo bundle from seeders (via the signed `bundle_hash`) and checks out a
-  working copy to disk. UI: "⇩ Синхронизировать (P2P)" banner button on remote
+  working copy to disk. UI: "⇩ Synchronize (P2P)" banner button on remote
   repos; opening any file auto-syncs first. After sync the Code tab (README,
   file viewer, diffs) is fully local.
 - **⑂ Fork** (GitHub-style): new `devhub_fork_repo` command copies the source
@@ -5829,7 +5829,7 @@ three critical defects made downloads fail for every non-author peer:
 
 ### Added
 - **New Music Alerts (NAT-proof)**: a followed artist publishing a new album
-  now pops a clickable toast - "🎵 Новый альбом · @artist выпустил «Title»"
+  now pops a clickable toast - "🎵 New album · @artist released 'Title'"
   (paid albums get a 💎 badge). Click routes straight to `AlbumView`. Wired
   over the existing DevHub gossip bus via a compact `{k:"albnew", id, o, n, p}`
   announce: fired instantly on `album_create` (both paid and free), plus a
@@ -5839,13 +5839,13 @@ three critical defects made downloads fail for every non-author peer:
   NAT now also learn owner/title from the same message.
 - **Feed Releases with version tags**: DevHub feed rows now surface the
   freshest tagged release for each repo - a golden **v1.2.3** pill next to
-  the repo name (click → repository "Релизы" tab) and a horizontal strip of
+  the repo name (click → repository "Releases" tab) and a horizontal strip of
   ⬇ Download buttons for each release asset (streams straight through the
   existing f:// P2P file exchange, one click per asset). Backend
   `devhub_feed` command now returns `latestRelease: DevReleaseInfo?` on every
   item; web fallback shows two mock tags/assets.
 - **Toast callbacks**: `useToastsStore.push(...)` now accepts an optional
-  `onOpen` handler; `ToastHost` shows "нажмите, чтобы открыть →" and routes
+  `onOpen` handler; `ToastHost` shows "click to open →" and routes
   on click (used by New Music Alerts).
 
 ### Housekeeping
@@ -5865,9 +5865,9 @@ three critical defects made downloads fail for every non-author peer:
   (`dht:providers:albkeys:` / `social:albgossip:xh:`) and `album_fetch_key`
   falls back to them, downloading over iroh (relays punch NAT). Announce is
   hint-only: the key itself is still ECIES-unwrapped with the buyer's secret.
-- **DevHub release feed**: new "Лента обновлений" section on the dev://
+- **DevHub release feed**: new "Updates Feed" section on the dev://
   dashboard - freshest repo pushes from all synced authors, sorted by update
-  time, with a "Подписки / Вся сеть" toggle (auto-falls back to the whole
+  time, with a "Following / Whole network" toggle (auto-falls back to the whole
   network when you follow nobody), author avatars, last commit message,
   relative age and a golden ★ on followed authors. Backend `devhub_feed`
   command assembles it from verified signed indexes.
@@ -5877,7 +5877,7 @@ three critical defects made downloads fail for every non-author peer:
 ### Added
 - **Chat "typing…" indicator**: ephemeral E2EE envelope (`sys:"typing"`) on the
   room gossip topic - never stored in history. Receiver emits `chat-typing`;
-  the chat header presence line shows a pulsing "печатает…" for 3.5 s. Sender
+  the chat header presence line shows a pulsing "typing…" for 3.5 s. Sender
   throttled to one signal per 2.5 s while composing (`chat_typing` command).
 - **Avatars in DevHub**: `UserAvatar` (cached avatar system) now renders in
   DevHub dashboard rows (search results + network projects), the repository
@@ -5889,7 +5889,7 @@ three critical defects made downloads fail for every non-author peer:
   refreshes silently in the background.
 - **Followed-author push toasts**: after a successful DevHub index sync, if
   the author is in my follow list, the app emits `devhub-author-push` and the
-  UI shows a toast "@author обновил repo - «commit message»".
+  UI shows a toast "@author updated repo - 'commit message'".
 
 ### Fixed
 - Missing i18n key `profile.changeAvatar` (ru/en/id).
@@ -6114,7 +6114,7 @@ three critical defects made downloads fail for every non-author peer:
 ### Fixed - `git clone` of a UI-created repo returned an empty repository
 
 `git clone dev://user/repo` of a repository created through the UI
-printed «cloned an empty repository»: README.md/LICENSE.md existed only
+printed "cloned an empty repository": README.md/LICENSE.md existed only
 as working files on disk - there was no git history at all. The client
 now generates a **real initial commit in pure Rust** (`devhub_git.rs`,
 no dependency on an installed git): blob/tree/commit objects are built
@@ -6124,7 +6124,7 @@ trailer) and wrapped into a bundle v2 with `refs/heads/main` + `HEAD`.
 The format was validated against real git (`git clone <bundle>` →
 history, branch `main` and all files check out).
 
-* «Create repository» now immediately produces the bundle, seeds it and
+* "Create repository" now immediately produces the bundle, seeds it and
   signs `bundle_hash`/`refs`/`commits: 1` into the index - a fresh repo
   is instantly clonable with its README and LICENSE.
 * **Legacy self-healing**: repos created before this fix get their
@@ -6146,7 +6146,7 @@ counts grow as more authors are synced. The index signing payload was
 extended to cover `starred` (**scheme v2** - indexes signed with the
 pre-release v1 scheme are rejected and simply need one re-publish).
 UI: a ⭐ Star / Starred toggle with live count on the repository page;
-«Проекты в сети» and global search now rank by stars, then seeders.
+"Projects on the network" and global search now rank by stars, then seeders.
 
 ### Added - live global search: periodic re-sync of known authors
 
@@ -6194,7 +6194,7 @@ diffing accepted index updates (`devhub:events:<addr>` in Sled).
 
 ### Added - release drafting UI (GitHub-style)
 
-Repository owners get a «Создать релиз» form on the Releases tab: tag,
+Repository owners get a "Create Release" form on the Releases tab: tag,
 title, markdown notes and an asset picker listing the user's published
 File-Exchange files (`f://` CIDs). `devhub_create_release` validates
 the tag, re-signs the index (`seq+1`) and republishes. Assets are still
@@ -6315,10 +6315,10 @@ while online and every 5 s while offline, and emits a `net-status`
 `{ online }` Tauri event on every state change (plus a System Console
 `net` entry). `ConnectionBar.vue` now subscribes to this event in
 addition to the browser events, so the bottom status bar reliably shows
-«Нет соединения» / «Соединение восстановлено» and re-triggers discovery
+"No connection" / "Connection restored" and re-triggers discovery
 on reconnect. A `net_online` command exposes the current state.
 
-### Added - System Console hint for socket.io «Invalid namespace»
+### Added - System Console hint for socket.io "Invalid namespace"
 
 The dApp bridge polyfill (`DAPP_BRIDGE_JS` in `dapp.rs`) now detects an
 incoming socket.io `CONNECT_ERROR` packet whose payload contains
@@ -6338,7 +6338,7 @@ so it never spams the console, and it is orthogonal to the normal
 `message` event - dApp code still receives the raw `CONNECT_ERROR` frame.
 JS was validated with `node --check` after injection.
 
-### Docs - Troubleshooting «Invalid namespace» for socket.io dApps
+### Docs - Troubleshooting "Invalid namespace" for socket.io dApps
 
 User verification of v1.55.36 confirmed the P2P WS tunnel is fully working
 (HTTP 101, frames both ways). The remaining "Invalid namespace" error is a
@@ -6371,7 +6371,7 @@ correct `ws://<nodeId>/...` URL.
 ### Docs - Canonical WebSocket / socket.io usage for dApp authors
 
 Extended `docs/08-dApp-Networking-Guide.md` with a new section
-"WebSocket и `socket.io` через P2P (`ws://<nodeId>/...`)":
+"WebSocket and `socket.io` via P2P (`ws://<nodeId>/...`)":
 
 * Canonical form: `io('ws://<64-hex-nodeId>', { path: '/pokersth/api/socket.io' })`
     - first argument becomes the socket.io host and the NodeID is preserved.
@@ -6392,7 +6392,7 @@ builds `ws://api/pokersth/api/socket.io/?EIO=4&transport=websocket` - the
 host is literally `api`. The socket.io URI parser does not understand the
 `api://` scheme and mangles the authority, so the 64-hex NodeID is lost and
 the polyfill passed the URL through to the native WebSocket (which goes
-nowhere) → «websocket error».
+nowhere) → "websocket error".
 
 **Fix (`dapp.rs` polyfill).** New `rescueWsUrl()`: when the WS host is not a
 64-hex NodeID *and* has no dots/port (`api`, bare hostnames), the nodeId is
@@ -6453,12 +6453,12 @@ Validated: `node --check` on the extracted bridge JS, clean
 
 ## [1.55.33] - 2026-07-12
 
-### Fixed - DApp WebSocket polyfill crashed with «Illegal invocation» (poker «websocket error»)
+### Fixed - DApp WebSocket polyfill crashed with "Illegal invocation" (poker "websocket error")
 
 **Symptom.** The WS tester inside the `api://` panel connected fine
 (`handshake ok (HTTP 101)`, echo worked), but the same endpoint opened from
 inside a dApp (`sth://…`, ui-poker Socket.IO) instantly failed with
-«Ошибка соединения: websocket error» - the connection never even reached
+"Connection error: websocket error" - the connection never even reached
 the Rust bridge.
 
 **Root cause.** The injected WS polyfill did
@@ -6467,7 +6467,7 @@ properties (`onopen`, `onmessage`, `readyState`, `binaryType`, `url`, …)
 are **native accessors** that throw `TypeError: Illegal invocation` when
 invoked with a non-native receiver. So `self.onopen = null` inside the
 `StubWs` constructor threw immediately; engine.io caught the constructor
-exception and emitted the generic «websocket error». The `api://` panel
+exception and emitted the generic "websocket error". The `api://` panel
 tester was unaffected because it calls `dapp_ws_open` via Tauri invoke
 directly, bypassing the polyfill entirely - which is why the bug only
 reproduced inside dApps.
@@ -6492,9 +6492,9 @@ Validated with `node --check` on the extracted bridge JS and a clean
 ### Fixed - WS handshake race condition (DApp Socket.IO / WebSocket)
 
 **Symptom.** dApp WebSockets (`new WebSocket('api://…')`, socket.io-client)
-never fired `onopen` - poker `ui-poker` reported «websocket error» even
+never fired `onopen` - poker `ui-poker` reported "websocket error" even
 though the Rust provider tunnel successfully completed the upstream WS
-handshake (visible as `WS[pokersth] апстрим OK (HTTP 101)` in
+handshake (visible as `WS[pokersth] upstream OK (HTTP 101)` in
 netfory-provider logs).
 
 **Root cause.** Two race conditions in the client-side JS pipeline:
@@ -6563,15 +6563,15 @@ handshakes (e.g. the `pokersth` provider used by the `ui-poker` DApp)
 without launching a full DApp.
 
 Features:
-- Live status badge - `ожидание` → `подключение…` → `онлайн (HTTP 101)` →
-  `закрыто` / `ошибка`.
+- Live status badge - `waiting` → `connecting…` → `online (HTTP 101)` →
+  `closed` / `error`.
 - **8-second handshake timeout** - if the provider does not emit
   `dapp-ws-open` within 8 s the tester force-closes the stream with code
   1006 (`handshake timeout`) and shows a red error.
 - Frame log with timestamps + direction arrows (`←` in / `→` out / `·`
   system) - text frames are shown inline, binary is summarized as
   `<binary N bytes>`.
-- Send-text input + `⇋ Открыть` / `⏻ Закрыть` buttons.
+- Send-text input + `⇋ Open` / `⏻ Close` buttons.
 
 ### Added - Public WS bridge API in `bridge.ts`
 
@@ -6592,7 +6592,7 @@ not only through the JS polyfill injected into DApp webviews.
 
 ## [1.55.30] - 2026-07-11
 
-### Fixed - Socket.IO / WS: автоматическое восстановление имени провайдера
+### Fixed - Socket.IO / WS: automatic provider name restoration
 
 `socket.io-client` (and some libraries with manual `path` in options) builds
 WS URL as `ws://<host>/<opts.path>` - takes **only host** from BASE
@@ -6807,7 +6807,7 @@ path status in SystemConsole at startup:
 - **Result logged once at endpoint start** to `syslog scope=net`:
     - `ipv6 outbound: OK` → clients can bind you directly over v6, no
       CGNAT-hole-punch, no relay overhead.
-    - `ipv6 outbound: недоступен` → operating v4-only, which is fine but
+    - `ipv6 outbound: unavailable` → operating v4-only, which is fine but
       will use relay if the remote peer is v6-only or if CGNAT triggers.
 
 ## [1.55.26] - 2026-07-11
@@ -6839,7 +6839,7 @@ release so the round-trip actually delivers `Authorization: Bearer …`.
 
 Consolidating the change from 1.55.23: the toolbar `⌨` button now spawns
 `toggle_console_window()` unconditionally (previously it toggled the
-in-layout floating panel; a secondary "🗗 В ОКНО" button on the panel
+in-layout floating panel; a secondary "🗗 TO WINDOW" button on the panel
 opened the detached copy). Rationale:
 
 - One code path - one `sys-log` subscriber, no accidental duplicate
@@ -6851,7 +6851,7 @@ opened the detached copy). Rationale:
 - **`src/layouts/AppLayout.vue`:** removed floating `<SystemConsole />`
   render, removed `sysConsoleOpen` ref and the `SystemConsole` import.
   Toolbar button now calls `openSysConsoleWindow` → `toggleConsoleWindow`.
-- **`src/components/SystemConsole.vue`:** the `🗗 В ОКНО` button
+- **`src/components/SystemConsole.vue`:** the `🗗 TO WINDOW` button
   disappears because it only rendered for `!props.detached` in the
   floating panel - the floating panel is gone. The component itself
   stays intact so an in-window widget can still be embedded later
@@ -6905,7 +6905,7 @@ The floating console can now be popped out into its own OS-level window
   parallel copy of the app and its background timers.
 - **`src/components/SystemConsole.vue` - `detached` prop:**
   Fullscreen layout (inset:0, no border/shadow/backdrop), no `✕`
-  button, plus a new `🗗 В ОКНО` button in the floating variant that
+  button, plus a new `🗗 TO WINDOW` button in the floating variant that
   invokes `toggleConsoleWindow()` and closes the floating panel to
   avoid two active `sys-log` subscribers holding duplicate ring buffers.
 - **`src-tauri/capabilities/default.json`** - `syscon` label added to
@@ -7353,7 +7353,7 @@ No unbounded collections identified. Fix verified by `cargo check --features p2p
 
 
 ### Changed - Auto-sign for trusted dApps (Core-Wallet UX parity)
-- After the user grants a dApp `getAccount` access (once, via the "Подключить"
+- After the user grants a dApp `getAccount` access (once, via the "Connect"
   prompt) subsequent `signMessage` requests from the same origin are now
   auto-approved WITHOUT re-prompting - just like the Core-Wallet browser
   extension. Rationale: the connect handshake already established trust, and
@@ -7361,7 +7361,7 @@ No unbounded collections identified. Fix verified by `cargo check --features p2p
   making the wallet unusable with a prompt for every signature.
 - Explicit `SIGN` prompt still shows for **unknown origins** on first
   contact, giving the user full control over the initial trust decision.
-- Removing trust is one click: Wallet → Приложения → DISCONNECT. Next sign
+- Removing trust is one click: Wallet → Apps → DISCONNECT. Next sign
   request from that origin will surface the AuthorizeMessage prompt again.
 
 ### Fixed
@@ -7692,7 +7692,7 @@ No unbounded collections identified. Fix verified by `cargo check --features p2p
   refresh button. i18n RU/EN `peers.swarmTop*`.
 - **Non-spam System Console log**: after a weight-changing download `save_swarm_weights()` logs the
   top-3 seeders to `syslog` (scope `swarm`) AT MOST once per 60 s and only once real stats exist -
-  `🏆 top-сидеры: 1. ab…cd 1234Б/с · …`.
+  `🏆 top-seeders: 1. ab…cd 1234B/s · …`.
 - Verified: `cargo check --features p2p` GREEN (0 swarm warnings); `yarn build` GREEN.
 
 
@@ -7942,7 +7942,7 @@ fair, per-application distribution driven by on-chain funding events.
   truncated `abc…def` tokens, alphanumeric IDs, tickers and long base64-like tokens - so wallet
   addresses and transaction hashes are left intact.
 - **Layout-safety guard.** The backend discards model output that looks like an *explanation* rather
-  than a translation (contains "translates"/"переводится"/"has no meaning" etc.) or that balloons in
+  than a translation (contains "translates"/"has no meaning" etc.) or that balloons in
   length (> 4× source + 40 chars), keeping the original instead - this fixes garbled UI where a single
   word like "Assets" was replaced by a long sentence and broke the page layout.
 
@@ -8438,7 +8438,7 @@ fair, per-application distribution driven by on-chain funding events.
   blob object-URLs (same-origin) avoid any CORS tainting of the graph.
 - **Fly-out playlist queue.** A slide-up (`<Transition>`) panel lists the queue with the current
   track highlighted; click to jump, ✕ to remove. Toggled by a queue button on the bar and by a new
-  **"Player"** left-sidebar entry (music icon) docked just above the "МЕССЕНДЖЕР" block.
+  **"Player"** left-sidebar entry (music icon) docked just above the "MESSENGER" block.
 - **Controls.** Play/pause, prev/next (prev restarts the track if >3s in), a seek slider bound to
   the audio's `currentTime`, a volume slider, elapsed/total time, and the now-playing title/artist.
 - **Sources wired.** The profile **playlist** (`WallPlaylist.vue`) now loads the whole playlist into
@@ -8472,7 +8472,7 @@ fair, per-application distribution driven by on-chain funding events.
 ### Added
 - **Audio playlist for posts.** When a post has multiple audio attachments they now play
   consecutively - when one track ends the next one auto-starts (loading it on demand if needed).
-  A "🎧 Плейлист · N" header appears when a post has 2+ audio files.
+  A "🎧 Playlist · N" header appears when a post has 2+ audio files.
   Verified: `yarn build` GREEN (backend unchanged).
 
 ### Notes
@@ -8506,13 +8506,13 @@ fair, per-application distribution driven by on-chain funding events.
   to their profile.
 
 ### Changed
-- **Removed the profile page header** ("ПРОФИЛЬ: @name" + subtitle); the columns now sit at the top.
+- **Removed the profile page header** ("PROFILE: @name" + subtitle); the columns now sit at the top.
   Verified: `yarn build` GREEN (backend unchanged, `cargo check --features p2p` GREEN).
 
 ### Changed - VK-style wall layout
 - The Wall tab now uses a VK-like three-column layout: the existing profile card on the left, a
   **narrower centered post column** (max-width 600px) in the middle, and a **social-graph sidebar**
-  on the right split into two stacked blocks - **Подписчики** (followers) on top and **Подписки**
+  on the right split into two stacked blocks - **Followers** on top and **Following**
   (following) below (replaces the previous tabbed subscribers/following panel). Collapses to a single
   column under 1100px.
 - Post images now render **full-width inside the post** (stacked, click → original in a new window)
@@ -8659,7 +8659,7 @@ fair, per-application distribution driven by on-chain funding events.
 ## [1.11.0] -25
 
 ### Added - Settings: P2P protocol node tabs + full-width layout
-- **"УЗЛЫ SMARTHOLDEM" now has two tabs**: **Clear Nodes** (the clearnet mainnet pool)
+- **"SMARTHOLDEM NODES" now has two tabs**: **Clear Nodes** (the clearnet mainnet pool)
   and **P2P Nodes** (our protocol `api://` nodes from the new build-time env
   `SMARTHOLDEM_NODES_P2P`). Each tab keeps the AUTO (pick fastest) / RESCAN (ping all)
   actions. Selecting a P2P node routes the wallet through it (reuses `select_node`,
@@ -8670,7 +8670,7 @@ fair, per-application distribution driven by on-chain funding events.
 ### Changed
 - **Settings page is full-width** (removed the 1400px max-width) - no more empty space
   on the right.
-- **"P2P-ОБНОВЛЕНИЯ" moved into the left network column** (above P2P Discovery) as a
+- **"P2P UPDATES" moved into the left network column** (above P2P Discovery) as a
   section instead of a separate full-width block.
 - `yarn build` GREEN (env var confirmed bundled). Frontend-only; no Rust changes.
 
@@ -8775,14 +8775,14 @@ fair, per-application distribution driven by on-chain funding events.
 
 ## [client 1.9.1]  (File Exchange: background downloads)
 
-### Added - «Are downloading» section + background P2P downloads
+### Added - "Are downloading" section + background P2P downloads
 - Clicking download on an `sn://file/...` link now calls a new `start_file_download`
   command that records `downloading: true` on the manifest in Sled and spawns the
   iroh fetch in the BACKGROUND (`tauri::async_runtime::spawn`), so the transfer keeps
   going no matter which page the user navigates to. Returns immediately; payment /
   missing-seeder validation still happens up front. A session dedup guard
   (`ACTIVE_DL`) prevents double-starting the same CID.
-- New **«Are downloading»** tab in "My Files" showing in-progress downloads with a live
+- New **"Are downloading"** tab in "My Files" showing in-progress downloads with a live
   progress bar (polls `file_download_progress`). Downloading files are excluded from
   the "Downloaded" tab and included in `list_my_files` even before the blob lands on
   disk. On completion the manifest flips to `downloading: false` + `seeding: true`.
@@ -8880,7 +8880,7 @@ Dashboard, in place of the former block). Three layers:
 ## [client 1.8.16] - 2026-07-02
 
 ### Added
-- **"ОБНОВЛЕНИЕ" badge on the release torrent row.** Update-package torrents
+- **"UPDATE" badge on the release torrent row.** Update-package torrents
   (seeded from `data/updates/v<version>`) are now flagged with `isUpdate` on
   `TorrentStatus` and show a green badge in the Torrents list, so it's obvious the
   client is re-seeding the new SmartNet release to other nodes. Tracked via a new
@@ -8993,8 +8993,8 @@ Dashboard, in place of the former block). Three layers:
       Android JNI-Intent stub. `std::process::exit(0)` after launch.
     - **Frontend:** `updater.ts` service (first check 5 min after start, then every
       `CHECK_UPDATE_PERIOD` hours - default 48), `UpdateBar.vue` (bottom status line:
-      "Идёт скачивание… N%" + persistent "Обновить" button), `UpdateModal.vue`
-      ("Скачана новая версия! [Обновить сейчас] [Позже]"). Torrent helper
+      "Downloading… N%" + persistent "Update" button), `UpdateModal.vue`
+      ("New version downloaded! [Update now] [Later]"). Torrent helper
       `torrent::download_magnet_update` downloads a magnet into an exact folder.
     - `.env`: `CHECK_UPDATE_PERIOD=48`.
     - `manifest.notes` may be a filename (e.g. `CHANGELOG.md`) - its file content is
@@ -9010,7 +9010,7 @@ Dashboard, in place of the former block). Three layers:
 ## [client 1.8.7] - 2026-07-01
 
 ### Added
-- **"Приватный торрент" checkbox** in the create-torrent dialog. When enabled,
+- **"Private torrent" checkbox** in the create-torrent dialog. When enabled,
   `info.private = true` is set on the generated torrent (not shared over DHT).
   Since `private` lives inside the info-dict, the info-hash is recomputed from the
   final serialized bytes via `librqbit::torrent_from_bytes` (no extra deps).
@@ -9105,14 +9105,14 @@ Dashboard, in place of the former block). Three layers:
   paused torrent stays paused after restart instead of resuming.
 - **Missing-folder detection → Error status.** On startup/resume, each torrent's
   download folder is checked on disk; if it was deleted/moved externally, the
-  torrent is not re-seeded and is shown with the **Error** status (Ошибка tab)
+  torrent is not re-seeded and is shown with the **Error** status (Error tab)
   instead of silently failing.
 - **Single-instance guard.** Added `tauri-plugin-single-instance` - launching a
   second copy now focuses the existing window instead of starting a duplicate
   process.
 
 ### Note
-- Partial-file seeding ("раздача до полной загрузки") already works - librqbit
+- Partial-file seeding ("seeding until full download") already works - librqbit
   uploads the pieces you already have to peers while still downloading (confirmed
   live: a 100% torrent seeding + an in-progress download at 16 MB/s).
 
@@ -9133,8 +9133,8 @@ Dashboard, in place of the former block). Three layers:
   `live_utp` from librqbit 9), visually confirming µTP is actually working.
 - **Torrent settings gear + tabbed settings modal.** Added a settings gear button
   next to the DHT-nodes counter on the Torrents page. The settings modal is now
-  organised into tabs - **Соединение** (peer protocol TCP/µTP, incoming port +
-  random-port toggle & reroll, UPnP, max peers/torrent), **Скорость** (down/up
+  organised into tabs - **Connection** (peer protocol TCP/µTP, incoming port +
+  random-port toggle & reroll, UPnP, max peers/torrent), **Speed** (down/up
   rate limits), **BitTorrent** (DHT on/off, LSD on/off, RuTracker key). New
   `dht`/`lsd` settings persist to Sled and apply on restart (`SessionOptions.dht`
   / `disable_local_service_discovery`).
@@ -9308,7 +9308,7 @@ Dashboard, in place of the former block). Three layers:
     - Trackers injected into every `AddTorrentOptions` (magnet list-only, torrent
       file, download start, resume) so metadata resolves fast like qBittorrent.
 - **RuTracker keeper key (kk passkey).** Configurable in the torrent settings
-  modal ("Настройки торрент-клиента"). When set, private RuTracker announce URLs
+  modal ("Torrent Client Settings"). When set, private RuTracker announce URLs
   (`http://bt{,2,3,4}.t-ru.org/ann?kk=<key>` and the `rutracker.cx` mirrors) are
   added to the tracker set for peer discovery on private releases. Commands
   `get_rutracker_key` / `set_rutracker_key`; stored in DB (`cfg:rutracker_bt`).
@@ -9321,11 +9321,11 @@ Dashboard, in place of the former block). Three layers:
   (`Session::get_dht().clone_routing_table()`) and merges them into our
   anti-censorship bootstrap cache (`p2p::merge_dht_hints`), strengthening the
   SmartNet Mainline DHT from the torrent client's peers.
-- **Drag & drop .torrent files.** A full-window drop overlay ("Отпустите, чтобы
-  добавить .torrent") appears while dragging (Tauri `tauri://drag-*` events);
+- **Drag & drop .torrent files.** A full-window drop overlay ("Drop to
+  add .torrent") appears while dragging (Tauri `tauri://drag-*` events);
   dropping a `.torrent` parses it and opens the same metadata modal as magnets.
   New backend commands `parse_torrent_file` (bytes) and `parse_torrent_path`
-  (path). A drop hint is also shown next to the "+ Добавить" button.
+  (path). A drop hint is also shown next to the "+ Add" button.
 - **`.torrent` file cache.** Torrents are cached at
   `data/torrents/{first-2-hash-chars}/{hash}.torrent` - saved for dropped files
   immediately and for magnets once metadata resolves (speeds up resume).
@@ -9372,7 +9372,7 @@ Dashboard, in place of the former block). Three layers:
       persist KiB/s in the `torrents` Sled tree and apply live via
       `Session.ratelimits.set_download_bps/set_upload_bps` (also re-applied on
       session start).
-    - "Узлы DHT: N" live counter in the page header (reuses the existing Mainline
+    - "DHT Nodes: N" live counter in the page header (reuses the existing Mainline
       DHT stats, polled every 5s).
     - Record filters above the table (radio group): All / Downloading / Done /
       Paused / Error, each with a live count.
@@ -9398,7 +9398,7 @@ Dashboard, in place of the former block). Three layers:
     - `librqbit` compiled with `default-features=false, features=["rust-tls"]`
       (no OpenSSL - cross-platform build).
 - **Embedded BitTorrent client - Phase B (Vue 3 UI).**
-    - Sidebar entry "ТОРРЕНТЫ" + `/torrents` route (`views/Torrents.vue`).
+    - Sidebar entry "TORRENTS" + `/torrents` route (`views/Torrents.vue`).
     - Page: aggregate stats (download / upload / uploaded-this-session), compact
       custom table (name, size, progress bar, status, seeders/peers, speed,
       pause/folder/remove buttons), "+ Add magnet" input.
@@ -9443,7 +9443,7 @@ Dashboard, in place of the former block). Three layers:
   advertise their public DHT bootstrap addr (`seederDht`) in `/announce`; the
   tracker pools the fresh ones (≤30 min) and serves them, the client harvests them
   every tracker tick into `cfg:seeders_auto` - so users never need to add seeders
-  manually. Network Settings shows a read-only **«+N auto-discovered»** badge.
+  manually. Network Settings shows a read-only **"+N auto-discovered"** badge.
 - **Anti-censorship DHT bootstrap exchange (tracker + gossip).** Nodes with a
   healthy DHT share ≤8 live node addrs; censored nodes (blocked from public
   routers/seeder, DHT=0, but reachable via tracker/mesh) harvest them and
@@ -9461,12 +9461,12 @@ Dashboard, in place of the former block). Three layers:
 - **Floating System Console** (topbar terminal icon, Tauri only): live `sys-log`
   Tauri event stream with a 300-line ring buffer (`syslog.rs`), backlog via
   `sys_log_history`. Scope-filter chips (DHT/P2P/NET/SYS - click toggle,
-  double-click "only", «ВСЕ"), **Copy-all**, grep text filter; ~1080px wide.
+  double-click "only", "ALL"), **Copy-all**, grep text filter; ~1080px wide.
   Log points: boot, endpoint bind, DHT bootstrap/table changes, tx rejections,
   seeder/key pinning.
 - **DHT node-count mini-sparkline** next to the counter on Dashboard + Network Map
   (`Sparkline.vue`), backed by a rolling localStorage history (`dhtHistory.ts`).
-- **«SEEDER» badge on the Network Map** - bootstrap-source seeder nodes are shown
+- **"SEEDER" badge on the Network Map** - bootstrap-source seeder nodes are shown
   in violet on the globe with a legend entry and live count, distinct from
   ephemeral amber DHT peers.
 - **Client version in the window title bar** (set at runtime from `CARGO_PKG_VERSION`).
@@ -9478,7 +9478,7 @@ Dashboard, in place of the former block). Three layers:
   `parse_sth` truncated the fee/amount fractional part with `String::truncate(8)`,
   panicking on a multi-byte UTF-8 char. The parser now keeps **only ASCII digits** -
   char-boundary-safe and robust against any malformed input.
-- **"Транзакция отклонена узлом" when publishing the messenger key.** The fee used
+- **"Transaction rejected by node" when publishing the messenger key.** The fee used
   was the generic `/node/fees` min (~0.001 STH), but a key publish carries a
   ~100-byte `xkey:` vendorField, so the node's size-based dynamic minimum (~0.011
   STH) was undershot → `ERR_LOW_FEE`. Publishes (key, msg-cost, endpoint re-publish)
@@ -9518,7 +9518,7 @@ Dashboard, in place of the former block). Three layers:
 ## [client 1.2.4] 2026-06-30
 
 ### Fixed
-- **REGRESSION: "DHT-узлы = 0" on the client.** The DHT monitor had switched to
+- **REGRESSION: "DHT nodes = 0" on the client.** The DHT monitor had switched to
   `DhtBuilder::bootstrap(&pre_resolved_ips)`, which **replaces** the default public
   Mainline routers. The pre-resolved list often collapsed to just the (not-yet-
   deployed / unreachable) SmartNet seeder IP, leaving the DHT with no reachable
@@ -9582,7 +9582,7 @@ Dashboard, in place of the former block). Three layers:
 ## [client 1.2.1 / provider 0.4.2] 2026-06-30
 
 ### Fixed
-- **CRITICAL: UI freeze ("Не отвечает") during peer/app discovery.** Root cause:
+- **CRITICAL: UI freeze ("Not responding") during peer/app discovery.** Root cause:
   `n0-mainline` resolves the default DHT bootstrap hostnames **synchronously**
   (`std` `to_socket_addrs`) inside `DhtBuilder::build()`. When DNS to those hosts
   is slow/blocked, the call blocked the thread for the full DNS timeout (~10-12s),
@@ -9638,7 +9638,7 @@ Dashboard, in place of the former block). Three layers:
       New commands: `get_dht_enabled`, `set_dht_enabled`, `dht_stats`.
     - **Provider**: new `network.dht_enabled` config key (default `true`);
       publishes its NodeID to the DHT so clients resolve it without n0/n1. The
-      `/status` JSON and HTML dashboard show a new **"DHT-узлы (Mainline)"** card.
+      `/status` JSON and HTML dashboard show a new **"DHT Nodes (Mainline)"** card.
 - **DHT bootstrap cache (extra_bootstrap).** Both sides periodically snapshot
   live DHT routing-table nodes via `Dht::to_bootstrap()` and persist them
   (provider → `dht_boot.dat`; client → sled key `cfg:dht_boot`, max 64 nodes,
@@ -9687,7 +9687,7 @@ Dashboard, in place of the former block). Three layers:
 ### Changed (earlier)
 - **Node Pool moved into Settings → Network**: the "SmartHoldem Nodes" list is
   no longer a standalone sidebar item; it now sits beside P2P Discovery in a
-  50/50 split inside Settings → Сеть. The `nodes` sidebar entry was removed
+  50/50 split inside Settings → Network. The `nodes` sidebar entry was removed
   (route `/nodes` + `NodePool.vue` kept as a fallback). New i18n `nodes.*` keys.
 
 ### Added
@@ -9723,8 +9723,8 @@ Dashboard, in place of the former block). Three layers:
 - **One-retry failover** for HOT reads (balance / subscribers / history): `http_get`
   tries the active node then ONE backup with a short 4 s timeout - never hammers
   the whole pool (public nodes IP-ban over-polling; block time is ~8 s).
-- **Node Pool UI** (`/nodes`, new "УЗЛЫ STH" sidebar item): live list with
-  ping/height/online status, "↻ Rescan", "⚡ Авто (лучший)", and click-to-pin a
+- **Node Pool UI** (`/nodes`, new "STH NODES" sidebar item): live list with
+  ping/height/online status, "↻ Rescan", "⚡ Auto (best)", and click-to-pin a
   node. Commands: `refresh_node_pool`, `auto_select_node`, `select_node`,
   `current_node`.
 
@@ -9824,7 +9824,7 @@ Dashboard, in place of the former block). Three layers:
 - **Double-click a file name → open with the OS default app** (player/viewer/…).
   `open_file_native` exports a cached temp copy with the real name (the store
   path is the bare CID) so the OS resolves the correct application.
-- Fixed the duplicated "сид" label in the status column.
+- Fixed the duplicated "seed" label in the status column.
 
 ### Planned
 - Decide metadata layer: **Entity (Product) transactions** (typeGroup 2,
