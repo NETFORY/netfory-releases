@@ -4,10 +4,9 @@ All notable changes to **NETFORY** (SmartHoldem decentralized P2P client) are do
 
 Component versions covered in this file:
 
-- SmartNet client bumped from **1.0**
-  through **1.135.28**.
+- NETFORY client bumped from **1.0**
 - Oxid Mail workspace (`oxid-mail/*`) - bumped from **0.1.0** to **0.2.0**
-  alongside SmartNet 1.120.0, then to **0.3.0** (encrypted mail protocol v1),
+  alongside NETFORY 1.120.0, then to **0.3.0** (encrypted mail protocol v1),
   to **0.5.0** (Iroh P2P delivery + contacts + QR share), to **0.6.0**
   (attachments Dropzone + inline NTFRY + attachment preview overlay
   + honest P2P delivery progress) and finally to **0.7.0** (paid unlock for
@@ -17,6 +16,195 @@ Component versions covered in this file:
     auto-contact on receive).
     Every crate in the workspace (`mail-core`, `mail-crypto`, `mail-store`,
     `oxid-bridge`, `src-tauri`) and the Vue UI share the same version number.
+
+---
+
+## [1.135.37] (Network Map: cloud provider badge inline before the pubkey)
+
+### Fixed
+
+- **YA / GD / MAIL badge wrapped to a new line and broke the Cloud Seeders
+  table layout.** The badge moved from the TYPE cell (after the CLOUD
+  chip) into the NODE cell — it now sits on the SAME line, right before
+  the short author pubkey (`[YA] 039d6f18…6ef35b`), with `white-space:
+  nowrap` so it never wraps. Provider tooltip and test ids unchanged.
+- Versions bumped to **1.135.37** across `package.json`, `tauri.conf.json`,
+  `Cargo.toml` and `Cargo.lock`.
+
+## [1.135.36] (Torrent modals localized — en/ru/id)
+
+### Changed
+
+- **`TorrentMagnetModal` (magnet download dialog) fully moved to i18n**
+  (new `torrents.*` section in `en.ts` / `ru.ts` / `id.ts`): title
+  fallback “Loading metadata…”, DHT fetch status, “Torrent files (N)”,
+  “Save folder”, “Sequential download (for video streaming)”,
+  “Selected: N / M”, START / STARTING… button, error strings (no source /
+  metadata failed / start failed).
+- **`TorrentStreamModal` (stream-while-downloading player)** localized
+  too: stream errors (open failed / no media files / metadata not ready),
+  the playback hint line and size units (KB/MB/GB per locale).
+- Versions bumped to **1.135.36** across `package.json`, `tauri.conf.json`,
+  `Cargo.toml` and `Cargo.lock`.
+
+## [1.135.35] (Sled DB migrated out of %TEMP% into the app data/ directory)
+
+### Changed
+
+- **`smartnet_db` (sled) moved from `%TEMP%/smartnet_db` to
+  `<app_data>/data/smartnet_db`** — next to `dapps/`, `manifests/`, `keys/`
+  (Windows: `%APPDATA%\io.smartholdem.smartnet\data\smartnet_db`; Linux:
+  `~/.local/share/io.smartholdem.smartnet/data/smartnet_db`; macOS:
+  `~/Library/Application Support/io.smartholdem.smartnet/data/smartnet_db`).
+  TEMP cleanup (Windows Storage Sense, CCleaner, reboot policies) could
+  wipe the live DB — killing the client and erasing settings/config keys.
+- **One-time automatic migration**: on first start the existing TEMP DB is
+  moved via `rename` (instant on the same volume) with a recursive-copy
+  fallback; if the copy fails the client stays on the TEMP DB and records
+  the reason in `%TEMP%/smartnet-crash.log`. No AppHandle needed — the
+  OS app-data dir is resolved manually (`os_app_data_dir()`), matching
+  Tauri’s `app_data_dir()` layout, because the Lazy DB initializes before
+  Tauri starts. If a user overrides `cfg:data_dir` (movable data/), the DB
+  intentionally stays at the DEFAULT location — the override itself is
+  stored inside the DB (chicken-and-egg).
+- Versions bumped to **1.135.35** across `package.json`, `tauri.conf.json`,
+  `Cargo.toml` and `Cargo.lock`.
+
+## [1.135.34] (Silent client exit forensics + headless seeder retry backoff)
+
+### Added
+
+- **Crash forensics for the “client just closed with no warning” reports.**
+  Root of the silence found in `lib.rs`: ANY `Destroyed` event of the main
+  window calls `exit(0)` — so when the OS kills the WebView renderer
+  (WebView2 crash, OOM, GPU driver reset), the whole app vanishes without a
+  trace (Windows GUI build has no visible stderr, syslog is in-memory
+  only). Now:
+  - a global `panic::set_hook` writes every thread panic (thread name +
+    location + message) to a persistent **`%TEMP%/smartnet-crash.log`**;
+  - `CloseRequested` on the main window sets a flag; a `Destroyed` WITHOUT
+    a prior close request is logged to the same file as an abnormal
+    termination (probable renderer crash) before the process exits.
+    Non-blocking appends only — the main process never hangs (async rule).
+    After the next silent exit, check `%TEMP%\smartnet-crash.log` for the
+    recorded cause.
+- **Headless seeder: exponential retry backoff (5 → 15 → 60 min, max 60).**
+  Targets that fail all providers get a per-app pause (1st fail 5 min, 2nd
+  15 min, 3rd+ 60 min) instead of a QUIC/relay dial storm every 30-second
+  cycle — this is what pushed the server CPU past 100% while six stale
+  targets were permanently unfetchable. A successful fetch clears the
+  backoff; a changed target hash (republish) resets it so new blobs are
+  tried immediately. Skip reason + retry countdown go to the debug log,
+  the warn line now shows `backoff N min (fail #K)`.
+
+### Changed
+
+- Versions bumped to **1.135.34** across `package.json`, `tauri.conf.json`,
+  `Cargo.toml` and `Cargo.lock`.
+
+## [1.135.33] (P2P updater UI fully localized — en/ru/id)
+
+### Changed
+
+- **All updater-facing strings moved to i18n** (new `updater.*` section in
+  `en.ts` / `ru.ts` / `id.ts`). Previously hardcoded Russian text is now
+  translated for every supported locale:
+  - status bar phases (`updater.ts`): “Starting update download…”,
+    rotating search hints (“Connecting to torrent network…”, “Searching
+    for a source in DHT…”, “Waiting for live release seeds…”, “Requesting
+    torrent metadata…”), live download line (“Downloading · seeds N /
+    peers M · ↓ speed”), “Downloaded — preparing to install…”, localized
+    speed units (B/s, KiB/s, MiB/s);
+  - `UpdateBar.vue`: fallback status, “Update vX is ready to install”,
+    Update button, “Launching the installer…”;
+  - `UpdateModal.vue`: UPDATE tag, “New version downloaded!”, missing-
+    installer warning, Later / Update now buttons;
+  - `installNow()` error “Installer not found for the current OS.”
+- Versions bumped to **1.135.33** across `package.json`, `tauri.conf.json`,
+  `Cargo.toml` and `Cargo.lock`.
+
+## [1.135.32] (Headless seeder: fix version-inflation bug that pinned stale blobs)
+
+### Fixed
+
+- **Headless seeder kept fetching STALE blob hashes forever (“provider
+  returned no data / blob absent on provider”).** In the target-selection
+  loop (`seeder/src/main.rs`) the per-provider version was inflated via
+  `p.version.max(app.version)` (app.version = highest across ALL
+  providers). A provider still announcing an OLD hash therefore looked
+  like it carried the newest version; if it iterated first, its stale hash
+  became the fetch target and the node actually serving the NEW blob was
+  discarded (`ver == entry.ver` with a different hash → skipped). Verified
+  against the live seeder at x.x.x.x:9466 `/metrics`: DEX was
+  targeted at provider `b310b058b1…` (stale) while the publisher’s node
+  `a06678f058…` was live-announcing the new blob `fce28547…`. Now `ver =
+  p.version` — the provider genuinely serving the highest version wins the
+  target, so republished dApps (free→paid re-uploads) propagate to
+  headless seeders again. Rebuild + restart of the seeder binary required.
+
+### Changed
+
+- Versions bumped to **1.135.32** across `package.json`, `tauri.conf.json`,
+  `Cargo.toml` and `Cargo.lock`.
+
+## [1.135.31] (Gray DIRECT LINK until ready + cloud provider badges on Network Map)
+
+### Added
+
+- **My DAPPS: ⚡ DIRECT LINK and ▦ QR buttons are now disabled (gray) until
+  the direct link is ready.** Links are prefetched sequentially when the
+  list loads (and re-fetched after each publish/update via `publishTick`);
+  the backend lazily re-seeds on a miss (v1.135.30), so buttons turn active
+  automatically. Clicking always copies an already-built
+  `sth://<id>?n=<nodeId>&h=<hash>` from the cache — no more “NOT SEEDING
+  YET” flashes on the button label (the state moved to the tooltip).
+- **Network Map: provider badge (YA / GD / MAIL) on each Cloud Seeder
+  row.** The same author pubkey published on Yandex Disk and Mail.ru Cloud
+  used to look like duplicate rows; the badge (parsed from the
+  `sn://seed/<y|g|m>@…` URI prefix, full provider name in the tooltip) now
+  tells them apart. Row `:key` switched from pubkey to the full URI —
+  fixes Vue duplicate-key warnings for multi-provider authors.
+
+### Changed
+
+- Versions bumped to **1.135.31** across `package.json`, `tauri.conf.json`,
+  `Cargo.toml` and `Cargo.lock`.
+
+## [1.135.30] (Direct link works right after publishing — lazy re-seed in `app_share_info`)
+
+### Fixed
+
+- **DIRECT LINK / QR showed “NOT SEEDING YET” for a freshly published
+  dApp.** The `sth://<id>?n=<nodeId>&h=<hash>` link is built from
+  `SEEDED_APPS`, which is only filled by the heavy `seed_all()` pass
+  (deterministic tar rebuild + iroh import) fired asynchronously after
+  `finalize` — clicking the button during that window (or if the background
+  re-announce failed) returned `not-seeded`. `app_share_info` is now async:
+  on a miss it awaits `p2p_impl::seed_all()` itself and retries the lookup,
+  so the button waits a few seconds and returns a valid link instead of
+  erroring. Frontend call is unchanged (`invoke('app_share_info')`).
+
+### Changed
+
+- Versions bumped to **1.135.30** across `package.json`, `tauri.conf.json`,
+  `Cargo.toml` and `Cargo.lock`.
+
+## [1.135.29] (Network defaults: drop retired DHT seeder x.x.x.x)
+
+### Changed
+
+- **`DEFAULT_SEEDERS` (Mainline DHT bootstrap) no longer includes
+  `x.x.x.x:6885`.** The built-in defaults are now exactly
+  `x.x.x.x:6881` and `y.y.y.y:6881` (both were already
+  present; the retired anchor is excluded per operator request). The
+  Settings placeholder for WAN trackers also stopped referencing the
+  retired IP (now shows `z.z.z.z:7374`, the first live default
+  tracker).
+- SMARTNET RELAYS defaults were verified as already built-in
+  (`DEFAULT_SMARTNET_RELAYS = relay-fsn7.sth.cx + relay-ru1.sth.cx`,
+  always added to the endpoint relay map) — no change needed.
+- Versions bumped to **1.135.29** across `package.json`, `tauri.conf.json`,
+  `Cargo.toml` and `Cargo.lock`.
 
 ---
 
@@ -9415,7 +9603,7 @@ Dashboard, in place of the former block). Three layers:
 
 ### Changed
 - **`DEFAULT_SEEDERS`** now ships all three canonical headless seeders
-  (`93.190.23.114:6885`, `116.202.32.250:6881`, `194.58.109.118:6881`) → the
+  (`x.x.x.x:6885`, `x.x.x.x:6881`, `y.y.y.y:6881`) → the
   Network Map "SEEDER" badge reflects the full default set.
 
 ### Fixed
@@ -9564,7 +9752,7 @@ Dashboard, in place of the former block). Three layers:
   it a reachable bootstrap node so clients/providers behind NAT or with closed UDP
   egress can join the DHT through SmartNet infrastructure - independent of n0/n1
   and public BitTorrent routers. New seeder config: `dht_enabled`, `dht_port`.
-  The address `116.202.32.250:6881` is baked into the **client** and **provider**
+  The address `x.x.x.x:6881` is baked into the **client** and **provider**
   DHT bootstrap defaults; the client also honours env `SMARTNET_DHT_BOOTSTRAP`.
 - **DHT nodes on the Network Map globe**: live DHT routing-table nodes (IP:port)
   are now plotted on the globe (amber **DHT** points) alongside peers, with a new
