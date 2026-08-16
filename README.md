@@ -8,7 +8,7 @@
 
 **Netfory is the Web 4.0 operating system of the Decentralized Physical Internet (DePIN).**
 
-## ❤️ Why?
+## Why?
 
 - We believe in open, free, and **uncensored** digital life.
 - Publish and access **websites, books, articles, music, images, games, and communication** without permission.
@@ -18,7 +18,7 @@
 - Works offline / LAN-First: Keep using apps, files, and chat even when the global internet is down.
 - No cloud. No AWS. No Vercel. Just a pure Peer-to-Peer network powered by user-owned hardware.
 
-## 🚀 Key Features
+## Key Features
 
 - **Zero-Infrastructure Architecture:** Apps deploy directly to the P2P network via `dev://` and `sn://` protocols. No servers to seize, no domains to revoke.
 - **Infrastructure Protection:** Unlike legacy P2P networks, Netfory nodes don't expose direct IPs to the public internet. The network protects seeders from DDoS attacks, ensuring 24/7 uptime.
@@ -27,7 +27,7 @@
 - **High-Performance Transport:** Built on **Iroh (QUIC)** for NAT traversal and **BLAKE3** for instant content verification.
 - **E2EE Communication:** Integrated messenger and mail client with X25519 encryption and economic anti-spam.
 
-## 🛠 Tech Stack
+## Tech Stack
 
 | Component | Technology | Purpose |
 | :--- | :--- | :--- |
@@ -38,27 +38,27 @@
 | **Blockchain** | SmartHoldem DPoS | Identity, Naming, Economic Anchor |
 | **Encryption** | X25519 + AES-256-GCM | E2EE for mail and messaging |
 
-## 📦 Ecosystem Repositories
+## Ecosystem Repositories
 
 - **netfory-client:** The main desktop application (Wallet, Store, Seeder).
 - **[smartnet-relay](https://github.com/NETFORY/smartnet-relay):** A lightweight, self-hosted relay server for the NETFORY P2P network.
 - **[smartnet-sdk](https://github.com/NETFORY/smartnet-sdk):** TypeScript SDK for building dApps on Netfory.
 - **[netfory-provider](https://github.com/NETFORY/netfory-provider):** API Bridge & Router (SmartNet / Web 4.0).
 
-## 💰 Tokenomics & Economics
+## Tokenomics & Economics
 
 Netfory uses the **STH** coin as fuel and anti-spam shield.
 - **Deflationary by Design:** Block emission is halted. Fees for names, dApps, and messages are burned or locked.
 - **Proof-of-Utility:** Seeders earn STH based on uptime (`K_up`), data volume, and active apps.
 - **Anti-Spam:** Economic barriers make mass spamming financially irrational.
 
-## 🤝 How to Contribute
+## How to Contribute
 
 1. Read the [Netfory 101](https://smartholdem.io/white-paper) White Paper.
 2. Check out the [DevHub](https://smartholdem.io/devhub) for API references.
 3. Join our [Telegram Community](https://t.me/smartholdem) for technical discussions.
 
-## 📜 License
+## License
 Netfory is licensed under the **Business Source License 1.1 (BSL 1.1)** - see the [LICENSE](LICENSE) file for details.
 
 ### Why BSL 1.1?
