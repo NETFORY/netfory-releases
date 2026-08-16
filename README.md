@@ -6,7 +6,17 @@
 
 # 🌐 Netfory: The Web 4.0 Infrastructure
 
-**Netfory is the Web 4.0 operating system of the Decentralized Physical Internet (DePIN). Netfory replaces centralized cloud hosting (AWS, Vercel, Cloudflare) with a sovereign Peer-to-Peer network powered by user-owned hardware.**
+**Netfory is the Web 4.0 operating system of the Decentralized Physical Internet (DePIN).**
+
+## ❤️ Why?
+
+- We believe in open, free, and **uncensored** digital life.
+- Publish and access **websites, books, articles, music, images, games, and communication** without permission.
+- No single point of failure: Content stays online as long as at least 1 peer is seeding it.
+- No hosting costs: Everything is served by the network itself.
+- Impossible to shut down: It’s nowhere because it’s everywhere.
+- Works offline / LAN-First: Keep using apps, files, and chat even when the global internet is down.
+- No cloud. No AWS. No Vercel. Just a pure Peer-to-Peer network powered by user-owned hardware.
 
 ## 🚀 Key Features
 
