@@ -8,28 +8,89 @@ Component versions covered in this file:
 - Oxid Mail workspace (`oxid-mail/*`) - bumped from **0.1.0**  + honest P2P delivery progress. Every crate in the workspace (`mail-core`, `mail-crypto`, `mail-store`, `oxid-bridge`, `src-tauri`) and the Vue UI share the same version number.
 ---
 
+## [1.135.89] (Reply to message, Telegram-style)
+
+### Added
+- "↩ Reply" item in the message context menu (right-click). Picking it shows
+  a quote strip above the input (sender name + preview, ✕ to cancel); the
+  sent message renders with a colored quote block above the text, and
+  clicking the quote smooth-scrolls to the original message with a brief
+  highlight flash. Wire format: `sn-rep:{json}` envelope
+  (`r` = replied message id, `s` = original sender address, `p` = short
+  preview ≤100 chars, `t` = the reply text) - plain text transport, no
+  backend protocol changes. Room-list previews, OS notifications, copy and
+  repost all unwrap the envelope to the inner text (new `preview_of()`
+  helper in `chat/mod.rs`). Reply draft clears on room switch.
+
+## [1.135.88] (Live download progress: percent and speed on media spinners)
+
+### Added
+- The audio download spinner in the messenger now shows LIVE progress: a
+  circular progress ring with the percentage inside the play button, plus a
+  "↓ 34% · 1.2 MB/s" line under the file name. Falls back to an indeterminate
+  spinning ring until the first bytes arrive. Hovering the button hints that
+  a click cancels the download.
+- The fullscreen image viewer shows the same live "34% · 1.2 MB/s" progress
+  next to the loading spinner. The file size is now passed to the viewer
+  window (`open_image_window` gained an optional `size` parameter, also in
+  the `imgview-open` event and the `s` query param).
+- New Tauri command `chat_media_progress(hash)` - polls the iroh blob store
+  (`blob_progress`) for bytes transferred so far; the UI polls it every
+  600 ms while a download is active.
+
+## [1.135.87] (Cancel/retry stuck media downloads in messenger)
+
+### Fixed
+- Endless audio/photo download on one of the clients: iroh `download()` can
+  hang forever on a dead provider and permanently held the global
+  one-download-at-a-time gate (`FETCH_GATE`) - every subsequent media item
+  also spun forever, and only a full app restart helped. The whole fetch
+  operation now has a hard 180-second ceiling (`media-timeout`), so the gate
+  is always released.
+
+### Added
+- Clicking the spinning audio download circle again now CANCELS the fetch
+  (new `chat_cancel_media` command, toast "Download cancelled - tap again to
+  retry"); the next click retries. A separate toast is shown when the fetch
+  is auto-aborted by the timeout.
+
 ## [1.135.86] (Message reactions, larger messenger window minimum, faster emoji picker)
 
 ### Added
-
-* Telegram-style message reactions: Right-click a message -> quick emoji row (👍 ❤️ 🔥 😂 😮 👏) at the top of the context menu. Reactions are displayed as chips below the message with a counter; clicking a chip joins or removes your reaction. One reaction per user (a new one replaces the previous one; repeating the same one removes it). Transport: ephemeral E2EE envelope `sys="react"` sent to the gossip topic (not written to history); for 1-on-1, it is duplicated over a direct QUIC channel like receipts. Storage: sled `chat:react:<msg_id>` (map emoji -> addresses, cap 500). New commands: `chat_react`, `chat_reactions`; live event `chat-react`.
+- Telegram-style message reactions: right-click a message → a quick-emoji
+  row (👍 ❤️ 🔥 😂 😮 👏) at the top of the context menu. Reactions render
+  as chips with a counter under the message; clicking a chip joins/removes
+  the reaction. One reaction per user (a new one replaces the previous, the
+  same one toggles it off). Transport: ephemeral E2EE `sys="react"` envelope
+  on the gossip topic (never stored in history), duplicated over the direct
+  QUIC channel for 1-on-1 chats like delivery receipts. Storage: sled
+  `chat:react:<msg_id>` (map emoji → addresses, cap 500). New commands:
+  `chat_react`, `chat_reactions`; live `chat-react` event.
 
 ### Changed
-
-* Minimum messenger window size increased to 1160×680 (matching the reference screenshot) - group header with buttons no longer shrinks.
-* Emoji picker lagged on first open due to rendering all categories. Kept only Smileys & People and Activities (`disabled-groups`) - the panel now opens noticeably faster.
+- Messenger window minimum size raised to 1160×680 (matching the reference
+  screenshot) - the group header with its buttons no longer collapses.
+- The emoji picker stuttered on first open because it rendered every
+  category. Only Smileys & People and Activities are kept
+  (`disabled-groups`) - the panel now opens noticeably faster.
 
 ## [1.135.85] (Fix message deletion: chatDeleteMessage is not defined)
 
 ### Fixed
-
-* Message deletion in messenger crashed with error `chatDeleteMessage is not defined` - the function was used in `deleteMsg()` in `ChatWidget.vue` but was missing from `@/lib/bridge` imports. Added import, message deletion works again.
+- Deleting a message in the messenger failed with
+  `chatDeleteMessage is not defined` - the function was used in
+  `deleteMsg()` in `ChatWidget.vue` but was missing from the import list
+  from `@/lib/bridge`. Import added; message deletion works again.
 
 ## [1.135.84] (Auto-minimize main window when opening dApp in a separate window)
 
 ### Changed
-
-* Clicking the "In window" button next to a dApp now programmatically minimizes the main application window - the dApp comes to the foreground immediately without being overlapped. Affects `open_app_webview` (existing window and initial open) and `open_app_webview_new` (new window on top of an already opened dApp). Implemented via `app.get_webview_window("main").minimize()` right after `show()/unminimize()/set_focus()` on the child window.
+- Clicking "Open in window" next to a dApp now programmatically minimizes
+  the main application window - the dApp comes to the foreground immediately
+  and is never covered. Affects `open_app_webview` (existing window and
+  first open) and `open_app_webview_new` (new window on top of an already
+  open dApp). Implemented via `app.get_webview_window("main").minimize()`
+  right after `show()/unminimize()/set_focus()` of the child window.
 
 ## [1.135.83] (dApp windows open maximized and in the foreground)
 
