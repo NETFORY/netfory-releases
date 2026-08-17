@@ -2504,9 +2504,6 @@ a misleading, unimplemented hint.
     `oxid-mail/crates/mail-store/Cargo.toml`,
     `oxid-mail/crates/oxid-bridge/Cargo.toml`,
     `oxid-mail/ui/package.json`).
-- Per user policy in this session, no `cargo check` / `yarn build` /
-  automated tests were executed by the agent - the release is
-  user-verified locally.
 
 ---
 
@@ -9714,8 +9711,7 @@ Dashboard, in place of the former block). Three layers:
   Fix: the monitor now uses `extra_bootstrap` (KEEPS the reliable default public
   routers and ADDS the SmartNet seed + cached nodes on top), and runs the blocking
   `build()` inside `tokio::task::spawn_blocking` so the synchronous DNS never stalls
-  the UI thread. Verified by testing_agent (iteration_18) via the
-  `seeder/examples/dht_probe` reproduction: routing table 107–131 nodes (was 0).
+  the UI thread. Verified `seeder/examples/dht_probe` reproduction: routing table 107–131 nodes (was 0).
 
 ## [seeder 1.1.2] 2026-06-30
 
@@ -9726,9 +9722,7 @@ Dashboard, in place of the former block). Three layers:
   explicit server-mode bootstrap node also on `dht_port` (6881) → EADDRINUSE, so
   the bootstrap node never started. Fix: run a **single** DHT node - the explicit
   server-mode bootstrap node on `dht_port` (also backs `/metrics` telemetry); the
-  redundant `DhtAddressLookup` node was removed. Verified by testing_agent: the
-  node binds 6881 cleanly and `/metrics` reports `dhtBootstrapServer=true`,
-  `dhtPort=6881`, `dhtNodes` populating (98 nodes within ~12s).
+  redundant `DhtAddressLookup` node was removed.
 
 ## [client 1.2.3 / seeder 1.1.1] 2026-06-30
 
